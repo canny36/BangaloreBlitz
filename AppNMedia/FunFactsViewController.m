@@ -1,0 +1,277 @@
+//
+//  FunFactsViewController.m
+//  AppNMedia
+//
+//  Created by Saikumar Bondugula on 04/07/12.
+//  Copyright 2012 LogicTree. All rights reserved.
+//
+
+#import "FunFactsViewController.h"
+#import "AppNMediaAppDelegate.h"
+#import "FunFactsTableViewCell.h"
+#import "WebViewController.h"
+#define kfunFactsTableCellHeight 80.0
+@implementation FunFactsViewController
+- (NSString *)dataFilePathForOfflineImages
+{ 
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	return [documentsDirectory stringByAppendingPathComponent:@"offlineImages.plist"];
+}
+-(void)makeaMap :(int )selectedAddress
+{
+    NSMutableDictionary *tmpDict = [funFactsArray objectAtIndex:selectedAddress];
+    if ([tmpDict objectForKey:@"pictureurl"] != nil)
+    {
+        NSString *urlString = [tmpDict objectForKey:@"pictureurl"];
+        
+       // NSLog(@"picture url = %@",urlString);
+        
+        webViewController = [[WebViewController alloc] init];
+        
+        webViewController.urlString = urlString;
+        
+        [self presentModalViewController:webViewController animated:YES];
+        
+    }
+    
+}
+-(void)openWeb:(int)intSelected
+{
+    NSMutableDictionary *tmpDict = [funFactsArray objectAtIndex:intSelected];
+    if ([tmpDict objectForKey:@"pictureurl"] != nil)
+    {
+        NSString *urlString = [tmpDict objectForKey:@"pictureurl"];
+        
+        webViewController = [[WebViewController alloc] init];
+        
+        webViewController.urlString = urlString;
+        
+        [self presentModalViewController:webViewController animated:YES];
+        
+    }
+
+}
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+#pragma mark Table View datasource and delegate methods 
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [funFactsArray count];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return kfunFactsTableCellHeight;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    FunFactsTableViewCell *cell;
+    NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
+    cell = (FunFactsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (cell == nil)
+    {
+        cell = [[FunFactsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    
+    [cell.descriptionTextView setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
+    
+    cell.descriptionTextView.textColor = [UIColor whiteColor];
+    
+    NSMutableDictionary *tmpDict = [funFactsArray objectAtIndex:indexPath.row];
+
+    
+    cell.descriptionTextView.tag = indexPath.row;
+    cell.ffvc = self;
+    
+    if ([tmpDict objectForKey:@"description"]!= nil) 
+    {
+        cell.descriptionTextView.text = [tmpDict objectForKey:@"description"];
+    }
+    
+    cell.funFactsImageView.tag = indexPath.row;
+    
+    if (appDelegate.runAppInOffline == NO)
+    {
+        BOOL network = [appDelegate networkCheckingMethod];
+        
+        if (network == YES)
+        {
+            
+            NSString *baseUrl = BASE_URL;
+            if ([tmpDict objectForKey:@"picture"] != nil) 
+            {
+                NSString *imageUrl = [tmpDict objectForKey:@"picture"];
+                baseUrl = [baseUrl stringByAppendingString:imageUrl];
+                
+            }
+            
+            [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
+        }
+        else
+        {
+            if ([offLineFunFactsImagesArray count] == [funFactsArray count])
+            {
+                NSData *tmpData = [offLineFunFactsImagesArray objectAtIndex:indexPath.row];
+                cell.funFactsImageView.image = [UIImage imageWithData:tmpData];
+            }
+            else
+            {
+                cell.funFactsImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
+            }
+            [cell.activityIndicator stopAnimating];
+            
+        }
+        
+    }
+    else
+    {
+        if ([offLineFunFactsImagesArray count] == [funFactsArray count])
+        {
+            NSData *tmpData = [offLineFunFactsImagesArray objectAtIndex:indexPath.row];
+            cell.funFactsImageView.image = [UIImage imageWithData:tmpData];
+        }
+        else
+        {
+            cell.funFactsImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
+        }
+        [cell.activityIndicator stopAnimating];
+        
+    }
+    
+
+    return cell;
+    
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+//    NSMutableDictionary *tmpDict = [funFactsArray objectAtIndex:indexPath.row];
+//    if ([tmpDict objectForKey:@"pictureurl"] != nil)
+//    {
+//        NSString *urlString = [tmpDict objectForKey:@"pictureurl"];
+//                
+//        webViewController = [[WebViewController alloc] init];
+//        
+//        webViewController.urlString = urlString;
+//        
+//        [self presentModalViewController:webViewController animated:YES];
+//        
+//    }
+//    
+    
+}
+-(void)assignStyles
+{
+    titleFontName =@"Helvetica-Bold";
+    titleFontSize = @"14";
+    
+    subTitleFontName =@"Helvetica";
+    subTitleFontSize = @"12";
+    
+
+
+    
+}
+-(void)homeButtonClicked
+{
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)dealloc
+{
+}
+    
+- (void)didReceiveMemoryWarning
+{
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+#pragma mark - View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
+    self.title = @"Fun Facts";
+    [self assignStyles];
+    UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
+    self.navigationItem.rightBarButtonItem = homeButton;
+    
+    
+    funFactsArray = [[NSMutableArray alloc] initWithCapacity:0];
+    
+    if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"funfactslist"] objectForKey:@"funfact"]  isKindOfClass:[NSDictionary class]]) 
+    {
+        [funFactsArray addObject:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"funfactslist"] objectForKey:@"funfact"] ];
+    }
+    else
+    {
+        [funFactsArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"funfactslist"] objectForKey:@"funfact"]];
+    }  
+
+   // NSLog(@"%@",funFactsArray);
+    offLineFunFactsImagesArray = [[NSMutableArray alloc] initWithCapacity:0];
+    
+    NSString *filePath  = [self dataFilePathForOfflineImages];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+    {
+        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+        
+        if ([tmpDict objectForKey:@"offlineFunFactsImagesArr"]!= nil)
+        {
+            [offLineFunFactsImagesArray addObjectsFromArray:[tmpDict objectForKey:@"offlineFunFactsImagesArr"]];
+        }
+        
+    }
+
+    
+    int height = kfunFactsTableCellHeight * [funFactsArray count];
+    if (height > 270)
+    {
+        height = 270;
+    }
+    funFactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 10, 300, height)];
+    funFactsTableView.dataSource = self;
+    funFactsTableView.delegate = self;
+    funFactsTableView.backgroundColor = [UIColor clearColor];
+    funFactsTableView.showsVerticalScrollIndicator = NO;
+    [funFactsTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self.view addSubview:funFactsTableView];
+    
+    [subBgView setFrame:CGRectMake(5, 5, 310, 280)];
+    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
+
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+@end
