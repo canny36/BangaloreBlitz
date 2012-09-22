@@ -144,21 +144,30 @@
             
             Category *category = [[Category alloc]initWithDict:_categorydict];
             
-            NSArray *sponsorArray =  [dict objectForKey:@"sponsor"];
+     NSArray *array =  [dict objectForKey:@"sponsor"];
             
-            NSLog(@" APPDELEGATE sponsor array   %@ ",sponsorArray);
-
-            NSMutableArray *sponsors = [[NSMutableArray alloc]init];
-            for (int i=0,size = sponsorArray.count ; i<size ; i++) {
-                
-                NSDictionary *dict = [sponsorArray objectAtIndex:i];
+           NSLog(@" APPDELEGATE sponsor array   %@ ",array);
+            
+            
+            if ([array isKindOfClass:[NSArray class]]) {
+                NSMutableArray *sponsorArray = (NSMutableArray*)array;
+                NSMutableArray *sponsors = [[NSMutableArray alloc]init];
+                for (int i=0,size = sponsorArray.count ; i<size ; i++) {
+                    
+                    NSDictionary *dict = [sponsorArray objectAtIndex:i];
+                    SPonsor *sponsor = [[SPonsor alloc]initWithDict:dict category:category];
+                    [sponsors addObject:sponsor];
+                    [categorydict setValue:sponsors forKey:category.name];
+                    
+                }
+            }else{
+                NSDictionary *dict = (NSDictionary*)array;
+                 NSMutableArray *sponsors = [[NSMutableArray alloc]init];
                 SPonsor *sponsor = [[SPonsor alloc]initWithDict:dict category:category];
                 [sponsors addObject:sponsor];
-            [categorydict setValue:sponsors forKey:category.name];
-
+                [categorydict setValue:sponsors forKey:category.name];
             }
-          
-        }
+            }
         
     }
     return categorydict;

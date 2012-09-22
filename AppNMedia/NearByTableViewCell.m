@@ -10,6 +10,7 @@
 #import "NearByDetailViewController.h"
 
 @implementation NearByTableViewCell
+
 @synthesize nameLabel;
 @synthesize phoneNumber;
 @synthesize addresstxtView;
@@ -17,6 +18,7 @@
 @synthesize typeLabel;
 @synthesize activityIndicator;
 @synthesize nbdvController;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -66,9 +68,6 @@
         UITapGestureRecognizer *txtTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeaMap)];
         [addresstxtView addGestureRecognizer:txtTapGesture];
         [self addSubview:addresstxtView];
-
-        
-        
         
         typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 95, 200, 20)];
         typeLabel.backgroundColor = [UIColor clearColor];

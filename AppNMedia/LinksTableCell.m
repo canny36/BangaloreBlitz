@@ -40,7 +40,7 @@ static UIImage *defaultImage;
         
         self.backgroundColor = [UIColor clearColor];
         
-        linksImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 1, 100, 100)];
+        linksImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 1, 100, 98)];
         //        //        supporterImageView.layer.cornerRadius = 7.0;
         if (defaultImage == nil) {
             defaultImage = [UIImage imageNamed:@"default_img.png"];

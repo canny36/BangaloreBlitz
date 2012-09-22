@@ -33,4 +33,5 @@
 @property BOOL   fromSearchTable;
 -(void)assignImage:(NSString *)path;
 -(void)selectButtonSetImage:(UIButton *)sender;
+-(void)loadDefaultImage;
 @end

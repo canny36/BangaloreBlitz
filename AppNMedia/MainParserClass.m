@@ -68,18 +68,22 @@
  
     }
     
+    NSLog(@"EVENTSARRAY COUNT %d",[appDelegate.eventsArray count] );
+    
     for (int i = 0; i<[appDelegate.eventsArray count]; i++)
     {
-        
-       // http://conferenceapps.net/mobile/eventinfo.php?id=1&tokenid=&devicetoken=&os=2
-        
-        
+    
+       // http://conferenceapps.net/mobile/eventinfo.php?id=1&tokenid=&devicetoken=&os=1
         
         eventParserClass = [[EventsParserClass alloc] init];
         eventParserClass.allInfoParsingCompleted = NO;
-        NSString *url =  @"http://conferenceapps.net/mobile/eventinfo.php?id=";
+        
+//        NSString *url =  @"http://conferenceapps.net/mobile/eventinfo.php?id=1&tokenid=&devicetoken=&os=1";
+        
+         NSString *url =  @"http://conferenceapps.net/mobile/eventinfo.php?id=";
         NSMutableDictionary *tmpDict  = [appDelegate.eventsArray objectAtIndex:i];
         NSString *id = [tmpDict objectForKey:@"eventid"];
+        
         url = [url stringByAppendingString:id];
         
         if ([tokenIdDict objectForKey:@"tokenId"]!= nil)
@@ -96,10 +100,8 @@
         }
         
         [eventParserClass callMainParsingMethod:url];
+   
     }
-    
-    
-    
 }
 
 -(void)startUserInteractions
@@ -114,9 +116,16 @@
      
     [appDelegate.eventsArray removeAllObjects];
     
-    if ([[[[appDelegate.mainResponseDictionary objectForKey:@"root"] objectForKey:@"events"] objectForKey:@"event"] isKindOfClass:[NSDictionary class]]) 
+    id response = [[[appDelegate.mainResponseDictionary objectForKey:@"root"] objectForKey:@"events"] objectForKey:@"event"];
+    
+    if ([response isKindOfClass:[NSDictionary class]])
     {
-        [appDelegate.eventsArray addObject:[[[appDelegate.mainResponseDictionary objectForKey:@"root"] objectForKey:@"events"] objectForKey:@"event"]];
+        NSLog(@" EVENT RESPONSE %@ ", (NSDictionary*)response);
+        if ( appDelegate.eventsArray == nil ) {
+            appDelegate.eventsArray  = [[NSMutableArray alloc]initWithCapacity:0];
+        }
+        
+        [appDelegate.eventsArray addObject:response];
     }
     else
     {
@@ -139,12 +148,8 @@
 		
 	
     connection = [[NSURLConnection alloc]initWithRequest:request delegate:self];
-    
-    if (timer  != nil)
-    {
-        timer = nil;
-    }
-    timer = [NSTimer scheduledTimerWithTimeInterval:100 target:self selector:@selector(cancelConnection:) userInfo:connection repeats:NO];
+   
+//    timer = [NSTimer scheduledTimerWithTimeInterval:100 target:self selector:@selector(cancelConnection:) userInfo:connection repeats:NO];
     
 }
 
@@ -179,7 +184,7 @@
     
     
     appDelegate.mainResponseDictionary = [xmlParsing parseData:webServiceData enableDebug:NO];
-    NSLog(@"%@",appDelegate.mainResponseDictionary  );
+    NSLog(@"RESPONSE  %@",appDelegate.mainResponseDictionary  );
     [self eventsInfoSeperationMethod];
     
 }
@@ -199,6 +204,7 @@
             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil message:@"Network problem " delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
         }
+        
         timer = nil;
     }
     

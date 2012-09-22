@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "QuartzCore/QuartzCore.h"
+#import "ImageDownloader.h"
 
 @class AppNMediaAppDelegate;
 @class SpeakersViewDetailsController;
-@interface SpeakersViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate,UITextFieldDelegate>
+
+@interface SpeakersViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate,UITextFieldDelegate,ImageDownloadDelegate>
 {
     AppNMediaAppDelegate    *appDelegate;
     SpeakersViewDetailsController *speakersDetailsViewController;
@@ -54,6 +56,10 @@
     NSMutableArray *searchArr;
     UITableView *searchTableView;
     IBOutlet UIImageView *transparentImageView;
+    
+    ImageDownloader *imageDownloader;
+    NSMutableArray *currentDownloads;
+    
 }
 @property(nonatomic,retain)NSMutableArray *offlineSpeakersImagesArr;
 -(void)assignStyles;

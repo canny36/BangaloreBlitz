@@ -68,9 +68,14 @@
         }
     }else{
         NSLog(@" APPDELEGATE org collection one  %@ ",object);
-        NSDictionary *dict = (NSDictionary*)object;
-         Program *program = [[Program alloc]initWithDict:dict];
-        [supportedByArray addObject:program];
+        if (object != nil && ! (object == [NSNull null]) && [object isKindOfClass:[NSDictionary class]]) {
+            
+            NSDictionary *dict = (NSDictionary*)object;
+            Program *program = [[Program alloc]initWithDict:dict];
+            [supportedByArray addObject:program];
+            
+        }
+       
     }
     
     return supportedByArray;

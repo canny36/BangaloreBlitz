@@ -11,6 +11,7 @@
 #import "NewsTableCell.h"
 #import "WebViewController.h"
 #import "ImageLoader.h"
+#import "Util.h"
 
 #define kNewsTableCellHeight 100
 @implementation NewsViewController
@@ -69,13 +70,13 @@
         NSMutableDictionary *tmpDict = [newsArray objectAtIndex:indexPath.row];
         //cell.titleLabel.textColor = [UIColor colorWithRed:r/255 green:g/255 blue:b/255 alpha:1];
         //cell.titleLabel.text =[tmpDict objectForKey:@"newsurl"];
-        [cell.titleLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-               cell.titleLabel.textColor = [UIColor whiteColor];
+        [cell.titleLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
+         cell.titleLabel.textColor = [Util subTitleColor];
            
         cell.descriptionTextView.text =[tmpDict objectForKey:@"description"];
-        [cell.descriptionTextView setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
+        [cell.descriptionTextView setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
         
-        cell.descriptionTextView.textColor = [UIColor whiteColor];
+        cell.descriptionTextView.textColor = [Util subTitleColor];
         
         
         
@@ -278,7 +279,9 @@
     
     CGSize point  = CGSizeMake(100, 80);
     
-    //    [NSInvocationOperation ];
+    if (imageDownloader == nil) {
+        imageDownloader =  [ImageDownloader shareInstance];
+    }
     
     UIImage *image =  [imageDownloader getImage:url];
     if (image != nil) {
@@ -293,9 +296,7 @@
         NSLog(@"FAIL AT %@ ",url);
         ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
         loader.indexPath = indexpath;
-        if (imageDownloader == nil) {
-            imageDownloader =  [ImageDownloader shareInstance];
-        }
+
         
         [imageDownloader addOperation:loader];
         [currentDownloads addObject:loader];

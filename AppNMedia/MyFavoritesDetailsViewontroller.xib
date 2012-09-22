@@ -74,7 +74,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{10, 310}, {300, 63}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1120,7 +1119,7 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{640, 960}</string>
 				<string>{640, 765}</string>
-				<string>{599, 125}</string>
+				<string>{599, 102}</string>
 			</object>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">1914</string>

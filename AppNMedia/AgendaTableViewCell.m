@@ -23,7 +23,7 @@
     if (self)
     {
         // Initialization code
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.selectionStyle = UITableViewCellSelectionStyleGray;
 
 //        bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 3, 300, 95)];
 //        [bgView.layer setCornerRadius:10.0f];
@@ -37,6 +37,11 @@
         
         self.backgroundView = imageView;
         
+        image = [UIImage imageNamed:@"list_over_bg.png"];
+        imageView  = [[UIImageView alloc]initWithFrame:CGRectZero];
+        imageView.image = image;
+        
+        self.selectedBackgroundView = imageView;
         
         self.backgroundColor = [UIColor clearColor];
       

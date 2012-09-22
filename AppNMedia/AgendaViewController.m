@@ -12,12 +12,11 @@
 #import "AgendaDetailsViewController.h"
 #import "Util.h"
 
-
-
 @interface CellItem : NSObject{
     
     NSString *_title;
     NSString *_subTitle;
+    
 }
 
 @property(retain,readwrite)NSString *title;
@@ -33,6 +32,7 @@
 @end
 
 #define kAgendaTableCellHeight 100.0
+
 @implementation AgendaViewController
 @synthesize selectedAgendaLocation;
 @synthesize fromWhichSection;
@@ -185,16 +185,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //return [agendaArray count];
-    if (tableView == agendaTableView)
-    {
-        return [itemsArray count];
-
-    }
-    else
-    {
-        return [searchArr count];
-    }
+    return ( tableView == agendaTableView ) ?  [itemsArray count] : [searchArr count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -213,6 +204,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    
     
     AgendaTableViewCell *cell;
     NSString *CellIdentifier = @"agenda identifier";
@@ -235,7 +228,7 @@
          cell.textLabel.font= [UIFont fontWithName:[Util subTitleFontName] size:16];
          cell.textLabel.textColor = [Util subTitleColor];
         
-         cell.detailTextLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:14];
+         cell.detailTextLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
         
         cell.detailTextLabel.textColor = [Util detailTextColor];
     }
@@ -267,37 +260,32 @@
         cell.selectButton.tag = indexPath.row;
         cell.selectedSection = indexPath.section;
         
-//        if ([myFavAgendaArray count]>0)                
-//        {
-//            for (int i=0; i<[myFavAgendaArray count]; i++)
-//            {
-//                NSString *tmpIdStr = [myFavAgendaArray objectAtIndex:i];
-//                NSString *speakerIdStr = @"";
-//                if ([tmpDict objectForKey:@"agendaid"] != nil)
-//                {
-//                    speakerIdStr = [tmpDict objectForKey:@"agendaid"];
-//                }
-//                
-//                if ([speakerIdStr isEqualToString:tmpIdStr])
-//                {
-//                    [cell.selectButton setImage:[UIImage imageNamed:@"gold_star.png"] forState:UIControlStateNormal];
-//                    cell.buttonSelected = YES;
-//                    i = [myFavAgendaArray count];
-//                }
-//                else
-//                {
-//                    [cell.selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-//                    cell.buttonSelected = NO; 
-//                }
-//                
-//            }
-//            
-//            
-//            
-//        }        
-        
-
-        
+        if ([myFavAgendaArray count]>0)                
+        {
+            NSMutableDictionary *tmpDict = [itemsArray objectAtIndex:indexPath.row];
+            for (int i=0; i<[myFavAgendaArray count]; i++)
+            {
+                NSString *tmpIdStr = [myFavAgendaArray objectAtIndex:i];
+                NSString *speakerIdStr = @"";
+                if ([tmpDict objectForKey:@"agendaid"] != nil)
+                {
+                    speakerIdStr = [tmpDict objectForKey:@"agendaid"];
+                }
+                
+                if ([speakerIdStr isEqualToString:tmpIdStr])
+                {
+                    [cell.selectButton setImage:[UIImage imageNamed:@"gold_star.png"] forState:UIControlStateNormal];
+                    cell.buttonSelected = YES;
+                    i = [myFavAgendaArray count];
+                }
+                else
+                {
+                    [cell.selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
+                    cell.buttonSelected = NO; 
+                }
+                
+            }
+         }        
     }
     else
     {
@@ -321,6 +309,8 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     AgendaDetailsViewController *agendaDetailsViewController = [[AgendaDetailsViewController alloc] init];
 
     if (tableView == agendaTableView)
@@ -362,7 +352,7 @@
     [super viewDidLoad];
     
     // Do any additional setup after loading the view from its nib.
-    self.title = dateString;
+    self.title = @"Selected Agenda";
     
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     
@@ -425,7 +415,7 @@
     searchTableView.delegate = self;
     searchTableView.backgroundColor = [UIColor clearColor];
     searchTableView.showsVerticalScrollIndicator = NO;
-    [searchTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    [searchTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLineEtched];
     [searchTableView setSeparatorColor:[UIColor clearColor]];
     [self.view addSubview:searchTableView];
 
@@ -442,9 +432,9 @@
         
         NSString *dateStr = @"";
         
-        if ([tmpDict objectForKey:@"date"]!= nil)
+        if ([tmpDict objectForKey:@"agendaspeaker"]!= nil)
         {
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"date"]];
+            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"agendaspeaker"]];
         }
         
         
@@ -455,7 +445,6 @@
             dateStr = [dateStr stringByAppendingString:@" - "];
             
         }
-        
         
         if ([tmpDict objectForKey:@"endtime"] != nil)
         {
@@ -507,6 +496,7 @@
     [UIView setAnimationBeginsFromCurrentState:YES];
     [UIView setAnimationDuration: 0.7];
     [searchTableView setFrame:viewFrame1];
+    searchTableView.hidden = YES;
     [UIView commitAnimations]; 
 
 }
@@ -534,6 +524,7 @@
     [searchBar resignFirstResponder];
     searchString = searchBar.text;
     [self mainSearchMethod];
+    
 }
 -(void)mainSearchMethod
 {

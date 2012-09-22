@@ -69,26 +69,25 @@
 ////////////////////////////// WebServices calling
 -(void)callMainParsingMethod :(NSString *)urlString1
 {
+    
+    NSLog(@"  CALLMAINPARSINGMETHOD %@",urlString1);
+    
     allInfoParsingCompleted = NO;
 
     NSURL *url = [NSURL URLWithString:urlString1];
     
-    if (request != nil)
-    {
-    }
 	request = [[NSMutableURLRequest alloc]initWithURL:url];
+   
+    [request setTimeoutInterval:120];
     
-	if (connection != nil) 
-	{
-	}
     connection = [[NSURLConnection alloc]initWithRequest:request delegate:self];
     
     
-    if (timer  != nil)
-    {
-        timer = nil;
-    }
-    timer = [NSTimer scheduledTimerWithTimeInterval:55 target:self selector:@selector(cancelConnection:) userInfo:connection repeats:NO];
+//    if (timer  != nil)
+//    {
+//       timer = nil;
+//    }
+//    timer = [NSTimer scheduledTimerWithTimeInterval:55 target:self selector:@selector(cancelConnection:) userInfo:connection repeats:NO];
     
 }
 
@@ -96,15 +95,21 @@
 
 -(void)connection:(NSURLConnection *)aConnection didReceiveData:(NSData *)data
 {
-    dataReceived = YES;
+     dataReceived = YES;
+    if (webServiceData == nil) {
+        webServiceData = [[NSMutableData alloc]init];
+    }
+    
     [webServiceData appendData:data]; 
 }
+
 -(void)connection:(NSURLConnection *)aConnection didReceiveResponse:(NSURLResponse *)response
 {
     
-    webServiceData = [[NSMutableData alloc]init];
-    
+   NSHTTPURLResponse *httpresponse = (NSHTTPURLResponse*) response;
+    NSLog(@"RESPONSE FROM SERVER %d ",httpresponse.statusCode);
 }
+
 -(void)connectionDidFinishLoading:(NSURLConnection *)aConnection
 {
    [self parseAdOnDifferentThread];
@@ -114,15 +119,18 @@
 {
 	//NSLog(@"error occured in login response");
 }
+
 -(void)parseAdOnDifferentThread
 {
     
     
     XMLToDictionary *xmlParsing = [[XMLToDictionary alloc] init];
-    [xmlParsing setNeedAttributesKey:YES needEmptyTags:NO];
-    if (resultDict) 
-    {
+    [xmlParsing setNeedAttributesKey:YES needEmptyTags:YES];
+  
+    if (webServiceData != nil) {
+        
     }
+    
     resultDict = [xmlParsing parseData:webServiceData enableDebug:NO];
     
     if (appDelegate.fromDataSynchMethod == YES)
@@ -135,8 +143,8 @@
         {
             [appDelegate.allEventsInfoArray removeAllObjects];
             [appDelegate.allEventsInfoArray addObject:resultDict];
-            allInfoParsingCompleted = YES;
-            [self storeingInformation]; 
+             allInfoParsingCompleted = YES;
+             [self storeingInformation]; 
             
             appDelegate.mainResponseDict = [appDelegate.allEventsInfoArray objectAtIndex:0];
 
@@ -146,20 +154,27 @@
     else
     {
     
-    if ([resultDict objectForKey:@"result"]!= nil)
-    {
-        [appDelegate nodataResponseMethod];
-    }
-    else
-    {
-        [appDelegate.allEventsInfoArray addObject:resultDict];
-    }
+        if ([resultDict objectForKey:@"result"]== nil)
+        {
+            [appDelegate nodataResponseMethod];
+        }
+        else
+        {
+            [appDelegate.allEventsInfoArray addObject:resultDict];
+        }
+        
         NSLog(@"the all information array = %@",resultDict);
-    
-    [appDelegate createCustomStyleDict];
-    allInfoParsingCompleted = YES;
-    [self storeingInformation];
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        
+//        [appDelegate createCustomStyleDict];
+        allInfoParsingCompleted = YES;
+        
+        [appDelegate.allEventsInfoArray addObject:resultDict];
+              
+        appDelegate.mainResponseDict = [appDelegate.allEventsInfoArray objectAtIndex:0];
+
+        
+        [self storeingInformation];
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 
 
     }

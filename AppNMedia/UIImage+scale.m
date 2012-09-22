@@ -10,7 +10,7 @@
 
 @implementation UIImage (scale)
 
--(void)scaleImageToSize:(CGSize)size{
+-(UIImage*)scaleImageToSize:(CGSize)size{
     UIImage *scaledImage  = nil;
     
     CGSize itemSize = CGSizeMake(size.width, size.height);
@@ -19,6 +19,7 @@
     [self drawInRect:imageRect];
     scaledImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    return scaledImage;
    }
 
 @end

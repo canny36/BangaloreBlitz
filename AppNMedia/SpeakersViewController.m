@@ -11,6 +11,8 @@
 #import "AppNMediaAppDelegate.h"
 #import "SpeakersTableViewCell.h"
 #import "AgendaDetailsViewController.h"
+#import "ImageLoader.h"
+#import "Util.h"
 
 #define kSpeakersTableCellHeight 80.0
 @implementation SpeakersViewController
@@ -245,26 +247,24 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SpeakersTableViewCell *cell;
+    
+        SpeakersTableViewCell *cell;
     NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
     cell = (SpeakersTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
     {
         cell = [[SpeakersTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        [cell.speakerNameLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
+        cell.speakerNameLabel.textColor = [Util subTitleColor];
         
-    }
-    [cell.speakerNameLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
+        [cell.speakersDetailsLabel setFont:[UIFont fontWithName:[Util detailTextFontName] size:14]];
+        
+        cell.speakersDetailsLabel.textColor = [Util detailTextColor];
+    };
     
-
-    
-    cell.speakerNameLabel.textColor = [UIColor whiteColor];
-    
-    [cell.speakersDetailsLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-
-    cell.speakersDetailsLabel.textColor = [UIColor whiteColor];
-    
-
+    [cell loadDefaultImage];
+ 
     if (tableView == speakersTableView) 
     {
         cell.fromSearchTable = NO;
@@ -285,55 +285,69 @@
         
         cell.speakersDetailsLabel.text = [tmpDict objectForKey:@"description"];
         
-        
-        if (appDelegate.runAppInOffline == NO)
-        {
-            BOOL network = [appDelegate networkCheckingMethod];
+        NSString *logo  = [tmpDict objectForKey:@"speakerphoto"];
+        NSLog(@" LOGO %@   ",logo);
+        if (logo != nil && ![logo isEqualToString:@""]) {
             
-            if (network == YES)
-            {
-                
-                NSString *baseUrl = BASE_URL;
-                if ([tmpDict objectForKey:@"speakerphoto"] != nil) 
-                {
-                    NSString *imageUrl = [tmpDict objectForKey:@"speakerphoto"];
-                    baseUrl = [baseUrl stringByAppendingString:imageUrl];
-                    
-                }
-                
-                [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
-            }
-            else
-            {
-                if ([offlineSpeakersImagesArr count] == [speakersArray count])
-                {
-                    NSData *tmpData = [offlineSpeakersImagesArr objectAtIndex:indexPath.row];
-                    cell.speakerImageView.image = [UIImage imageWithData:tmpData];
-                }
-                else
-                {
-                    cell.speakerImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-                }
-                [cell.activityIndicatorview stopAnimating];
-                
-            }
-
+            NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
+            [mainlogo appendString:logo];
+            NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
+            [self loadImageAtIndexpath:indexPath urlString:mainlogo cell : cell];
+        }else{
+            NSLog(@" NO LOGO   ");
             
         }
-        else
-        {
-            if ([offlineSpeakersImagesArr count] == [speakersArray count])
-            {
-                NSData *tmpData = [offlineSpeakersImagesArr objectAtIndex:indexPath.row];
-                cell.speakerImageView.image = [UIImage imageWithData:tmpData];
-            }
-            else
-            {
-                cell.speakerImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-            }
-            [cell.activityIndicatorview stopAnimating]; 
-        }
         
+        
+        
+//        if (appDelegate.runAppInOffline == NO)
+//        {
+//            BOOL network = [appDelegate networkCheckingMethod];
+//            
+//            if (network == YES)
+//            {
+//                
+//                NSString *baseUrl = BASE_URL;
+//                if ([tmpDict objectForKey:@"speakerphoto"] != nil) 
+//                {
+//                    NSString *imageUrl = [tmpDict objectForKey:@"speakerphoto"];
+//                    baseUrl = [baseUrl stringByAppendingString:imageUrl];
+//                    
+//                }
+//                
+//                [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
+//            }
+//            else
+//            {
+//                if ([offlineSpeakersImagesArr count] == [speakersArray count])
+//                {
+//                    NSData *tmpData = [offlineSpeakersImagesArr objectAtIndex:indexPath.row];
+//                    cell.speakerImageView.image = [UIImage imageWithData:tmpData];
+//                }
+//                else
+//                {
+//                    cell.speakerImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
+//                }
+//                [cell.activityIndicatorview stopAnimating];
+//                
+//            }
+//
+//            
+//        }
+//        else
+//        {
+//            if ([offlineSpeakersImagesArr count] == [speakersArray count])
+//            {
+//                NSData *tmpData = [offlineSpeakersImagesArr objectAtIndex:indexPath.row];
+//                cell.speakerImageView.image = [UIImage imageWithData:tmpData];
+//            }
+//            else
+//            {
+//                cell.speakerImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
+//            }
+//            [cell.activityIndicatorview stopAnimating]; 
+//        }
+//        
        
         
         cell.speakerViewController= self;
@@ -420,6 +434,8 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     speakersDetailsViewController = [[SpeakersViewDetailsController alloc] init];
 
     if (tableView == speakersTableView)
@@ -550,7 +566,9 @@
     else
     {
         [speakersArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"]];
-    } 
+    }
+    
+    NSLog(@" SPEAKERS ARRAY %d ", [speakersArray count]);
     
     myFavIndexesArray = [[NSMutableArray alloc] initWithCapacity:0];
     
@@ -582,20 +600,18 @@
     }      
     
     
-    int height = kSpeakersTableCellHeight * [speakersArray count];
-    if (height > 220)
-    {
-        height = 220;
-    }
-    speakersTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 60, 300, height)];
+
+    speakersTableView = [[UITableView alloc] initWithFrame:CGRectMake(5,60, 310, 250)];
     speakersTableView.dataSource = self;
     speakersTableView.delegate = self;
     speakersTableView.backgroundColor = [UIColor clearColor];
     speakersTableView.showsVerticalScrollIndicator = NO;
-    [speakersTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [speakersTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    speakersTableView.separatorColor = [UIColor clearColor] ;
+    
     [self.view addSubview:speakersTableView];
     
-    [subBgView setFrame:CGRectMake(5, 5, 310, 280)];
+  
     
     
     for (UIView *view in participantsSearchBar.subviews)
@@ -850,5 +866,68 @@
     
 }
 
+
+
+-(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(SpeakersTableViewCell*)cell{
+    
+    CGSize point  = CGSizeMake(100, 80);
+    
+    if (imageDownloader == nil) {
+        imageDownloader =  [ImageDownloader shareInstance];
+    }
+    //    [NSInvocationOperation ];
+    
+    UIImage *image =  [imageDownloader getImage:url];
+    if (image != nil) {
+        NSLog(@"HIT AT %@ ",url);
+        //        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
+        
+        cell.speakerImageView.image = image;
+        //        [supportedByTableView reloadData];
+        
+    }else{
+        
+        NSLog(@"FAIL AT %@ ",url);
+        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
+        loader.indexPath = indexpath;
+
+        
+        [imageDownloader addOperation:loader];
+        [currentDownloads addObject:loader];
+        
+    }
+}
+
+-(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
+    
+    NSLog(@" DOWNLOAD COMPLETED FOR %d ",imageLoader.indexPath.row);
+    
+    [currentDownloads removeObject:imageLoader];
+    [imageDownloader removeOperation:imageLoader];
+    
+    [self performSelectorOnMainThread:@selector(updateCell:) withObject:imageLoader waitUntilDone:YES];
+    
+}
+
+-(void)updateCell:(ImageLoader*)loader{
+    [speakersTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+-(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
+   
+    NSLog(@"ERROR DOWNLOADING ");
+    [imageDownloader removeOperation:imageLoader];
+    [currentDownloads removeObject:imageDownloader];
+}
+
+
+-(void)viewDidDisappear:(BOOL)animated{
+
+    for (ImageLoader *loader in currentDownloads) {
+        [loader cancel];
+    }
+    
+    [currentDownloads removeAllObjects];
+}
 
 @end

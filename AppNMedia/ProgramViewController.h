@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ImageDownloader.h"
 
-@interface ProgramViewController : UIViewController{
+@interface ProgramViewController : UIViewController<ImageDownloadDelegate>{
     
     IBOutlet UITableView *_tableView;
     NSMutableArray *programs;

@@ -181,7 +181,7 @@ static NSString *cachedImageDir;
 //        customStylesDict= [[NSMutableDictionary alloc] initWithCapacity:0];
 //    }
     
-    if (eventsArray != nil)
+    if (eventsArray == nil)
     {
    
        eventsArray = [[NSMutableArray alloc] initWithCapacity:0];
@@ -251,8 +251,6 @@ static NSString *cachedImageDir;
 -(void)createCommonUI
 {
     
-    
-    
     if ([poweredByBgView isDescendantOfView:self.window])
     {
         [poweredByBgView removeFromSuperview];
@@ -280,8 +278,7 @@ static NSString *cachedImageDir;
     {
         poweredByLabel = [[UILabel alloc] initWithFrame:CGRectMake(85, 403, 150, 20)];
     }
-    
-    
+     
     NSString *tmpStr = @"Powered by APPlusMedia";
     poweredByLabel.font = [UIFont systemFontOfSize:12];
     poweredByLabel.backgroundColor = [UIColor clearColor];
@@ -335,16 +332,20 @@ static NSString *cachedImageDir;
         eventNameTxtView = [[UITextView alloc] initWithFrame:CGRectMake(10, 345 , 300, 60)];
     }
     
-    NSMutableDictionary *tmpDict  = [eventsArray objectAtIndex:0];
-    NSString *eventName = [tmpDict objectForKey:@"eventtitle"];
-    eventNameTxtView.editable = NO;
-    eventNameTxtView.userInteractionEnabled = NO;
-    eventNameTxtView.font = [UIFont systemFontOfSize:18];
-    eventNameTxtView.backgroundColor = [UIColor clearColor];
-    eventNameTxtView.textColor = [UIColor whiteColor];
-    eventNameTxtView.textAlignment = UITextAlignmentCenter;
-    eventNameTxtView.text = eventName;
-//    [self.window addSubview:eventNameTxtView]; 
+    if ([eventsArray count]>0) {
+        NSMutableDictionary *tmpDict  = [eventsArray objectAtIndex:0];
+        NSString *eventName = [tmpDict objectForKey:@"eventtitle"];
+        eventNameTxtView.editable = NO;
+        eventNameTxtView.userInteractionEnabled = NO;
+        eventNameTxtView.font = [UIFont systemFontOfSize:18];
+        eventNameTxtView.backgroundColor = [UIColor clearColor];
+        eventNameTxtView.textColor = [UIColor whiteColor];
+        eventNameTxtView.textAlignment = UITextAlignmentCenter;
+        eventNameTxtView.text = eventName;
+
+    }
+    
+   //    [self.window addSubview:eventNameTxtView]; 
     
     
     
@@ -541,441 +542,441 @@ static NSString *cachedImageDir;
     
 }
 
--(void)createCustomStyleDict
-{
-    tmpStylesDict = [[mainResponseDictionary objectForKey:@"root"] objectForKey:@"client"] ;
-    
-    
-    /*
-
-    NSString *listHeadingFontName = @"";
-    listHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"style"];
-        
-    NSString *listHeadingFontSize =@"";
-    listHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"size"];
-    
-    
-    NSMutableDictionary *listHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"color"];
-    
-    
-    
-    NSString *listContentFontName =@"";
-    listContentFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"style"];
-    
-    NSString *listContentFontSize=@"";
-    listContentFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"size"];
-    
-    NSMutableDictionary *listContentFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"color"];
-    
-    
-    NSString *webLinkFontName= @"";
-    webLinkFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"style"];
-    
-    NSString *webLinkFontSize= @"";
-    webLinkFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"size"];
-    
-    NSMutableDictionary *webLinkFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"color"];
-
-    
-    NSString *titleFontName= @"";
-    titleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
-    NSString *titleFontSize = @"";
-    titleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *titleFontColorDict = [[[tmpStylesDict objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
-    
-    
-    NSString *subTitleFontName= @"";
-    subTitleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
-    NSString *subTitleFontSize = @"";
-    
-    subTitleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *subTitleFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
-
-    NSString *iconFontName= @"";
-    iconFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"style"];
-    
-    NSString *iconFontSize=@"";
-    iconFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"size"];
-    
-     NSMutableDictionary *iconFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"color"];
-
-        
-    
-    NSString *pageHeadingFontName= @"";
-    pageHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
-    
-    NSString *pageHeadingFontSize=@"";
-    pageHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *pageHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
-    
-    
-    NSString *pageSubHeadingFontName= @"";
-    pageSubHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
-    
-    NSString *pageSubHeadingFontSize=@"";
-    pageSubHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *pageSubHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
- 
-    
-    NSString *logoImageUrl = [[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"logo"];
-    
-    NSData *logoImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:logoImageUrl]];
-    
-    
-    NSString *bgImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-  
-    NSString *tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"bg"];
-    
-    bgImageUrl = [bgImageUrl stringByAppendingString:tmpStr] ;
-
-    NSData *bgImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:bgImageUrl]];
-
-    NSString *subBgImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"subbg"];
-    
-    subBgImageUrl = [subBgImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *subBgImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:subBgImageUrl]];
-    
-    
-    NSString *footerImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"footerbg"];
-    
-    footerImageUrl = [footerImageUrl stringByAppendingString:tmpStr] ; 
-    
-    NSData *footerImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:footerImageUrl]];
-    
-    
-    NSString *agendaImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"agenda"];
-    
-    agendaImageUrl = [agendaImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *agendaImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:agendaImageUrl]];
-    
-    
-    NSString *speakerImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"speakers"];
-    
-    speakerImageUrl = [speakerImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *speakersImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:speakerImageUrl]];
-
-    
-    NSString *sponserImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"sponsors"];
-    
-    sponserImageUrl = [sponserImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *sponsersImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:sponserImageUrl]];
-    
-    
-    NSString *linksImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"links"];
-    
-    linksImageUrl = [linksImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *linksImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:linksImageUrl]];
-    
-    
-    NSString *newsImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"news"];
-    
-    newsImageUrl = [newsImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *newsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:newsImageUrl]];
-    
-    NSString *photosImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"photos"];
-    
-    photosImageUrl = [photosImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *photosImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:photosImageUrl]];
-    
-    NSString *videosImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"videos"];
-    
-    videosImageUrl = [videosImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *videosImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:videosImageUrl]];
-    
-    NSString *socialImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"social"];
-    
-    socialImageUrl = [socialImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *socialImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:socialImageUrl]];
-    
-    NSString *nearbyImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"nearby"];
-    
-    nearbyImageUrl = [nearbyImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *nearbyImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:nearbyImageUrl]];
-    
-    //////////////////////////
-    
-    NSString *myFavoriteImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"myfavorite"];
-    
-    myFavoriteImageUrl = [myFavoriteImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *myFavoriteData =[NSData dataWithContentsOfURL:[NSURL URLWithString:myFavoriteImageUrl]];
-    
-    
-    NSString *aboutImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"about"];
-    
-    aboutImageUrl = [aboutImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *aboutImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:aboutImageUrl]];
-    
-    
-    
-    
-    NSString *contactUsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"contact"];
-    
-    contactUsImageUrl = [contactUsImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *contactUsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:contactUsImageUrl]];
-    
-    
-    NSString *exhibitorsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"exhibitor"];
-    
-    exhibitorsImageUrl = [exhibitorsImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *exhibitorsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:exhibitorsImageUrl]];
-
-    
-    
-    NSString *partnersImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"partner"];
-    
-    partnersImageUrl = [partnersImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *partnersImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:partnersImageUrl]];
-    
-    
-    NSString *eventIntroImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"intro"];
-    
-    eventIntroImageUrl = [eventIntroImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *eventIntroImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:eventIntroImageUrl]];
-
-    
-    NSString *registerNowImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"register"];
-    
-    registerNowImageUrl = [registerNowImageUrl stringByAppendingString:tmpStr] ;
-
-    NSData *rigisterImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:registerNowImageUrl]];
-    
-    
-    NSString *settingsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"settings"];    
-    settingsImageUrl = [settingsImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *settingsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:settingsImageUrl]];
-    
-    
-    NSString *funFactsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"funfacts"];    
-    funFactsImageUrl = [funFactsImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *funFactsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:funFactsImageUrl]];
-    
-
-    NSString *transparentImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"transparentbg"];    
-    transparentImageUrl = [transparentImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *transparentImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:transparentImageUrl]];
-    
-    
-    NSString *listHeadingImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"listheadbg"];
-    
-    listHeadingImageUrl = [listHeadingImageUrl stringByAppendingString:tmpStr] ;
-    
-    NSData *listHeadingImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:listHeadingImageUrl]];
-       
-     NSString *baseUrl = [tmpStylesDict  objectForKey:@"baseurl"];
-    
-    [customStylesDict setObject:baseUrl forKey:@"baseUrl"];
-    
-    [customStylesDict setObject:listHeadingFontName forKey:@"listHeadingFontName"];
-    [customStylesDict setObject:listHeadingFontSize forKey:@"listHeadingFontSize"];
-    [customStylesDict setObject:listHeadingFontColorDict forKey:@"listHeadingFontColor"];
-    
-    [customStylesDict setObject:listContentFontName forKey:@"listContentFontName"];
-    [customStylesDict setObject:listContentFontSize forKey:@"listContentFontSize"];
-    [customStylesDict setObject:listContentFontColorDict forKey:@"listContentFontColor"];
-    
-    [customStylesDict setObject:webLinkFontName forKey:@"webLinkFontName"];
-    [customStylesDict setObject:webLinkFontSize forKey:@"webLinkFontSize"];
-    [customStylesDict setObject:webLinkFontColorDict forKey:@"webLinkFontColor"];
-    
-    [customStylesDict setObject:titleFontName forKey:@"titleFontName"];
-    [customStylesDict setObject:titleFontSize forKey:@"titleFontSize"];
-    [customStylesDict setObject:titleFontColorDict forKey:@"titleFontColor"];
-    
-    [customStylesDict setObject:subTitleFontName forKey:@"subTitleFontName"];
-    [customStylesDict setObject:subTitleFontSize forKey:@"subTitleFontSize"];
-    [customStylesDict setObject:subTitleFontColorDict forKey:@"subTitleFontColorDict"];
-    
-    
-    [customStylesDict setObject:iconFontName forKey:@"iconFontName"];
-    [customStylesDict setObject:iconFontSize forKey:@"iconFontSize"];
-    [customStylesDict setObject:iconFontColorDict forKey:@"iconFontColorDict"];
-    
-    [customStylesDict setObject:pageHeadingFontName forKey:@"pageHeadingFontName"];
-    [customStylesDict setObject:pageHeadingFontSize forKey:@"pageHeadingFontSize"];
-    [customStylesDict setObject:pageHeadingFontColorDict forKey:@"pageHeadingFontColorDict"];
-    
-    [customStylesDict setObject:pageSubHeadingFontName forKey:@"pageSubHeadingFontName"];
-    [customStylesDict setObject:pageSubHeadingFontSize forKey:@"pageSubHeadingFontSize"];
-    [customStylesDict setObject:pageSubHeadingFontColorDict forKey:@"pageSubHeadingFontColorDict"];
-    
-
-    [customStylesDict setObject:logoImageData forKey:@"logoImagedata"];
-    [customStylesDict setObject:bgImageData forKey:@"bgImageData"];
-    [customStylesDict setObject:subBgImageData forKey:@"subBgImageData"];
-    [customStylesDict setObject:footerImageData forKey:@"footerImageData"];
-    [customStylesDict setObject:agendaImageData forKey:@"agendaImageData"];
-    [customStylesDict setObject:speakersImageData forKey:@"speakersImageData"];
-    [customStylesDict setObject:sponsersImageData forKey:@"sponsersImageData"];  
-    [customStylesDict setObject:linksImageData forKey:@"linksImageData"];
-    [customStylesDict setObject:newsImageData forKey:@"newsImageData"];
-    [customStylesDict setObject:photosImageData forKey:@"photosImageData"];
-    [customStylesDict setObject:videosImageData forKey:@"videosImageData"];
-    [customStylesDict setObject:socialImageData forKey:@"socialImageData"];
-    [customStylesDict setObject:nearbyImageData forKey:@"nearbyImageData"];
-    [customStylesDict setObject:myFavoriteData forKey:@"myFavoriteImageData"];
-    [customStylesDict setObject:aboutImageData forKey:@"aboutImageData"];
-    [customStylesDict setObject:contactUsImageData forKey:@"contactUsImageData"];
-    [customStylesDict setObject:exhibitorsImageData forKey:@"exhibitorsImageData"];
-    [customStylesDict setObject:partnersImageData forKey:@"partnersImageData"];
-    [customStylesDict setObject:eventIntroImageData forKey:@"eventIntroImageData"];
-    [customStylesDict setObject:rigisterImageData forKey:@"rigisterImageData"];
-    [customStylesDict setObject:settingsImageData forKey:@"settingsImageData"];
-    [customStylesDict setObject:funFactsImageData forKey:@"funFactsImageData"];
-    [customStylesDict setObject:transparentImageData forKey:@"transparentImageData"];
-
-
-    [customStylesDict setObject:listHeadingImageData forKey:@"listHeadingImageData"];
-    
-    [self callMainViewCreationMethod];
-    
-     
-     */
-    
-    
-    
-    ///////////// 07/09/2012
-    NSString *listHeadingFontName = @"";
-    listHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"style"];
-    
-    NSString *listHeadingFontSize =@"";
-    listHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"size"];
-    
-    
-    NSMutableDictionary *listHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"color"];
-    
-    
-    
-    NSString *listContentFontName =@"";
-    listContentFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"style"];
-    
-    NSString *listContentFontSize=@"";
-    listContentFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"size"];
-    
-    NSMutableDictionary *listContentFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"color"];
-    
-    
-    NSString *webLinkFontName= @"";
-    webLinkFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"style"];
-    
-    NSString *webLinkFontSize= @"";
-    webLinkFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"size"];
-    
-    NSMutableDictionary *webLinkFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"color"];
-    
-    
-    NSString *titleFontName= @"";
-    titleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
-    NSString *titleFontSize = @"";
-    titleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *titleFontColorDict = [[[tmpStylesDict objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
-    
-    
-    NSString *subTitleFontName= @"";
-    subTitleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
-    NSString *subTitleFontSize = @"";
-    
-    subTitleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *subTitleFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
-    
-    NSString *iconFontName= @"";
-    iconFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"style"];
-    
-    NSString *iconFontSize=@"";
-    iconFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"size"];
-    
-    NSMutableDictionary *iconFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"color"];
-    
-    
-    
-    NSString *pageHeadingFontName= @"";
-    pageHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
-    
-    NSString *pageHeadingFontSize=@"";
-    pageHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *pageHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
-    
-    
-    NSString *pageSubHeadingFontName= @"";
-    pageSubHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
-    
-    NSString *pageSubHeadingFontSize=@"";
-    pageSubHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
-    
-    NSMutableDictionary *pageSubHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
-    
-    
-}
-
+//-(void)createCustomStyleDict
+//{
+//    tmpStylesDict = [[mainResponseDictionary objectForKey:@"root"] objectForKey:@"client"] ;
+//    
+//    
+//    /*
+//
+//    NSString *listHeadingFontName = @"";
+//    listHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"style"];
+//        
+//    NSString *listHeadingFontSize =@"";
+//    listHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"size"];
+//    
+//    
+//    NSMutableDictionary *listHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"color"];
+//    
+//    
+//    
+//    NSString *listContentFontName =@"";
+//    listContentFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"style"];
+//    
+//    NSString *listContentFontSize=@"";
+//    listContentFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *listContentFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"color"];
+//    
+//    
+//    NSString *webLinkFontName= @"";
+//    webLinkFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"style"];
+//    
+//    NSString *webLinkFontSize= @"";
+//    webLinkFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *webLinkFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"color"];
+//
+//    
+//    NSString *titleFontName= @"";
+//    titleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
+//    NSString *titleFontSize = @"";
+//    titleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *titleFontColorDict = [[[tmpStylesDict objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
+//    
+//    
+//    NSString *subTitleFontName= @"";
+//    subTitleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
+//    NSString *subTitleFontSize = @"";
+//    
+//    subTitleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *subTitleFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
+//
+//    NSString *iconFontName= @"";
+//    iconFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"style"];
+//    
+//    NSString *iconFontSize=@"";
+//    iconFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"size"];
+//    
+//     NSMutableDictionary *iconFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"color"];
+//
+//        
+//    
+//    NSString *pageHeadingFontName= @"";
+//    pageHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
+//    
+//    NSString *pageHeadingFontSize=@"";
+//    pageHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *pageHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
+//    
+//    
+//    NSString *pageSubHeadingFontName= @"";
+//    pageSubHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
+//    
+//    NSString *pageSubHeadingFontSize=@"";
+//    pageSubHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *pageSubHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
+// 
+//    
+//    NSString *logoImageUrl = [[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"logo"];
+//    
+//    NSData *logoImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:logoImageUrl]];
+//    
+//    
+//    NSString *bgImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//  
+//    NSString *tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"bg"];
+//    
+//    bgImageUrl = [bgImageUrl stringByAppendingString:tmpStr] ;
+//
+//    NSData *bgImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:bgImageUrl]];
+//
+//    NSString *subBgImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"subbg"];
+//    
+//    subBgImageUrl = [subBgImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *subBgImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:subBgImageUrl]];
+//    
+//    
+//    NSString *footerImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"footerbg"];
+//    
+//    footerImageUrl = [footerImageUrl stringByAppendingString:tmpStr] ; 
+//    
+//    NSData *footerImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:footerImageUrl]];
+//    
+//    
+//    NSString *agendaImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"agenda"];
+//    
+//    agendaImageUrl = [agendaImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *agendaImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:agendaImageUrl]];
+//    
+//    
+//    NSString *speakerImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"speakers"];
+//    
+//    speakerImageUrl = [speakerImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *speakersImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:speakerImageUrl]];
+//
+//    
+//    NSString *sponserImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"sponsors"];
+//    
+//    sponserImageUrl = [sponserImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *sponsersImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:sponserImageUrl]];
+//    
+//    
+//    NSString *linksImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"links"];
+//    
+//    linksImageUrl = [linksImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *linksImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:linksImageUrl]];
+//    
+//    
+//    NSString *newsImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"news"];
+//    
+//    newsImageUrl = [newsImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *newsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:newsImageUrl]];
+//    
+//    NSString *photosImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"photos"];
+//    
+//    photosImageUrl = [photosImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *photosImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:photosImageUrl]];
+//    
+//    NSString *videosImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"videos"];
+//    
+//    videosImageUrl = [videosImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *videosImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:videosImageUrl]];
+//    
+//    NSString *socialImageUrl = [tmpStylesDict objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"social"];
+//    
+//    socialImageUrl = [socialImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *socialImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:socialImageUrl]];
+//    
+//    NSString *nearbyImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"nearby"];
+//    
+//    nearbyImageUrl = [nearbyImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *nearbyImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:nearbyImageUrl]];
+//    
+//    //////////////////////////
+//    
+//    NSString *myFavoriteImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"myfavorite"];
+//    
+//    myFavoriteImageUrl = [myFavoriteImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *myFavoriteData =[NSData dataWithContentsOfURL:[NSURL URLWithString:myFavoriteImageUrl]];
+//    
+//    
+//    NSString *aboutImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"about"];
+//    
+//    aboutImageUrl = [aboutImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *aboutImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:aboutImageUrl]];
+//    
+//    
+//    
+//    
+//    NSString *contactUsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"contact"];
+//    
+//    contactUsImageUrl = [contactUsImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *contactUsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:contactUsImageUrl]];
+//    
+//    
+//    NSString *exhibitorsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"exhibitor"];
+//    
+//    exhibitorsImageUrl = [exhibitorsImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *exhibitorsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:exhibitorsImageUrl]];
+//
+//    
+//    
+//    NSString *partnersImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"partner"];
+//    
+//    partnersImageUrl = [partnersImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *partnersImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:partnersImageUrl]];
+//    
+//    
+//    NSString *eventIntroImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"intro"];
+//    
+//    eventIntroImageUrl = [eventIntroImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *eventIntroImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:eventIntroImageUrl]];
+//
+//    
+//    NSString *registerNowImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"register"];
+//    
+//    registerNowImageUrl = [registerNowImageUrl stringByAppendingString:tmpStr] ;
+//
+//    NSData *rigisterImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:registerNowImageUrl]];
+//    
+//    
+//    NSString *settingsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"settings"];    
+//    settingsImageUrl = [settingsImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *settingsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:settingsImageUrl]];
+//    
+//    
+//    NSString *funFactsImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"funfacts"];    
+//    funFactsImageUrl = [funFactsImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *funFactsImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:funFactsImageUrl]];
+//    
+//
+//    NSString *transparentImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict  objectForKey:@"stylesheet"]objectForKey:@"transparentbg"];    
+//    transparentImageUrl = [transparentImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *transparentImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:transparentImageUrl]];
+//    
+//    
+//    NSString *listHeadingImageUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    tmpStr = [[tmpStylesDict objectForKey:@"stylesheet"]objectForKey:@"listheadbg"];
+//    
+//    listHeadingImageUrl = [listHeadingImageUrl stringByAppendingString:tmpStr] ;
+//    
+//    NSData *listHeadingImageData =[NSData dataWithContentsOfURL:[NSURL URLWithString:listHeadingImageUrl]];
+//       
+//     NSString *baseUrl = [tmpStylesDict  objectForKey:@"baseurl"];
+//    
+//    [customStylesDict setObject:baseUrl forKey:@"baseUrl"];
+//    
+//    [customStylesDict setObject:listHeadingFontName forKey:@"listHeadingFontName"];
+//    [customStylesDict setObject:listHeadingFontSize forKey:@"listHeadingFontSize"];
+//    [customStylesDict setObject:listHeadingFontColorDict forKey:@"listHeadingFontColor"];
+//    
+//    [customStylesDict setObject:listContentFontName forKey:@"listContentFontName"];
+//    [customStylesDict setObject:listContentFontSize forKey:@"listContentFontSize"];
+//    [customStylesDict setObject:listContentFontColorDict forKey:@"listContentFontColor"];
+//    
+//    [customStylesDict setObject:webLinkFontName forKey:@"webLinkFontName"];
+//    [customStylesDict setObject:webLinkFontSize forKey:@"webLinkFontSize"];
+//    [customStylesDict setObject:webLinkFontColorDict forKey:@"webLinkFontColor"];
+//    
+//    [customStylesDict setObject:titleFontName forKey:@"titleFontName"];
+//    [customStylesDict setObject:titleFontSize forKey:@"titleFontSize"];
+//    [customStylesDict setObject:titleFontColorDict forKey:@"titleFontColor"];
+//    
+//    [customStylesDict setObject:subTitleFontName forKey:@"subTitleFontName"];
+//    [customStylesDict setObject:subTitleFontSize forKey:@"subTitleFontSize"];
+//    [customStylesDict setObject:subTitleFontColorDict forKey:@"subTitleFontColorDict"];
+//    
+//    
+//    [customStylesDict setObject:iconFontName forKey:@"iconFontName"];
+//    [customStylesDict setObject:iconFontSize forKey:@"iconFontSize"];
+//    [customStylesDict setObject:iconFontColorDict forKey:@"iconFontColorDict"];
+//    
+//    [customStylesDict setObject:pageHeadingFontName forKey:@"pageHeadingFontName"];
+//    [customStylesDict setObject:pageHeadingFontSize forKey:@"pageHeadingFontSize"];
+//    [customStylesDict setObject:pageHeadingFontColorDict forKey:@"pageHeadingFontColorDict"];
+//    
+//    [customStylesDict setObject:pageSubHeadingFontName forKey:@"pageSubHeadingFontName"];
+//    [customStylesDict setObject:pageSubHeadingFontSize forKey:@"pageSubHeadingFontSize"];
+//    [customStylesDict setObject:pageSubHeadingFontColorDict forKey:@"pageSubHeadingFontColorDict"];
+//    
+//
+//    [customStylesDict setObject:logoImageData forKey:@"logoImagedata"];
+//    [customStylesDict setObject:bgImageData forKey:@"bgImageData"];
+//    [customStylesDict setObject:subBgImageData forKey:@"subBgImageData"];
+//    [customStylesDict setObject:footerImageData forKey:@"footerImageData"];
+//    [customStylesDict setObject:agendaImageData forKey:@"agendaImageData"];
+//    [customStylesDict setObject:speakersImageData forKey:@"speakersImageData"];
+//    [customStylesDict setObject:sponsersImageData forKey:@"sponsersImageData"];  
+//    [customStylesDict setObject:linksImageData forKey:@"linksImageData"];
+//    [customStylesDict setObject:newsImageData forKey:@"newsImageData"];
+//    [customStylesDict setObject:photosImageData forKey:@"photosImageData"];
+//    [customStylesDict setObject:videosImageData forKey:@"videosImageData"];
+//    [customStylesDict setObject:socialImageData forKey:@"socialImageData"];
+//    [customStylesDict setObject:nearbyImageData forKey:@"nearbyImageData"];
+//    [customStylesDict setObject:myFavoriteData forKey:@"myFavoriteImageData"];
+//    [customStylesDict setObject:aboutImageData forKey:@"aboutImageData"];
+//    [customStylesDict setObject:contactUsImageData forKey:@"contactUsImageData"];
+//    [customStylesDict setObject:exhibitorsImageData forKey:@"exhibitorsImageData"];
+//    [customStylesDict setObject:partnersImageData forKey:@"partnersImageData"];
+//    [customStylesDict setObject:eventIntroImageData forKey:@"eventIntroImageData"];
+//    [customStylesDict setObject:rigisterImageData forKey:@"rigisterImageData"];
+//    [customStylesDict setObject:settingsImageData forKey:@"settingsImageData"];
+//    [customStylesDict setObject:funFactsImageData forKey:@"funFactsImageData"];
+//    [customStylesDict setObject:transparentImageData forKey:@"transparentImageData"];
+//
+//
+//    [customStylesDict setObject:listHeadingImageData forKey:@"listHeadingImageData"];
+//    
+//    [self callMainViewCreationMethod];
+//    
+//     
+//     */
+//    
+//    
+//    
+//    ///////////// 07/09/2012
+//    NSString *listHeadingFontName = @"";
+//    listHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"style"];
+//    
+//    NSString *listHeadingFontSize =@"";
+//    listHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"size"];
+//    
+//    
+//    NSMutableDictionary *listHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listheading"] objectForKey:@"color"];
+//    
+//    
+//    
+//    NSString *listContentFontName =@"";
+//    listContentFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"style"];
+//    
+//    NSString *listContentFontSize=@"";
+//    listContentFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *listContentFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listcontent"] objectForKey:@"color"];
+//    
+//    
+//    NSString *webLinkFontName= @"";
+//    webLinkFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"style"];
+//    
+//    NSString *webLinkFontSize= @"";
+//    webLinkFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *webLinkFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"listweblink"] objectForKey:@"color"];
+//    
+//    
+//    NSString *titleFontName= @"";
+//    titleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
+//    NSString *titleFontSize = @"";
+//    titleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *titleFontColorDict = [[[tmpStylesDict objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
+//    
+//    
+//    NSString *subTitleFontName= @"";
+//    subTitleFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
+//    NSString *subTitleFontSize = @"";
+//    
+//    subTitleFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *subTitleFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
+//    
+//    NSString *iconFontName= @"";
+//    iconFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"style"];
+//    
+//    NSString *iconFontSize=@"";
+//    iconFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *iconFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"menuname"] objectForKey:@"color"];
+//    
+//    
+//    
+//    NSString *pageHeadingFontName= @"";
+//    pageHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"style"];
+//    
+//    NSString *pageHeadingFontSize=@"";
+//    pageHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *pageHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"heading"] objectForKey:@"color"];
+//    
+//    
+//    NSString *pageSubHeadingFontName= @"";
+//    pageSubHeadingFontName = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"style"];
+//    
+//    NSString *pageSubHeadingFontSize=@"";
+//    pageSubHeadingFontSize = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"size"];
+//    
+//    NSMutableDictionary *pageSubHeadingFontColorDict = [[[tmpStylesDict  objectForKey:@"stylesheet"] objectForKey:@"subheading"] objectForKey:@"color"];
+//    
+//    
+//}
+//
 
 
 -(void)offLineAppMethod
@@ -2325,8 +2326,7 @@ static NSString *cachedImageDir;
 -(void)cacheImage:(NSData*)imageData withKey :(NSString*)urlKey{
 
     if (imageCache == nil) {
-        imageCache = [[NSCache  alloc]init];
-        imageCache.countLimit = 30;
+        imageCache = [[NSMutableDictionary alloc]init];
     }
     
     if (cachedImageDir == nil) {
@@ -2344,24 +2344,28 @@ static NSString *cachedImageDir;
     if (imageCache != nil) {
        id object =  [imageCache objectForKey:[url lastPathComponent]];
         if (object != nil) {
-             NSLog(@" FILE AT URL  %@ ",[url lastPathComponent]);
+             NSLog(@" NSCACHE HIT  %@ ",[url lastPathComponent]);
             UIImage *image = [UIImage imageWithData:object];
-            return image;
-        }else{
-            
-            NSString *file = [cachedImageDir stringByAppendingPathComponent:[url lastPathComponent]];
-            NSLog(@" FILE NAME %@ ",file);
+            if (image != nil) {
+                 return image;
+            }else{
+                [imageCache removeObjectForKey:[url lastPathComponent]];
+            }
+        }
+
+        NSString *file = [cachedImageDir stringByAppendingPathComponent:[url lastPathComponent]];
+           
             if ([[NSFileManager defaultManager] fileExistsAtPath:file]) {
-               NSData *data = [[NSFileManager defaultManager] contentsAtPath:file];
+             
+            NSData *data = [[NSFileManager defaultManager] contentsAtPath:file];
             
-                if (data != nil) {
+            if (data != nil) {
+                 NSLog(@" DOCUMENTS HIT FILE NAME %@ ",file);
                     [imageCache setObject:data forKey:[url lastPathComponent]];
                     UIImage *image = [UIImage imageWithData:data];
                     return image;
-                }
-                
-            
             }
+               
         }
     }
     return nil;

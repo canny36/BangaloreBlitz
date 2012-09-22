@@ -18,55 +18,80 @@
 @synthesize activityIndicatorview;
 @synthesize speakerViewController;
 @synthesize fromSearchTable;
+
+static UIImage *defaultImage;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) 
     {
         // Initialization code
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
 
-        bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 77)];
-        [bgView.layer setCornerRadius:10.0f];
-        bgView.backgroundColor = [UIColor colorWithRed:255/255 green:255/255 blue:255/255 alpha:0.5];;
-        [bgView.layer setBorderWidth:0.1f];
-        [self addSubview:bgView];
+        self.clipsToBounds = YES;
+        self.selectionStyle = UITableViewCellSelectionStyleGray;
+        
+        UIImage *image = [UIImage imageNamed:@"list_bg.png"];
+        UIImageView *iView  = [[UIImageView alloc]initWithFrame:CGRectZero];
+        iView.image = image;
+        
+        self.backgroundView = iView;
+        
+        image = [UIImage imageNamed:@"list_over_bg.png"];
+        iView  = [[UIImageView alloc]initWithFrame:CGRectZero];
+        iView.image = image;
+        
+        self.selectedBackgroundView = iView;
+        
         
         self.backgroundColor = [UIColor clearColor];
         speakerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 70, 65)];
-        speakerImageView.layer.cornerRadius = 7.0;
-        speakerImageView.layer.masksToBounds = YES;
-        speakerImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-        speakerImageView.layer.borderWidth = 0.5;
+
         speakerImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:speakerImageView];
         
-        speakerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, 0, 180, 60)];
+        speakerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(100
+                                                                     , 0, 180, 60)];
         speakerNameLabel.numberOfLines = 3;
         speakerNameLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:speakerNameLabel];
-        
-        
-        
-               
-        speakersDetailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, 30, 190, 20)];
+                 
+        speakersDetailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 30, 190, 20)];
         speakersDetailsLabel.backgroundColor = [UIColor clearColor];
         //[self addSubview:speakersDetailsLabel];
-        
-        
+           
         selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        selectButton.frame = CGRectMake(265, 10, 30, 30);
+        selectButton.frame = CGRectMake(265, 20, 30, 30);
         [selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
         [selectButton addTarget:self action:@selector(selectButtonSetImage :) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:selectButton];
         
-        activityIndicatorview = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        activityIndicatorview.frame = CGRectMake(25, 20, 20, 20);
-        [activityIndicatorview startAnimating];
-        [speakerImageView addSubview:activityIndicatorview];
+//        activityIndicatorview = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//        activityIndicatorview.frame = CGRectMake(25, 20, 20, 20);
+//        [activityIndicatorview startAnimating];
+//        [speakerImageView addSubview:activityIndicatorview];
         
     }
     return self;
+}
+
+-(void)loadDefaultImage{
+    
+    if (defaultImage == nil) {
+        defaultImage = [UIImage imageNamed:@"default_img.png"];
+        CGSize size = defaultImage.size;
+        CGSize itemSize = CGSizeMake(size.width/2, size.height/2);
+        UIGraphicsBeginImageContext(itemSize);
+        CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
+        [defaultImage drawInRect:imageRect];
+        defaultImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+    }
+    //        imageView.backgroundColor = [UIColor  colorWithPatternImage:defaultImage];
+    
+    speakerImageView.contentMode = UIViewContentModeScaleToFill;
+    speakerImageView.image = defaultImage;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

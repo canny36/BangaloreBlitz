@@ -10,6 +10,9 @@
 #import "AppNMediaAppDelegate.h"
 #import "SpeakersViewController.h"
 #import "WebViewController.h"
+#import "UIImage+scale.h"
+#import "Util.h"
+
 @implementation SpeakersViewDetailsController
 @synthesize selectedDict;
 @synthesize selectedRow;
@@ -96,52 +99,93 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"No details available" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
-        
-    
-    
-    
-    
-    
-    
-    
+     
 }
+
 -(void)loadSpeakerImage
 {
-
-    if ([svc.offlineSpeakersImagesArr count] >0)
-    {
-        if (selectedRow < [svc.offlineSpeakersImagesArr count])
-        {
-            speakerImageView.image = [UIImage imageWithData:[svc.offlineSpeakersImagesArr objectAtIndex:selectedRow]]; 
-        } 
-        else
-        {
-        speakerImageView.image = [UIImage imageNamed:@"NoImage.png"];
-        }
-    }
-    else
-    {
-        NSString *baseUrl =   BASE_URL;
-    if ([selectedDict objectForKey:@"speakerphoto"] != nil) 
-    {
-        NSString *imageUrl = [selectedDict objectForKey:@"speakerphoto"];
-        baseUrl = [baseUrl stringByAppendingString:imageUrl];
+    NSString *logo = [selectedDict objectForKey:@"speakerphoto"];
+    
+    
+    if (logo == nil || [logo isEqualToString:@""]) {
         
+        return;
     }
-    NSURL *url=[NSURL URLWithString:baseUrl];
-    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-    if(img)
-    {
-        speakerImageView.image = img;
+
+    NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
+    [mainlogo appendString:logo];
+    NSLog(@" URL AT  %@  ",  mainlogo);
+      
+    ImageDownloader *downloader = [ImageDownloader shareInstance];
+    
+    UIImage *image = [downloader getImage:mainlogo];
+    if (image != nil) {
+         NSLog(@" HIT AT  %@  ",  mainlogo);
+        speakerImageView.image = image;
+        
+    }else{
+        
+        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:mainlogo withSize: CGSizeZero delegate:self];
+       [downloader addOperation:loader];
+                               
     }
-    else
-    {
-        speakerImageView.image = [UIImage imageNamed:@"NoImage.png"];
-    }
-    }
+    
+
+                           
+//    if ([svc.offlineSpeakersImagesArr count] >0)
+//    {
+//        if (selectedRow < [svc.offlineSpeakersImagesArr count])
+//        {
+//            speakerImageView.image = [UIImage imageWithData:[svc.offlineSpeakersImagesArr objectAtIndex:selectedRow]]; 
+//        } 
+//        else
+//        {
+//        speakerImageView.image = [UIImage imageNamed:@"NoImage.png"];
+//        }
+//    }
+//    else
+//    {
+//        NSString *baseUrl =   BASE_URL;
+//    if ([selectedDict objectForKey:@"speakerphoto"] != nil) 
+//    {
+//        NSString *imageUrl = [selectedDict objectForKey:@"speakerphoto"];
+//        baseUrl = [baseUrl stringByAppendingString:imageUrl];
+//        
+//    }
+//    NSURL *url=[NSURL URLWithString:baseUrl];
+//    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+//    if(img)
+//    {
+//        speakerImageView.image = img;
+//    }
+//    else
+//    {
+//        speakerImageView.image = [UIImage imageNamed:@"NoImage.png"];
+//    }
+//    }
 
 }
+           
+ -(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
+          
+     [self performSelectorOnMainThread:@selector(updateCell) withObject:imageLoader waitUntilDone:NO];
+  }
+
+
+-(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
+    
+}
+                           
+                            
+ -(void)updateCell:(ImageLoader*)loader{
+     
+     ImageDownloader *downloader = [ImageDownloader shareInstance];
+     UIImage *image = [downloader getImage:loader.url];
+     speakerImageView.image = image;
+     
+  }
+                            
+                           
 -(void)homeButtonClicked
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
@@ -196,42 +240,39 @@
         typeDataLabel.text = [selectedDict objectForKey:@"title"];
     }
 
-    
-    
-
-    
     speakerDeatilsTxtView.textColor = [UIColor whiteColor];
     
     
     [speakerDescriptionTxtView setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
     speakerDescriptionTxtView.textColor = [UIColor whiteColor];
     
+    UIFont *labelFont = [UIFont fontWithName: [Util subTitleFontName] size:15  ];;
+    UIColor *labelColor = [Util subTitleColor];
     
+    [byLabel setFont:labelFont];
+    byLabel.textColor = labelColor;
     
-    [byLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    byLabel.textColor = [UIColor whiteColor];
+    [byDataLabel setFont:labelFont];
+    byDataLabel.textColor = labelColor;
     
-    [byDataLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    byDataLabel.textColor = [UIColor whiteColor];
+    [countryLabel setFont:labelFont];
+    countryLabel.textColor = labelColor;
     
-    [countryLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    countryLabel.textColor = [UIColor whiteColor];
+    [countryDataLabel setFont:labelFont];
+    countryDataLabel.textColor = labelColor;
     
-    [countryDataLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    countryDataLabel.textColor = [UIColor whiteColor];
+    [typeLabel setFont:labelFont];
+    typeLabel.textColor = labelColor;
     
-    [typeLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    typeLabel.textColor = [UIColor whiteColor];
+    [typeDataLabel setFont:labelFont];
+    typeDataLabel.textColor = labelColor;
     
-    [typeDataLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    typeDataLabel.textColor = [UIColor whiteColor];
+    [descriptionLabel setFont:labelFont];
+    descriptionLabel.textColor = labelColor;
     
-    [descriptionLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    descriptionLabel.textColor = [UIColor whiteColor];
+  
     
-
-    
-    [self performSelectorInBackground:@selector(loadSpeakerImage) withObject:nil];
+//    [self performSelectorInBackground:@selector(loadSpeakerImage) withObject:nil];
 
 }
 
@@ -273,14 +314,18 @@
     }
    
     
-    speakerImageView.layer.cornerRadius = 7.0;
-    speakerImageView.layer.masksToBounds = YES;
-    speakerImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-    speakerImageView.layer.borderWidth = 0.5;
     
+       UIImage *image = [UIImage imageNamed:@"default_img.png"];
+    
+      CGSize size = image.size;
+      CGSize itemSize = CGSizeMake(size.width/2, size.height/2);
+      UIImage  *scaleimage  = [image scaleImageToSize:itemSize];
+     speakerImageView.image = scaleimage;
+    
+    [self loadSpeakerImage];
     speakerScrollView.frame = CGRectMake(10, 10, 310, 270);
     speakerScrollView.contentSize = CGSizeMake(310, 400);
-   transparentImageView.frame = CGRectMake(30, 70, 260, 250);
+ 
 
 }
 

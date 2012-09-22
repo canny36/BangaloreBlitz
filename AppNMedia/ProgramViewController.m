@@ -127,6 +127,10 @@
 
 -(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(ProgramCell*)cell{
     
+    if (imageDownloader == nil) {
+        imageDownloader =  [ImageDownloader shareInstance];
+    }
+    
     CGSize point  = CGSizeMake(100, 80);
     
     //    [NSInvocationOperation ];
@@ -143,9 +147,7 @@
         NSLog(@"FAIL AT %@ ",url);
         ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
         loader.indexPath = indexpath;
-        if (imageDownloader == nil) {
-            imageDownloader =  [ImageDownloader shareInstance];
-        }
+
         
         [imageDownloader addOperation:loader];
         [currentDownloads addObject:loader];
@@ -171,7 +173,7 @@
 
 -(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
     NSLog(@"ERROR DOWNLOADING ");
-    
+     [imageDownloader removeOperation:imageLoader];
     [currentDownloads removeObject:imageDownloader];
 }
 

@@ -11,7 +11,7 @@
 
 @class AppNMediaAppDelegate;
 @class  WebViewController;
-@interface SponsersViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface SponsersViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,ImageDownloadDelegate>
 {
     AppNMediaAppDelegate    *appDelegate;
     WebViewController *webViewController;
@@ -42,13 +42,14 @@
     NSMutableArray *currentDownloads;
     ImageDownloader *imageDownloader;
     
-    
+    NSString *categoryName;
 }
 
 -(void)assignStyles;
 -(void)homeButtonClicked;
 
 @property(nonatomic,retain)NSMutableArray *sponsorsArray;
+@property(nonatomic,retain) NSString *categoryName;
 
 
 @end

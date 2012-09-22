@@ -8,14 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "QuartzCore/QuartzCore.h"
+#import "ImageDownloader.h"
+
 @class AppNMediaAppDelegate;
 @class SpeakersViewController;
 @class  WebViewController;
-@interface SpeakersViewDetailsController : UIViewController
+
+@interface SpeakersViewDetailsController : UIViewController<ImageDownloadDelegate>
 {
      AppNMediaAppDelegate    *appDelegate;
-    SpeakersViewController   *svc;
-    WebViewController *webView;
+     SpeakersViewController   *svc;
+     WebViewController *webView;
     
     IBOutlet UIImageView *mainBgView;
     IBOutlet UIImageView  *subBgView;
@@ -23,9 +26,7 @@
     IBOutlet UITextView  *speakerDescriptionTxtView;
     IBOutlet UITextView  *speakerDeatilsTxtView;
     IBOutlet UIScrollView *speakerScrollView;
-    
-    
-    
+       
     IBOutlet UILabel *byLabel;
     IBOutlet UILabel *byDataLabel;
     

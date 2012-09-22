@@ -44,13 +44,22 @@
         return;
     }
     
+    
     NSLog(@"IMAGE DOWNLOADED %@ ",url);
     
-   NSData *imgData =  [NSData dataWithContentsOfURL:[NSURL URLWithString:self.url] ];
+    NSData *imgData =  [NSData dataWithContentsOfURL:[NSURL URLWithString:self.url] ];
+    NSError *error = [[NSError alloc]init];
+    [NSData dataWithContentsOfURL:[NSURL URLWithString:self.url] options:NSDataReadingMappedIfSafe error: &error];
     [appdelegate cacheImage:imgData withKey:self.url];
     
     
     if (cancelled) {
+        return;
+    }
+    
+    if (imgData == nil) {
+       NSLog( @"ERROR DESCRIPTIO N %@ ", [error description]);
+         [delegate onErrorLoadingImage:self];
         return;
     }
     
@@ -62,11 +71,7 @@
     }
     
     completed = YES;
-      
-
-    
-   
-    
+     
 }
 
 -(void)cancel{

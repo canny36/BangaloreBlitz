@@ -14,12 +14,12 @@
 @synthesize titleLabel;
 @synthesize byLabel;
 @synthesize bgView;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) 
     {
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
 
         self.selectionStyle = UITableViewCellSelectionStyleGray;
         
@@ -34,28 +34,21 @@
         imageView.image = image;
         
         self.selectedBackgroundView = imageView;
-        
-        
         self.backgroundColor = [UIColor clearColor];
         
-        
-        timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 280, 30)];
-        timeLabel.numberOfLines =2;
-        timeLabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:timeLabel];
-        
-        
-        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 280, 40)];
+        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 280, 35)];
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.numberOfLines = 2;
         [self addSubview:titleLabel];
         
+        timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,38, 280, 40)];
+        timeLabel.numberOfLines =2;
+        timeLabel.backgroundColor = [UIColor clearColor];
+        [self addSubview:timeLabel];
         
         byLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 55, 280, 40)];
         byLabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:byLabel];
-        
-        
+//        [self addSubview:byLabel];
         
     }
     return self;

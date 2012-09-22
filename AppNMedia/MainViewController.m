@@ -5,7 +5,7 @@
 //  Created by Saikumar Bondugula on 25/04/12.
 //  Copyright 2012 LogicTree. All rights reserved.
 //
-
+#import "RegisterNowViewController.h"
 #import "MainViewController.h"
 #import "AppNMediaAppDelegate.h"
 #import "SpeakersViewController.h"
@@ -186,6 +186,9 @@
         
         supporterViewController = [[SupportedViewController alloc] init];
         [self.navigationController pushViewController:supporterViewController  animated:YES];
+    }else if( sender == registerNowButton){
+        RegisterNowViewController *controller  = [[RegisterNowViewController alloc] init];
+        [self.navigationController pushViewController:controller animated:YES];
     }
     
 

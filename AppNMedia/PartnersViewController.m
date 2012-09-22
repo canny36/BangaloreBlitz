@@ -355,6 +355,10 @@
     CGSize point  = CGSizeMake(100, 80);
     
     //    [NSInvocationOperation ];
+    if (imageDownloader == nil) {
+        imageDownloader =  [ImageDownloader shareInstance];
+    }
+    
     
     UIImage *image =  [imageDownloader getImage:url];
     if (image != nil) {
@@ -369,10 +373,7 @@
         NSLog(@"FAIL AT %@ ",url);
         ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
         loader.indexPath = indexpath;
-        if (imageDownloader == nil) {
-          imageDownloader =  [ImageDownloader shareInstance];
-        }
-        
+ 
         [imageDownloader addOperation:loader];
         [currentDownloads addObject:loader];
         
@@ -400,7 +401,7 @@
 
 -(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
     NSLog(@"ERROR DOWNLOADING ");
-    
+    [imageDownloader removeOperation:imageLoader];
     [currentDownloads removeObject:imageDownloader];
 }
 

@@ -10,6 +10,7 @@
 #import "AppNMediaAppDelegate.h"
 #import "NearByTypestableCell.h"
 #import "NearByDetailViewController.h"
+
 @implementation NearbyViewController
 - (NSString *)dataFilePathForOfflineImages
 { 

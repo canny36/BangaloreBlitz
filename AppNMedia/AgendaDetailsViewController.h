@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "mapViews.h"
 
+
 @class AppNMediaAppDelegate;
 @class AgendaSpeakerDetailsViewController;
 @interface AgendaDetailsViewController : UIViewController <UITextViewDelegate>
@@ -21,21 +22,7 @@
     NSMutableDictionary *selectedDict;
     NSMutableArray      *speakersDetailsArray;
    
-    IBOutlet UITextView *timeTxtView;
-    IBOutlet UITextView *titleTxtView;
-    IBOutlet UILabel    *levelLabel;
-    IBOutlet UILabel    *levelDataLabel;
-    IBOutlet UILabel    *byLabel;
-    IBOutlet UITextView *byTxtView;
-    IBOutlet UILabel    *instructorLabel;
-    IBOutlet UITextView *addressTxtView;
-    IBOutlet UILabel    *roomLabel;
-    IBOutlet UITextView *roomTxtView;
-    IBOutlet UILabel    *descriptionLabel;
-    IBOutlet UITextView *descriptionTextView;
-    
-        
-    
+      
     IBOutlet UIScrollView *scrollView;
   
     //////////// Styles data
@@ -49,13 +36,14 @@
     NSString *subTitleFontSize;
     
     mapViews *openMap;
-    IBOutlet UIImageView *transparentImageView;
+   
+
 
 }
 @property(nonatomic,retain)NSMutableDictionary *selectedDict;
--(void)assignStyles;
--(void)createLabelsWithStyles;
--(void)homeButtonClicked;
--(void)agendaSpeakerDetails;
--(void)makeaMap;
+//-(void)assignStyles;
+//-(void)createLabelsWithStyles;
+//-(void)homeButtonClicked;
+//-(void)agendaSpeakerDetails;
+//-(void)makeaMap;
 @end

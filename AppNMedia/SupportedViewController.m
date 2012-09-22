@@ -196,8 +196,8 @@
 
 -(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
     NSLog(@"ERROR DOWNLOADING ");
-
-    [currentDownloads removeObject:imageDownloader];
+    [imageDownloader removeOperation:imageLoader];
+    [currentDownloads removeObject:imageLoader];
 }
 
 @end

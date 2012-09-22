@@ -7,7 +7,7 @@
 //
 
 #import "NewsTableCell.h"
-
+#import "UIImage+scale.h"
 
 @implementation NewsTableCell
 @synthesize newsImageView;
@@ -51,13 +51,16 @@ static UIImage *defaultImage;
         
         
         
-        newsImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 100, 100)];
+        newsImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 90, 80)];
         //        supporterImageView.layer.cornerRadius = 7.0;
         if (defaultImage == nil) {
-            defaultImage = [UIImage imageNamed:@"list_over_image.png"];
+//            defaultImage = [UIImage imageNamed:@"list_over_image.png"];
+            defaultImage = [UIImage imageNamed:@"default_img.png"];
+            defaultImage = [defaultImage scaleImageToSize:CGSizeMake(defaultImage.size.width/2, defaultImage.size.height/2)];
+            
         }
-        newsImageView.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
-        newsImageView.image = image;
+//        newsImageView.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
+        newsImageView.image = defaultImage;
         newsImageView.contentMode = UIViewContentModeScaleAspectFit;
        
         [self addSubview:newsImageView];

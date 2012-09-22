@@ -19,7 +19,7 @@
 @implementation SponsersViewController
 
 @synthesize sponsorsArray;
-
+@synthesize categoryName;
 
 - (NSString *)dataFilePathForOfflineImages
 { 
@@ -92,7 +92,7 @@
 
 //        NSMutableDictionary *tmpDict = [sponsersArray objectAtIndex:indexPath.row];
     
-        SPonsor *sponsor = [sponsorsArray objectAtIndex:indexPath.row];
+    SPonsor *sponsor = [sponsorsArray objectAtIndex:indexPath.row];
     
     cell.sponserTypeLabel.text = sponsor.level;
     cell.sponserNameLabel.text = sponsor.name;
@@ -154,8 +154,10 @@
     [super viewDidLoad];
     
     [self assignStyles];
+    
+    self.title = categoryName;
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Sponsors";
+    
     
     
 //    appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -236,6 +238,10 @@
     
     //    [NSInvocationOperation ];
     
+    if (imageDownloader == nil) {
+        imageDownloader =  [ImageDownloader shareInstance];
+    }
+    
     UIImage *image =  [imageDownloader getImage:url];
     if (image != nil) {
         NSLog(@"HIT AT %@ ",url);
@@ -249,9 +255,8 @@
         NSLog(@"FAIL AT %@ ",url);
         ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
         loader.indexPath = indexpath;
-        if (imageDownloader == nil) {
-            imageDownloader =  [ImageDownloader shareInstance];
-        }
+        
+  
         
         [imageDownloader addOperation:loader];
         [currentDownloads addObject:loader];
@@ -281,7 +286,7 @@
 
 -(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
     NSLog(@"ERROR DOWNLOADING ");
-    
+    [imageDownloader removeOperation:imageLoader];
     [currentDownloads removeObject:imageDownloader];
 }
 

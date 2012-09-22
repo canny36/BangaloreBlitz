@@ -12,5 +12,5 @@
 
 
 
--(void)scaleImageToSize:(CGSize)size;
+-(UIImage*)scaleImageToSize:(CGSize)size;
 @end

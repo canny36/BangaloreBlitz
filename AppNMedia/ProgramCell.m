@@ -20,6 +20,8 @@ static UIImage *defaultImage;
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
       
+        
+        self.clipsToBounds = YES;
         self.selectionStyle = UITableViewCellSelectionStyleGray;
         
         UIImage *image = [UIImage imageNamed:@"list_bg.png"];
@@ -36,13 +38,14 @@ static UIImage *defaultImage;
         
         self.backgroundColor = [UIColor clearColor];
         
-        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160,0,100, 140)];
+        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160,0,100, 100)];
         titleLabel.textAlignment = UITextAlignmentCenter;
+        titleLabel.numberOfLines =3;
         [titleLabel setBackgroundColor:[UIColor  clearColor]];
     
         [self addSubview:titleLabel];
         
-       pimageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 150, 100)];
+       pimageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 150, 80)];
 //        //        supporterImageView.layer.cornerRadius = 7.0;
         if (defaultImage == nil) {
             defaultImage = [UIImage imageNamed:@"default_img.png"];
@@ -57,7 +60,7 @@ static UIImage *defaultImage;
         }
 //        imageView.backgroundColor = [UIColor  colorWithPatternImage:defaultImage];
         
-        pimageView.contentMode = UIViewContentModeScaleAspectFit ;
+        pimageView.contentMode = UIViewContentModeScaleAspectFit;
         pimageView.image = defaultImage;
         
         [self addSubview:pimageView];

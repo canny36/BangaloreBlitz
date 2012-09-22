@@ -11,7 +11,10 @@
 #import "MyFavoritesTableCell.h"
 #import "MyFavoritesDetailsViewontroller.h"
 #import "AgendaDetailsViewController.h"
+#import "Util.h"
+
 #define kmyFavoritesTableCellHeight 60
+
 @implementation MyFavotitesViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -59,6 +62,7 @@
 {
     return 2;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section ==0)
@@ -72,34 +76,33 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 35;
+    return 30;
 }
 
 - (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section 
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, 300, 30)];
     
-    [headerView.layer setCornerRadius:10.0f];
-    [headerView.layer setBorderWidth:0.1f];
-    [headerView.layer setCornerRadius:15.0f];
-    UIImage *bgImage = [UIImage imageNamed:@"list_head_bg.png"];
-    headerView.backgroundColor = [UIColor clearColor];
-    headerView.layer.backgroundColor = [UIColor colorWithPatternImage:bgImage].CGColor;
+
+    
+    headerView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"list_head_bg.png"]];
+   
    
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 180, 30)];
     label.backgroundColor = [UIColor clearColor];
-    [label setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-    label.textColor = [UIColor whiteColor];
+    [label setFont:[UIFont fontWithName:[Util titleFontName] size:15]];
+    label.textColor = [Util titleColor];
     
     if (section ==0) 
     {
-        label.text = @"Selected Agenda";
+        label.text = @"Agenda";
     }
     else
     {
-        label.text = @"Selected Artists"; 
+        label.text = @"Artists"; 
     }
+    
     [headerView addSubview:label];
     
     return headerView;
@@ -108,7 +111,7 @@
 {
     if (indexPath.section == 0)
     {
-        return 100;
+        return 80;
     }
     else
     {
@@ -139,22 +142,27 @@
     if (cell == nil) 
     {
         cell = [[MyFavoritesTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        
+        cell.timeLabel.textColor = [Util detailTextColor];
+        cell.titleLabel.textColor = [Util subTitleColor];
+        
+        cell.byLabel.textColor = [Util detailTextColor];
+        
+        
+        [cell.timeLabel setFont:[UIFont fontWithName:[ Util detailTextFontName] size:12]];
+        
+        [cell.titleLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:14]];
+        
+        [cell.byLabel setFont:[UIFont fontWithName:[Util detailTextFontName] size:12]];
     }
     
     
-    cell.timeLabel.textColor = [UIColor whiteColor];
-    cell.titleLabel.textColor = [UIColor whiteColor];
 
-    cell.byLabel.textColor = [UIColor whiteColor];
 
     
     if (indexPath.section == 0)
     {
-        [cell.timeLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
 
-        [cell.titleLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-
-        [cell.byLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
 
         ////
         NSMutableDictionary *tmpDict = [selectedAgendaArr  objectAtIndex:indexPath.row];
@@ -164,21 +172,21 @@
         if ([tmpDict objectForKey:@"date"]!= nil)
         {
             dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"date"]];
-            dateStr = [dateStr stringByAppendingString:@" "];
+            dateStr = [dateStr stringByAppendingString:@" \n "];
         }
         if ([tmpDict objectForKey:@"starttime"] != nil)
         {
             dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"starttime"]];
-            dateStr = [dateStr stringByAppendingString:@" to\n"];
+            dateStr = [dateStr stringByAppendingString:@" - "];
             
         }
         
-        if ([tmpDict objectForKey:@"enddate"] != nil)
-        {
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"enddate"]];
-            dateStr = [dateStr stringByAppendingString:@" "];
-            
-        }
+//        if ([tmpDict objectForKey:@"enddate"] != nil)
+//        {
+//            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"enddate"]];
+//            dateStr = [dateStr stringByAppendingString:@" "];
+//            
+//        }
         
         if ([tmpDict objectForKey:@"endtime"] != nil)
         {

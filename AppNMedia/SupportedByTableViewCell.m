@@ -43,11 +43,21 @@ static UIImage *defaultImage;
         
         supporterImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 100, 80)];
 //        supporterImageView.layer.cornerRadius = 7.0;
-        if (defaultImage == nil) {
-            defaultImage = [UIImage imageNamed:@"list_over_image.png"];
+                   if (defaultImage == nil) {
+                defaultImage = [UIImage imageNamed:@"default_img.png"];
+                CGSize size = defaultImage.size;
+                CGSize itemSize = CGSizeMake(size.width/2, size.height/2);
+                UIGraphicsBeginImageContext(itemSize);
+                CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
+                [defaultImage drawInRect:imageRect];
+                defaultImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                
+                      
+//            defaultImage = [UIImage imageNamed:@"list_over_image.png"];
         }
-        supporterImageView.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
-        supporterImageView.image = image;
+//        supporterImageView.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
+        supporterImageView.image = defaultImage;
         supporterImageView.contentMode = UIViewContentModeScaleAspectFit;
        
 //        
@@ -81,7 +91,6 @@ static UIImage *defaultImage;
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.numberOfLines = 2;
         [self addSubview:titleLabel];
-        
         
 //        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 //        activityIndicator.frame = CGRectMake(40, 15, 20, 20);

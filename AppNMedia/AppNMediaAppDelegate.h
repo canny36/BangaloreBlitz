@@ -80,8 +80,8 @@
     
     BOOL isNetworkAvailable;
     
-    NSCache *imageCache;
-    
+//    NSCache *imageCache;
+    NSMutableDictionary *imageCache;
     UIImageView *footerView;
 
    

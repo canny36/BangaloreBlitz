@@ -109,6 +109,7 @@
     NSLog(@"SPONSORS ARRAY  %@",sponsorArray);
     
    SponsersViewController *controller =  [[SponsersViewController alloc]initWithNibName:@"SponsersViewController" bundle:nil];
+    controller.categoryName = [array objectAtIndex:indexPath.row];
     controller.sponsorsArray = sponsorArray;
     [self.navigationController pushViewController:controller animated:YES];
     
