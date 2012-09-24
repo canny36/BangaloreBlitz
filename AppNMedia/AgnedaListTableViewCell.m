@@ -18,11 +18,19 @@
     {
         // Initialization code
         
+        self.selectionStyle = UITableViewCellSelectionStyleGray;
+        
         UIImage *image = [UIImage imageNamed:@"list_bg.png"];
         UIImageView *imageView  = [[UIImageView alloc]initWithFrame:CGRectZero];
         imageView.image = image;
-        
         self.backgroundView = imageView;
+        
+        
+        image = [UIImage imageNamed:@"list_over_bg.png"];
+        imageView  = [[UIImageView alloc]initWithFrame:CGRectZero];
+        
+        imageView.image = image;
+        self.selectedBackgroundView = imageView;
         
         self.backgroundColor = [UIColor clearColor];
 

@@ -30,6 +30,7 @@
 #import "SupportedViewController.h"
 #import "SponsorCategoryController.h"
 #import "ProgramViewController.h"
+#import "ViewController.h"
 
 @implementation UINavigationBar (UINavigationBarCategory)  
 
@@ -120,8 +121,12 @@
     }
     else if (sender  == photosButton )
     {
-        photosViewController = [[PhotosViewController alloc] init];
-        [self.navigationController pushViewController:photosViewController animated:YES];
+        
+        
+        NSLog(@" PHOTOS BUTTON ");
+        ViewController *controller = [[ViewController alloc]initWithNibName:@"PhotoViewController" bundle:nil];
+//        photosViewController = [[PhotosViewController alloc] init];
+         [self.navigationController pushViewController:controller animated:YES];
     }
     else if(sender == exhibitorsButton)
     {
@@ -262,7 +267,7 @@
      CGPoint offset =dashBordScrollView.contentOffset;
     
     [pageControl setCurrentPage:(offset.x/320)];
-    NSLog(@" CUrrent OFFset %f origin.x = %f  ", dashBordScrollView.contentOffset.x  , dashBordScrollView.frame.origin.x);
+//    NSLog(@" CUrrent OFFset %f origin.x = %f  ", dashBordScrollView.contentOffset.x  , dashBordScrollView.frame.origin.x);
 
     
 }

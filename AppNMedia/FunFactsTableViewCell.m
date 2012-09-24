@@ -19,13 +19,22 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self)
     {
-        // Initialization code
+       
+        self.clipsToBounds = YES;
+        self.selectionStyle = UITableViewCellSelectionStyleGray;
         
-        bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 3, 300, 75)];
-        [bgView.layer setCornerRadius:10.0f];
-        bgView.backgroundColor = [UIColor colorWithRed:255/255 green:255/255 blue:255/255 alpha:0.5];;
-        [bgView.layer setBorderWidth:0.1f];
-        [self addSubview:bgView];
+        UIImage *image = [UIImage imageNamed:@"list_bg.png"];
+        UIImageView *iView  = [[UIImageView alloc]initWithFrame:CGRectZero];
+        iView.image = image;
+        
+        self.backgroundView = iView;
+        
+        image = [UIImage imageNamed:@"list_over_bg.png"];
+        iView  = [[UIImageView alloc]initWithFrame:CGRectZero];
+        iView.image = image;
+        
+        self.selectedBackgroundView = iView;
+        
         self.backgroundColor = [UIColor clearColor];
         
         descriptionTextView = [[UITextView alloc] initWithFrame:CGRectMake(100, 5, 180, 70)];

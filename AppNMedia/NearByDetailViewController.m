@@ -9,9 +9,10 @@
 #import "NearByDetailViewController.h"
 #import "AppNMediaAppDelegate.h"
 #import "NearByTableViewCell.h"
+#import "UIImage+scale.h"
 #import "WebViewController.h"
-#define kNearbyTableCellHeight 130
 
+#define kNearbyTableCellHeight 120
 @implementation NearByDetailViewController
 @synthesize selectedArray;
 @synthesize selectedType;
@@ -179,7 +180,7 @@
     if (cell == nil) 
     {
         
-        cell = [[NearByTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        cell = [[NearByTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
         
         
     }
@@ -275,81 +276,7 @@
     cell.phoneNumber.textColor = [UIColor whiteColor];
     
     cell.typeLabel.textColor = [UIColor whiteColor];
-    
     cell.addresstxtView.textColor = [UIColor whiteColor];
-    
-//    if (appDelegate.runAppInOffline == NO)
-//    {
-//        BOOL network = [appDelegate networkCheckingMethod];
-//        if (network == YES)
-//        {
-//            
-//            NSString *baseUrl = BASE_URL;
-//            if ([tmpDict objectForKey:@"logo"] != nil) 
-//            {
-//                NSString *imageUrl = [tmpDict objectForKey:@"logo"];
-//                baseUrl = [baseUrl stringByAppendingString:imageUrl];
-//                
-//            }
-//            
-//            [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
-//        }
-//        else
-//        {
-//            if ([offlineNearByImagesArr count] == [nearbyArray count]) 
-//            {
-//                
-//                for (int i = 0; i<[nearbyArray count]; i++)
-//                {
-//                    NSMutableDictionary *tmpDict1 = [nearbyArray objectAtIndex:i];
-//                    if ([tmpDict1 objectForKey:@"nearbyid"])
-//                    {
-//                        if ([[tmpDict1 objectForKey:@"nearbyid"] intValue] == [[tmpDict objectForKey:@"nearbyid"] intValue]) 
-//                        {
-//                            NSData *tmpData = [offlineNearByImagesArr objectAtIndex:i];
-//                            cell.locationImageView.image = [UIImage imageWithData:tmpData];
-//                        }
-//                    }
-//                }    
-//            }
-//            else
-//            {
-//                cell.locationImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-//                
-//            }
-//            [cell.activityIndicator stopAnimating];
-//           
-//        }    
-//    
-//    }
-//    else
-//    {
-//        if ([offlineNearByImagesArr count] == [nearbyArray count]) 
-//        {
-//                  
-//        for (int i = 0; i<[nearbyArray count]; i++)
-//        {
-//            NSMutableDictionary *tmpDict1 = [nearbyArray objectAtIndex:i];
-//            if ([tmpDict1 objectForKey:@"nearbyid"])
-//            {
-//                if ([[tmpDict1 objectForKey:@"nearbyid"] intValue] == [[tmpDict objectForKey:@"nearbyid"] intValue]) 
-//                {
-//                NSData *tmpData = [offlineNearByImagesArr objectAtIndex:i];
-//                cell.locationImageView.image = [UIImage imageWithData:tmpData];
-//                }
-//            }
-//        }    
-//        }
-//        else
-//        {
-//            cell.locationImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-//
-//        }
-//        [cell.activityIndicator stopAnimating];
-//          
-//    }
-    
-    
     
     NSString *logo =  [tmpDict objectForKey:@"logo"];
     
@@ -424,8 +351,7 @@
         [nearbyArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"nearbylist"] objectForKey:@"nearby"]];
     }   
 
-    //NSLog(@"%@",selectedArray);
-    
+   
     offlineNearByImagesArr = [[NSMutableArray alloc] initWithCapacity:0];
     NSString *filePath  = [self dataFilePathForOfflineImages];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
@@ -436,26 +362,26 @@
         {
             [offlineNearByImagesArr addObjectsFromArray:[tmpDict objectForKey:@"offlineNearByImagesArr"]];
         }
-        
     }        
     
     
-    int height = [selectedArray count] * kNearbyTableCellHeight;
+//    int height = [selectedArray count] * kNearbyTableCellHeight;
+//    
+//    if (height > 270)
+//    {
+//        height = 270;
+//    }
     
-    if (height > 270)
-    {
-        height = 270;
-    }
-    
-    nearbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 5, 300, height)];
+    nearbyTableView = [[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310,280)];
     nearbyTableView.delegate = self;
     nearbyTableView.dataSource = self;
     nearbyTableView.showsVerticalScrollIndicator = NO;
     nearbyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     nearbyTableView.backgroundColor = [UIColor clearColor];
+    
     [self.view addSubview:nearbyTableView];
 
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
+//    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
     
     
 }
@@ -487,6 +413,7 @@
     UIImage *image =  [imageDownloader getImage:url];
     if (image != nil) {
         NSLog(@"HIT AT %@ ",url);
+//        image   = [image scaleImageToSize:CGSizeMake(95, 95)];
         //        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
         
         cell.locationImageView.image = image;
@@ -496,7 +423,6 @@
         NSLog(@"FAIL AT %@ ",url);
         ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
         loader.indexPath = indexpath;
-
         
         [imageDownloader addOperation:loader];
         [currentDownloads addObject:loader];

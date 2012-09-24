@@ -241,8 +241,6 @@
     }
 
     speakerDeatilsTxtView.textColor = [UIColor whiteColor];
-    
-    
     [speakerDescriptionTxtView setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
     speakerDescriptionTxtView.textColor = [UIColor whiteColor];
     

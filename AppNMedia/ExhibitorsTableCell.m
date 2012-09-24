@@ -40,17 +40,15 @@
         
         
         exhibitorsImageView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 10, 110, 60)];
-        exhibitorsImageView.layer.cornerRadius = 7.0;
-        exhibitorsImageView.layer.masksToBounds = YES;
-        exhibitorsImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-        exhibitorsImageView.contentMode = UIViewContentModeScaleToFill;
-        exhibitorsImageView.layer.borderWidth = 0.5;
+//        exhibitorsImageView.layer.cornerRadius = 7.0;
+//        exhibitorsImageView.layer.masksToBounds = YES;
+//        exhibitorsImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+        exhibitorsImageView.contentMode = UIViewContentModeScaleAspectFit;
+//        exhibitorsImageView.layer.borderWidth = 0.5;
         
         [self addSubview:exhibitorsImageView];
         
-        
-        
-        nameLabel = [[UITextView alloc] initWithFrame:CGRectMake(120, 5, 170, 60)];
+         nameLabel = [[UITextView alloc] initWithFrame:CGRectMake(120, 5, 170, 60)];
         nameLabel.editable = NO;
         nameLabel.userInteractionEnabled = NO;
         nameLabel.backgroundColor = [UIColor clearColor];

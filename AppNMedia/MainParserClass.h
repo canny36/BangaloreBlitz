@@ -10,7 +10,8 @@
 @class AppNMediaAppDelegate;
 @class EventsParserClass;
 @class EventsListViewController;
-@interface MainParserClass : NSObject 
+#import "BBEventParser.h"
+@interface MainParserClass : NSObject <ParserDelegate>
 {
     AppNMediaAppDelegate *appDelegate;
     EventsParserClass    *eventParserClass;

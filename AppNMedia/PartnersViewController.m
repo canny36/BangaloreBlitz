@@ -13,7 +13,7 @@
 #import "ImageDownloader.h"
 #import "Util.h"
 
-#define kPartnersTableCellHeight 100
+#define kPartnersTableCellHeight 80
 @implementation PartnersViewController
 
 - (NSString *)dataFilePathForOfflineImages

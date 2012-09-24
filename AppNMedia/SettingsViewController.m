@@ -8,6 +8,7 @@
 
 #import "SettingsViewController.h"
 #import "AppNMediaAppDelegate.h"
+#import "Util.h"
 
 @implementation SettingsViewController
 - (NSString *)dataFilePathForRunOfflineOnline
@@ -180,11 +181,11 @@
 
 -(void)assignStyles
 {
-    titleFontName =@"Helvetica-Bold";
-    titleFontSize = @"14";
+    titleFontName = [Util subTitleFontName];
+    titleFontSize = @"15";
     
-    subTitleFontName =@"Helvetica";
-    subTitleFontSize = @"12";
+    subTitleFontName = [Util detailTextFontName];
+    subTitleFontSize = @"15";
     
    
     [onlineOfflinelabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
@@ -370,9 +371,6 @@
         }
 
     }
-        
-    
-    
     
     pickerViewSourceArray = [[NSMutableArray alloc] initWithObjects:@"6",@"10",@"15",@"30",@"60", nil];
     selectedTimeValue = [pickerViewSourceArray objectAtIndex:0
@@ -392,7 +390,9 @@
     [self.view addSubview:toolBarpicker];
     
     UIBarButtonItem *donepicker= [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleBordered target:self action:@selector(doneButActionpicker)];
+    
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] ;
+    
     UIBarButtonItem *cancel= [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:self action:@selector(cancelAction)];
     
     toolBarpicker.items =  [NSArray arrayWithObjects:cancel,space,donepicker,nil];

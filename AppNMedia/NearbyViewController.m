@@ -10,6 +10,7 @@
 #import "AppNMediaAppDelegate.h"
 #import "NearByTypestableCell.h"
 #import "NearByDetailViewController.h"
+#import "Util.h"
 
 @implementation NearbyViewController
 - (NSString *)dataFilePathForOfflineImages
@@ -64,18 +65,12 @@
     {
 
         cell = [[NearByTypestableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
-        
-        
     }
     
-    cell.selectionStyle = UITableViewCellSelectionStyleNone; 
-           
-               
-        cell.nameLabel.textColor = [UIColor whiteColor];
+       cell.selectionStyle = UITableViewCellSelectionStyleNone; 
+       cell.nameLabel.textColor = [Util subTitleColor];
         
-        [cell.nameLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-
-        
+        [cell.nameLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
         cell.selectionStyle = UITableViewCellSelectionStyleNone; 
         cell.nameLabel.text = [nearByTypesArray objectAtIndex:indexPath.row];
 
@@ -93,10 +88,6 @@
     nearByDetailViewController.selectedArray =[self mainNearByTableCreation];
     nearByDetailViewController.selectedType = selectedType;
     [self.navigationController pushViewController:nearByDetailViewController animated:YES];
-    
-    
-    
-    
 }
 
 

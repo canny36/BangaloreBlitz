@@ -11,6 +11,8 @@
 #import "EventsParserClass.h"
 #import "EventsListViewController.h"
 #import "XMLToDictionary.h"
+#import "DownloadUtil.h"
+
 @implementation MainParserClass
 @synthesize resultDict;
 
@@ -99,9 +101,19 @@
             url = [url stringByAppendingString:@"&os=1"];
         }
         
+//        [[DownloadUtil instance] download:url delegate:self];
         [eventParserClass callMainParsingMethod:url];
    
     }
+}
+
+
+-(void)onSuccess : (NSDictionary*)responseDict{
+    NSLog(@"BBPARSER RESPONSE %@ ",responseDict);
+}
+
+-(void)onError :(NSError**)error{
+      NSLog(@"BBPARSER RESPONSE ERROR ");
 }
 
 -(void)startUserInteractions

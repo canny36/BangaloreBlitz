@@ -155,6 +155,7 @@
     
     [self assignStyles];
     
+    categoryName = [categoryName stringByAppendingString:@" Sponsors"];
     self.title = categoryName;
     // Do any additional setup after loading the view from its nib.
     

@@ -11,6 +11,8 @@
 @implementation UIImage (scale)
 
 -(UIImage*)scaleImageToSize:(CGSize)size{
+    
+    
     UIImage *scaledImage  = nil;
     
     CGSize itemSize = CGSizeMake(size.width, size.height);

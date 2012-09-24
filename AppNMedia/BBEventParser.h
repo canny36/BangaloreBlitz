@@ -20,12 +20,20 @@
 @interface BBEventParser : NSOperation{
     
     id<ParserDelegate> delegate;
-    NSString *url;
+    NSString *_url;
     BOOL isStarted;
     BOOL isFinished;
     BOOL cancel;
+    int tag;
     
     
 }
+
+-(id)initWithUrl:(NSString*)urlString delegate:(id<ParserDelegate>)_delegate;
+
+@property(nonatomic,readonly) NSString *url;
+@property int tag;
+
+
 
 @end

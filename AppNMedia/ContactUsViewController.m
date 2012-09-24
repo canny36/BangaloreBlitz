@@ -9,6 +9,7 @@
 #import "ContactUsViewController.h"
 #import "AppNMediaAppDelegate.h"
 #import "WebViewController.h"
+#import "Util.h"
 
 @implementation ContactUsViewController
 
@@ -103,10 +104,10 @@
 }
 -(void)assignStyles
 {
-    titleFontName =@"Helvitica-Bold";
-    titleFontSize = @"14";
-    subTitleFontName = @"Helvitica";
-    subTitleFontSize = @"12";
+    titleFontName = [Util subTitleFontName];
+    titleFontSize = @"15";
+    subTitleFontName = [Util detailTextFontName];
+    subTitleFontSize = @"15";
        
     [emailidLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
     emailidLabel.textColor = [UIColor whiteColor];
@@ -170,6 +171,7 @@
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    
     [textView resignFirstResponder];
     if (textView.tag == 0)
     {

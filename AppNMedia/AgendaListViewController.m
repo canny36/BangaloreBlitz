@@ -189,7 +189,6 @@
               
     }
     
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     cell.agendaNameTxtView.textColor = [Util subTitleColor];
     
@@ -230,9 +229,9 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    
-    
+
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+   
     if (tableView == agendaTableView)
     {
         agendaViewController = [[AgendaViewController alloc] init];
@@ -331,7 +330,7 @@
     
     [searchTableView setSeparatorColor:[UIColor clearColor]];
 
-//    [self.view addSubview:searchTableView];
+//    ;
     //transparentImageView.frame = CGRectMake(30, 70, 260, 250);
 
 
@@ -392,6 +391,7 @@
     searchString = searchBar.text;
     [self mainSearchMethod];
 }
+
 -(void)mainSearchMethod
 {
     
@@ -500,27 +500,33 @@
 }
 -(void)createSearchTable
 {
+    NSLog(@" AGENDA DEARCH COUNT %d ",[searchArr count]);;
     if ([searchArr count]>0)
     {
+      if (![searchTableView isDescendantOfView:self.view]) {
+             [self.view addSubview:searchTableView];
+         }
+       
         agendaTableView.hidden = YES;
         [searchTableView reloadData];
-        int height  = kAgendaTableCellHeight * [searchArr count];
-        if (height > 220)
-        {
-            height = 220;
-        }
-        
-        CGRect viewFrame1 = CGRectMake(10, 60, 300, height);
+//        int height  = kAgendaTableCellHeight * [searchArr count];
+//        if (height > 220)
+//        {
+//            height = 220;
+//        }
+//        
+        CGRect viewFrame1 = agendaTableView.frame;
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationBeginsFromCurrentState:YES];
         [UIView setAnimationDuration: 0.7];
+        [searchTableView setHidden:NO];
         [searchTableView setFrame:viewFrame1];
         [UIView commitAnimations]; 
     }
     else
     {
         [searchTableView reloadData];
-        CGRect viewFrame1 = CGRectMake(10, 500, 300, 200);
+        CGRect viewFrame1 = agendaTableView.frame;
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationBeginsFromCurrentState:YES];
         [UIView setAnimationDuration: 0.7];

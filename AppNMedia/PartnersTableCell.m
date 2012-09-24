@@ -8,6 +8,7 @@
 
 #import "PartnersTableCell.h"
 #import "PartnersViewController.h"
+#import "UIImage+scale.h"
 
 @implementation PartnersTableCell
 @synthesize phoneNoButton;
@@ -43,14 +44,12 @@ static UIImage *defaultImage;
         
         self.backgroundColor = [UIColor clearColor];
         
-        nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 3, 180, 50)];
-        nameLabel.numberOfLines = 3;
+        nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(110,10, 180, 42)];
+        nameLabel.numberOfLines = 2;
         nameLabel.backgroundColor =[UIColor clearColor];
         [self addSubview:nameLabel];
         
-               
-        
-        phoneLabel = [[UILabel alloc]initWithFrame:CGRectMake(110, 62, 170, 20)];
+        phoneLabel = [[UILabel alloc]initWithFrame:CGRectMake(110, 52, 170, 21)];
         phoneLabel.backgroundColor = [UIColor clearColor];
         phoneLabel.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture =
@@ -64,10 +63,11 @@ static UIImage *defaultImage;
         partnerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 100, 100)];
         //        supporterImageView.layer.cornerRadius = 7.0;
         if (defaultImage == nil) {
-            defaultImage = [UIImage imageNamed:@"list_over_image.png"];
+            defaultImage = [UIImage imageNamed:@"default_img.png"];
+            defaultImage = [defaultImage scaleImageToSize:CGSizeMake( defaultImage.size.width, defaultImage.size.height)];
         }
-       partnerImageView.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
-        partnerImageView.image = image;
+//       partnerImageView.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
+        partnerImageView.image = defaultImage;
         partnerImageView.contentMode = UIViewContentModeScaleAspectFit;
         
         

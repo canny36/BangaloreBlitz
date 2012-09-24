@@ -55,7 +55,7 @@
         agendaDetailsLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:agendaDetailsLabel];
         
-        byLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 55, 270, 40)];
+        byLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 270, 40)];
         byLabel.numberOfLines = 2;
         byLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:byLabel];

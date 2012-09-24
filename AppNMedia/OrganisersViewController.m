@@ -10,6 +10,7 @@
 #import "AppNMediaAppDelegate.h"
 #import "Organizer.h"
 #import "OrganiserTableViewCell.h"
+#import "Util.h"
 
 #define kfunFactsTableCellHeight 80.0
 @interface OrganisersViewController ()
@@ -58,6 +59,10 @@
     if (cell == nil)
     {
         cell = [[OrganiserTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        cell.titleLabel.font = [UIFont fontWithName:[Util subTitleFontName] size:15];
+        cell.titleLabel.textColor = [Util subTitleColor];
+        cell.descriptionLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+        cell.descriptionLabel.textColor = [Util detailTextColor];
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -112,7 +117,7 @@
     
        
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
-    self.title = @"ORGANISERS";
+    self.title = @"Organizers";
     [self assignStyles];
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];
     self.navigationItem.rightBarButtonItem = homeButton;

@@ -145,6 +145,8 @@ static NSString *cachedImageDir;
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
+    
+    NSLog(@" APPLICATION BECOME ACTIVE ");
     selectedEvent = 0;
     [self mainMethod];
     
@@ -240,11 +242,7 @@ static NSString *cachedImageDir;
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    /*
-     Called when the application is about to terminate.
-     Save data if appropriate.
-     See also applicationDidEnterBackground:.
-     */
+    
 }
 
 ///////////////////////////////////////
@@ -477,7 +475,7 @@ static NSString *cachedImageDir;
     [self tokenIdMethodStoreMethod];
     
     //[self loadCompleteOffLineImages];
-    //[self performSelector:@selector(callOrNotDataSynchMethod) withObject:nil afterDelay:60];
+   [self performSelector:@selector(callOrNotDataSynchMethod) withObject:nil afterDelay:60];
     
    
 
@@ -515,7 +513,7 @@ static NSString *cachedImageDir;
         }
         else
         {
-           // NSLog(@"no net work ");
+            
         }
         
     }
@@ -525,10 +523,6 @@ static NSString *cachedImageDir;
 
 -(void)callWebServices
 {
-    
-    if (mainParser != nil)
-    {
-    }
     
     mainParser = [[MainParserClass alloc] init];
     
@@ -2009,6 +2003,7 @@ static NSString *cachedImageDir;
     }
     
 }
+
 -(void)dataSynchMethod :(NSString *)selectedTime
 {
     NSString *timeStr = selectedTime;
@@ -2022,9 +2017,8 @@ static NSString *cachedImageDir;
         timer = nil;
     }
     
-    timer = [NSTimer scheduledTimerWithTimeInterval:time target:self selector:@selector(callDataSynchMethod) userInfo:nil repeats:YES];
-    
-    
+    timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(callDataSynchMethod) userInfo:nil repeats:YES];
+     
 }
 
 -(void)callDataSynchMethod
@@ -2033,6 +2027,7 @@ static NSString *cachedImageDir;
     
     if (network == YES)
     {
+        NSLog(@"called DATA SYNC METHOD ");
             fromDataSynchMethod = YES;
             mainParser = [[MainParserClass alloc] init];
     }

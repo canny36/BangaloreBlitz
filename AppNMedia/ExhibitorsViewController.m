@@ -10,7 +10,7 @@
 #import "AppNMediaAppDelegate.h"
 #import "ExhibitorsTableCell.h"
 #import "WebViewController.h"
-#define kExhibitorsTableCellHeight 150
+#define kExhibitorsTableCellHeight 100
 
 @implementation ExhibitorsViewController
 - (NSString *)dataFilePathForOfflineImages
@@ -174,13 +174,11 @@
             cell.exhibitorsImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
         }
         [cell.activityIndicator stopAnimating]; 
-
     }
 
-    
-    
     return cell;
 }
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -205,10 +203,8 @@
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
+
 }
 
 #pragma mark - View lifecycle
@@ -216,6 +212,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     [self assignStyles];
@@ -249,42 +246,29 @@
         {
             [offlineExhibitorsImagesArr addObjectsFromArray:[tmpDict objectForKey:@"offlineExhibitorsImagesArr"]];
         }
-        
-//        [tmpDict release];
-    }
-    
-    
-    int height = [exhibitorsArray count] * kExhibitorsTableCellHeight;
-    
-    if (height > 270)
-    {
-        height = 270;
-    }
 
+    }
     
-    exhibitorsTableView =[[UITableView alloc] initWithFrame:CGRectMake(10, 5, 300, height)];
+    exhibitorsTableView =[[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310,280)];
     exhibitorsTableView.dataSource= self;
     exhibitorsTableView.delegate = self;
     exhibitorsTableView.backgroundColor = [UIColor clearColor];
     exhibitorsTableView.showsVerticalScrollIndicator= NO;
-    exhibitorsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    exhibitorsTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    exhibitorsTableView.separatorColor = [UIColor clearColor];
     [self.view addSubview:exhibitorsTableView];
-    [subBgView setFrame:CGRectMake(5, 5, 310, height+15)];
-   transparentImageView.frame = CGRectMake(30, 70, 260, 250);
-
+    [subBgView setFrame:CGRectMake(5, 5, 310,290)];
     
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 

@@ -120,6 +120,8 @@
 	//NSLog(@"error occured in login response");
 }
 
+
+
 -(void)parseAdOnDifferentThread
 {
     
@@ -154,7 +156,7 @@
     else
     {
     
-        if ([resultDict objectForKey:@"result"]== nil)
+        if ([resultDict objectForKey:@"result"]!= nil)
         {
             [appDelegate nodataResponseMethod];
         }

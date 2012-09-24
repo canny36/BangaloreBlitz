@@ -104,7 +104,7 @@
     // Do any additional setup after loading the view from its nib.
     
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
-    self.title = @"SUPPORTED BY";
+    self.title = @"Supported By";
     
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];
     self.navigationItem.rightBarButtonItem = homeButton;

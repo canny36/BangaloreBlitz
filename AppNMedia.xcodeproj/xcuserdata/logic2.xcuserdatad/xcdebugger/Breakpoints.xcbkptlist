@@ -21,64 +21,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "AppNMedia/AppNMediaAppDelegate.m"
-         timestampString = "369899540.392097"
+         timestampString = "370086642.039186"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "451"
-         endingLineNumber = "451"
-         landmarkName = "-callMainViewCreationMethod"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "AppNMedia/AppNMediaAppDelegate.m"
-         timestampString = "369899540.392097"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "479"
-         endingLineNumber = "479"
-         landmarkName = "-callMainViewCreationMethod"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "AppNMedia/SpeakersViewController.m"
-         timestampString = "369919542.986913"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "562"
-         endingLineNumber = "562"
-         landmarkName = "-viewDidLoad"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "AppNMedia/AppNMediaAppDelegate.m"
-         timestampString = "369929464.951934"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "2344"
-         endingLineNumber = "2344"
+         startingLineNumber = "2348"
+         endingLineNumber = "2348"
          landmarkName = "-getImageWithUrl:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "AppNMedia/MainParserClass.m"
-         timestampString = "369998747.259218"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "74"
-         endingLineNumber = "74"
-         landmarkName = "-callAllEventsInfoParsingMethod"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

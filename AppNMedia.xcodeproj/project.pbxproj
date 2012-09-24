@@ -47,6 +47,11 @@
 		CE8BBAA9160322450097A44D /* list_over_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = CE8BBAA7160322430097A44D /* list_over_bg.png */; };
 		CE8BBAB41603726D0097A44D /* image_rounder.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CE8BBAB3160372670097A44D /* image_rounder.jpg */; };
 		CE9DCCD3160DF03B00C40438 /* BBEventParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9DCCD2160DF03A00C40438 /* BBEventParser.m */; };
+		CE9DCCD7160DF2C900C40438 /* DownloadUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9DCCD6160DF2C800C40438 /* DownloadUtil.m */; };
+		CE9DCCDE160E00A700C40438 /* BBParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9DCCDD160E00A700C40438 /* BBParser.m */; };
+		CE9DE44A160F276D00FFADDA /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9DE447160F276D00FFADDA /* MyImageView.m */; };
+		CE9DE44B160F276D00FFADDA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9DE449160F276D00FFADDA /* ViewController.m */; };
+		CE9DE44D160F39E000FFADDA /* PhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE9DE44C160F39DF00FFADDA /* PhotoViewController.xib */; };
 		CE9E079616084D8A00BFE04C /* UIImage+scale.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9E079516084D8A00BFE04C /* UIImage+scale.m */; };
 		CE9E079A16086D5B00BFE04C /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9E079916086D5B00BFE04C /* Util.m */; };
 		CE9E871715FE760000C61F12 /* SupportedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9E871515FE760000C61F12 /* SupportedViewController.m */; };
@@ -217,6 +222,15 @@
 		CE8BBAB3160372670097A44D /* image_rounder.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = image_rounder.jpg; sourceTree = "<group>"; };
 		CE9DCCD1160DF03A00C40438 /* BBEventParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBEventParser.h; sourceTree = "<group>"; };
 		CE9DCCD2160DF03A00C40438 /* BBEventParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBEventParser.m; sourceTree = "<group>"; };
+		CE9DCCD5160DF2C800C40438 /* DownloadUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadUtil.h; sourceTree = "<group>"; };
+		CE9DCCD6160DF2C800C40438 /* DownloadUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadUtil.m; sourceTree = "<group>"; };
+		CE9DCCDC160E00A700C40438 /* BBParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBParser.h; sourceTree = "<group>"; };
+		CE9DCCDD160E00A700C40438 /* BBParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBParser.m; sourceTree = "<group>"; };
+		CE9DE446160F276D00FFADDA /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
+		CE9DE447160F276D00FFADDA /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
+		CE9DE448160F276D00FFADDA /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CE9DE449160F276D00FFADDA /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CE9DE44C160F39DF00FFADDA /* PhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoViewController.xib; sourceTree = "<group>"; };
 		CE9E079416084D8A00BFE04C /* UIImage+scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+scale.h"; sourceTree = "<group>"; };
 		CE9E079516084D8A00BFE04C /* UIImage+scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+scale.m"; sourceTree = "<group>"; };
 		CE9E079816086D5B00BFE04C /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
@@ -472,6 +486,18 @@
 			path = "iphone 4S_graphics 2";
 			sourceTree = "<group>";
 		};
+		CE9DE444160F270A00FFADDA /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				CE9DE446160F276D00FFADDA /* MyImageView.h */,
+				CE9DE447160F276D00FFADDA /* MyImageView.m */,
+				CE9DE448160F276D00FFADDA /* ViewController.h */,
+				CE9DE449160F276D00FFADDA /* ViewController.m */,
+				CE9DE44C160F39DF00FFADDA /* PhotoViewController.xib */,
+			);
+			name = Photos;
+			sourceTree = "<group>";
+		};
 		CECC9DCE160C68C600692740 /* tbl html */ = {
 			isa = PBXGroup;
 			children = (
@@ -497,6 +523,13 @@
 				CED2BCCB15FE1FFA00F86165 /* inner_head_bg.png */,
 			);
 			path = "Theme-images";
+			sourceTree = "<group>";
+		};
+		CED50562161081D900EEC144 /* Register_html */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Register_html;
 			sourceTree = "<group>";
 		};
 		F0393DBA1547C69E00411CF6 = {
@@ -535,6 +568,8 @@
 		F0393DCF1547C69E00411CF6 /* AppNMedia */ = {
 			isa = PBXGroup;
 			children = (
+				CED50562161081D900EEC144 /* Register_html */,
+				CE9DE444160F270A00FFADDA /* Photos */,
 				CECC9DCE160C68C600692740 /* tbl html */,
 				CECC9DCA160C660A00692740 /* tbl html */,
 				CEE9BF69160B5C6400002D93 /* Default.png */,
@@ -702,8 +737,12 @@
 				CE9E079916086D5B00BFE04C /* Util.m */,
 				CE9E079416084D8A00BFE04C /* UIImage+scale.h */,
 				CE9E079516084D8A00BFE04C /* UIImage+scale.m */,
+				CE9DCCDC160E00A700C40438 /* BBParser.h */,
+				CE9DCCDD160E00A700C40438 /* BBParser.m */,
 				CE9DCCD1160DF03A00C40438 /* BBEventParser.h */,
 				CE9DCCD2160DF03A00C40438 /* BBEventParser.m */,
+				CE9DCCD5160DF2C800C40438 /* DownloadUtil.h */,
+				CE9DCCD6160DF2C800C40438 /* DownloadUtil.m */,
 				F047FA91154AC25700DE3537 /* Parsing Support */,
 				F0393DD01547C69E00411CF6 /* Supporting Files */,
 			);
@@ -898,6 +937,7 @@
 				CECC9DD3160C68C600692740 /* contactus.png in Resources */,
 				CECC9DD4160C68C600692740 /* reg.png in Resources */,
 				CECC9DD5160C68C600692740 /* index.html in Resources */,
+				CE9DE44D160F39E000FFADDA /* PhotoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -975,6 +1015,10 @@
 				CEE9BF70160B5C6400002D93 /* ProgramViewController.m in Sources */,
 				CE48B62E160C61DF0075D2C8 /* RegisterNowViewController.m in Sources */,
 				CE9DCCD3160DF03B00C40438 /* BBEventParser.m in Sources */,
+				CE9DCCD7160DF2C900C40438 /* DownloadUtil.m in Sources */,
+				CE9DCCDE160E00A700C40438 /* BBParser.m in Sources */,
+				CE9DE44A160F276D00FFADDA /* MyImageView.m in Sources */,
+				CE9DE44B160F276D00FFADDA /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1050,6 +1094,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Srinivas Sai (HU29MBEE58)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Srinivas Sai (HU29MBEE58)";
@@ -1070,6 +1115,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6D050DF9-07C1-479B-B351-B5024927437F";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "armv7 ";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1078,6 +1124,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Srinivas Sai (HU29MBEE58)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Srinivas Sai (HU29MBEE58)";
@@ -1097,6 +1144,7 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 ";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

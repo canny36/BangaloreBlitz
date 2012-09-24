@@ -124,7 +124,8 @@ static AgendaItem *agendaItem;
     
     CGSize size = [agendaItem.title sizeWithFont:[UIFont fontWithName:[Util titleFontName] size:16] constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  , 10, 300, size.height+10)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  , 10, 290, size.height+10)];
+    
     titleLabel.font = [UIFont fontWithName:[Util titleFontName] size:16];
     titleLabel.textColor = [Util titleColor];
     titleLabel.textAlignment = UITextAlignmentCenter;
@@ -241,7 +242,7 @@ static AgendaItem *agendaItem;
       startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
-    agendaItem.description  = @"DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION ";
+//    agendaItem.description  = @"DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION ";
     
     size= [agendaItem.description sizeWithFont:detailFont constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
     

@@ -8,6 +8,7 @@
 
 #import "NearByTableViewCell.h"
 #import "NearByDetailViewController.h"
+#import "Util.h"
 
 @implementation NearByTableViewCell
 
@@ -47,6 +48,8 @@
         nameLabel.numberOfLines =2;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.textAlignment = UITextAlignmentLeft;
+        nameLabel.font = [UIFont fontWithName:[Util subTitleFontName] size:15];
+        nameLabel.textColor = [Util subTitleColor];
         [self addSubview:nameLabel];
         
                 
@@ -54,31 +57,35 @@
         phoneNumber.backgroundColor = [UIColor clearColor];
         phoneNumber.textAlignment = UITextAlignmentLeft;
         phoneNumber.userInteractionEnabled = YES;
+        phoneNumber.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+        phoneNumber.textColor = [Util detailTextColor];
         UITapGestureRecognizer *tapGesture =
         [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makePhoneCall)]     ;
         [phoneNumber addGestureRecognizer:tapGesture];
         [self addSubview:phoneNumber];
         
-        addresstxtView = [[UITextView alloc] initWithFrame:CGRectMake(100, 60, 190, 45)];
+        addresstxtView = [[UILabel alloc] initWithFrame:CGRectMake(10, 60,250, 70)];
         addresstxtView.backgroundColor = [UIColor clearColor];
         addresstxtView.textAlignment = UITextAlignmentLeft;
-        addresstxtView.editable = NO;
+        addresstxtView.numberOfLines = 3;
+        addresstxtView.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+        addresstxtView.textColor = [Util detailTextColor];
         addresstxtView.userInteractionEnabled = YES;
         
         UITapGestureRecognizer *txtTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeaMap)];
         [addresstxtView addGestureRecognizer:txtTapGesture];
         [self addSubview:addresstxtView];
         
-        typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 95, 200, 20)];
+        typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,110, 200, 20)];
         typeLabel.backgroundColor = [UIColor clearColor];
+        typeLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+        typeLabel.textColor = [Util detailTextColor];
         typeLabel.textAlignment = UITextAlignmentLeft;
-        [self addSubview:typeLabel];
-        
-        
-        
-        
-        locationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 95, 95)];
+//        [self addSubview:typeLabel];
+
+        locationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5,1, 100, 85)];
         locationImageView.contentMode = UIViewContentModeScaleAspectFit;
+
 
         
         UITapGestureRecognizer *tapGesture1 =
@@ -136,6 +143,21 @@
 
     // Configure the view for the selected state
 }
+
+
+//-(void)layoutSubviews{
+//    [super layoutSubviews];
+//    CGRect frame =  self.imageView.frame;
+//    frame.size.width = 95;
+//    frame.size.height = 95;
+//    self.imageView.frame = frame;
+//    
+//    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//    
+//    frame = self.textLabel.frame;
+//    self.textLabel.numberOfLines = 4;
+//    
+//}
 
 - (void)dealloc
 {

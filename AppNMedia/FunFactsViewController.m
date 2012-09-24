@@ -10,14 +10,18 @@
 #import "AppNMediaAppDelegate.h"
 #import "FunFactsTableViewCell.h"
 #import "WebViewController.h"
+
 #define kfunFactsTableCellHeight 80.0
+
 @implementation FunFactsViewController
+
 - (NSString *)dataFilePathForOfflineImages
 { 
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 	return [documentsDirectory stringByAppendingPathComponent:@"offlineImages.plist"];
 }
+
 -(void)makeaMap :(int )selectedAddress
 {
     NSMutableDictionary *tmpDict = [funFactsArray objectAtIndex:selectedAddress];
@@ -210,6 +214,7 @@
     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     self.title = @"Fun Facts";
+    
     [self assignStyles];
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
@@ -242,35 +247,28 @@
         
     }
 
-    
-    int height = kfunFactsTableCellHeight * [funFactsArray count];
-    if (height > 270)
-    {
-        height = 270;
-    }
-    funFactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 10, 300, height)];
+    funFactsTableView = [[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310,280)];
     funFactsTableView.dataSource = self;
     funFactsTableView.delegate = self;
     funFactsTableView.backgroundColor = [UIColor clearColor];
     funFactsTableView.showsVerticalScrollIndicator = NO;
-    [funFactsTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [funFactsTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    funFactsTableView.separatorColor = [UIColor clearColor];
     [self.view addSubview:funFactsTableView];
     
-    [subBgView setFrame:CGRectMake(5, 5, 310, 280)];
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
+    [subBgView setFrame:CGRectMake(0, 5, 320 , 290)];
 
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
+
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 

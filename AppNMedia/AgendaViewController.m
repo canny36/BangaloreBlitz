@@ -130,7 +130,7 @@
     if (tableView == agendaTableView)
     {
        
-        return 60;
+        return 30;
     }
     else
     {
@@ -142,7 +142,7 @@
 {
     if (tableView == agendaTableView) 
     {
-        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width - 5,60)] ;
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width - 5,25)] ;
         
     
         
@@ -162,14 +162,14 @@
         dateLabel.text = dateString;
         [headerView addSubview:dateLabel];
         
-        UILabel *addressTxtView = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, 270, 40)];
-        addressTxtView.backgroundColor = [UIColor clearColor];
-        [addressTxtView setFont:[UIFont fontWithName:[Util titleFontName] size:13]];
-
-        addressTxtView.textColor = [Util titleColor];
-        addressTxtView.text = [tmpDict objectForKey:@"address"];
-        
-      [headerView addSubview:addressTxtView];
+//        UILabel *addressTxtView = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, 270, 40)];
+//        addressTxtView.backgroundColor = [UIColor clearColor];
+//        [addressTxtView setFont:[UIFont fontWithName:[Util titleFontName] size:13]];
+//
+//        addressTxtView.textColor = [Util titleColor];
+//        addressTxtView.text = [tmpDict objectForKey:@"address"];
+//        
+//      [headerView addSubview:addressTxtView];
         
         
         return headerView;
