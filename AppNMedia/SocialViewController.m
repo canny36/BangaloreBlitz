@@ -10,8 +10,13 @@
 #import "AppNMediaAppDelegate.h"
 #import "SocialTableCell.h"
 #import "WebViewController.h"
+#import "Util.h"
+#import "ImageLoader.h"
+
 #define kSocialTableCellHeight 80.0
+
 @implementation SocialViewController
+
 - (NSString *)dataFilePathForOfflineImages
 { 
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
@@ -32,16 +37,8 @@
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
--(void)assignStyles
-{
-    titleFontName =@"Helvetica-Bold";
-    titleFontSize = @"14";
-    
-    subTitleFontName =@"Helvetica";
-    subTitleFontSize = @"12";
 
 
-}
 #pragma mark Table View datasource and delegate methods 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -54,84 +51,28 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SocialTableCell *cell;
+   CustomTableViewCell *cell = nil;
     NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
-    cell = (SocialTableCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
     {
-        cell = [[SocialTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
-        NSMutableDictionary *tmpDict = [socialArray objectAtIndex:indexPath.row];
-        
-        [cell.socialNameLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-        cell.socialNameLabel.text = [tmpDict objectForKey:@"medianame"];
-      
-        cell.socialNameLabel.textColor = [UIColor whiteColor];
-        
-        [cell.socialUrlTxtView setFont:[UIFont fontWithName:weblinkFontName size:[weblinkFontSize intValue]]];
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        [cell setDefaultImage:nil];
+    }
+    
+    NSMutableDictionary *tmpDict = [socialArray objectAtIndex:indexPath.row];
 
+    cell.textLabel.text = [tmpDict objectForKey:@"medianame"];
+    
+    NSString *logo =  [tmpDict objectForKey:@"logo"];
+    NSLog(@" LOGO %@   ",logo);
+    if (logo != nil && ![logo isEqualToString:@""]) {
         
-        cell.socialUrlTxtView.textColor = [UIColor blueColor];
-        
-        //cell.socialUrlTxtView.text = [tmpDict objectForKey:@"meidaurl"];
-
-        
-        
-        
-        if (appDelegate.runAppInOffline == NO)
-        {
-            BOOL network = [appDelegate networkCheckingMethod];
-            
-            if (network == YES)
-            {
-                
-                NSString *baseUrl = BASE_URL;
-                if ([tmpDict objectForKey:@"logo"] != nil) 
-                {
-                    NSString *imageUrl = [tmpDict objectForKey:@"logo"];
-                    baseUrl = [baseUrl stringByAppendingString:imageUrl];
-                    
-                }
-                
-                [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
-            }
-            else
-            {
-                
-                if ([offlineSocialImagesArr count] == [socialArray count])
-                {
-                    NSData *tmpData = [offlineSocialImagesArr objectAtIndex:indexPath.row];
-                    cell.socilImageView.image = [UIImage imageWithData:tmpData];
-                }
-                else
-                {
-                    cell.socilImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-                }
-                [cell.activityIndicator stopAnimating];
-                
-            }
-
-        }
-        else
-        {
-            if ([offlineSocialImagesArr count] == [socialArray count])
-            {
-                NSData *tmpData = [offlineSocialImagesArr objectAtIndex:indexPath.row];
-                cell.socilImageView.image = [UIImage imageWithData:tmpData];
-            }
-            else
-            {
-                cell.socilImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-            }
-            [cell.activityIndicator stopAnimating];
-        }
-        
-                
-        
-   
-       
-        
-        
+        NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
+        [mainlogo appendString:logo];
+        NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
+        [self loadImageAtIndexpath:indexPath urlString:mainlogo cell : cell];
     }
     return cell;
 }
@@ -142,22 +83,33 @@
     
     NSMutableDictionary *tmpDict = [socialArray objectAtIndex:indexPath.row];
     
-    if ([tmpDict objectForKey:@"meidaurl"]!=nil)
-    {
-     
     NSString *urlString = [tmpDict objectForKey:@"meidaurl"];
     
-    webViewController = [[WebViewController alloc] init];
+    NSLog(@" MEDIA URL %@ ",urlString);
     
-    webViewController.urlString = urlString;
+    if (urlString !=nil)
+    {
+     
     
-    [self presentModalViewController:webViewController animated:YES];
+        webViewController = [[WebViewController alloc] init];
+        
+        webViewController.urlString = urlString;
+        
+        [self presentModalViewController:webViewController animated:YES];
     
     }
     
 }
 
 
+- (BOOL) validateUrl: (NSString *) candidate {
+    
+    NSString *urlRegEx =
+    @"(http|https)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|/]((\\w)*|([0-9]*)|([-|_])*))+";
+    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", urlRegEx];
+    
+    return [urlTest evaluateWithObject:candidate];
+}
 
 - (void)dealloc
 {
@@ -183,8 +135,6 @@
     
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
-
-    [self assignStyles];
     
     socialArray = [[NSMutableArray alloc] initWithCapacity:0];
     if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"sociallist"] objectForKey:@"social"] isKindOfClass:[NSDictionary class]]) 
@@ -197,38 +147,16 @@
     }    
     
     
-    offlineSocialImagesArr = [[NSMutableArray alloc] initWithCapacity:0];
-    
-    NSString *filePath  = [self dataFilePathForOfflineImages];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-    {
-        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-        
-        if ([tmpDict objectForKey:@"offLineSocialImagesArry"]!= nil)
-        {
-            [offlineSocialImagesArr addObjectsFromArray:[tmpDict objectForKey:@"offLineSocialImagesArry"]];
-        }
-        
-    }
-       
-
-    int height = [socialArray count] * kSocialTableCellHeight;
-    if (height > 270)
-    {
-        height = 270;
-    }
-    socialTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 5, 300, height)];
+    socialTableView = [[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310, 290)];
     socialTableView.delegate = self;
     socialTableView.dataSource = self;
     socialTableView.showsVerticalScrollIndicator = NO;
     socialTableView.backgroundColor = [UIColor clearColor];
-    socialTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    socialTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    socialTableView.separatorColor
+    =[UIColor clearColor];
     [self.view addSubview:socialTableView];
-    [subBgView setFrame:CGRectMake(5, 5, 310, height+15)];
     
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
-
 
 }
 
@@ -244,5 +172,14 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+
+-(void)updateCell:(ImageLoader*)loader{
+    
+    [socialTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+    
+}
+
 
 @end

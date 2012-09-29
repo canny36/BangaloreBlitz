@@ -37,8 +37,8 @@
 //    navBar.tintColor = [UIColor colorWithRed:0.3 green:0.1 blue:0.8 alpha:1];
     
     
-    [tableView setBackgroundColor:[UIColor clearColor]];
-    [tableView setSeparatorColor:[UIColor clearColor]];
+    [_tableView setBackgroundColor:[UIColor clearColor]];
+    [_tableView setSeparatorColor:[UIColor clearColor]];
     sponsorDict  = [SPonsor collectSponsors];
     array =  [sponsorDict allKeys];
 }
@@ -57,37 +57,18 @@
     return 0;
 }
 
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
-
-- (UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSString *reuseIdentifier = @"reuseidentifier";
     
-   UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
+   CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-        UIImage *image = [UIImage imageNamed:@"list_bg.png"];
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
-        imageView.image = image;
-        cell.backgroundView = imageView ;
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        
-        image = [UIImage imageNamed:@"list_over_bg.png"];
-        imageView  = [[UIImageView alloc]initWithFrame:CGRectZero];
-        imageView.image = image;
-        
-        cell.selectedBackgroundView = imageView;
-        
+        cell = [[CustomTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+       
     }
   
     cell.textLabel.text = [array objectAtIndex:indexPath.row];
-    cell.textLabel.font = [UIFont fontWithName:[Util titleFontName] size:15 ] ;
-
-    
-    cell.textLabel.textColor = [Util titleColor];
-
     return cell;
 }
 
@@ -102,7 +83,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    [_tableView deselectRowAtIndexPath:indexPath animated:NO];
     
    NSMutableArray *sponsorArray = [sponsorDict objectForKey:[array objectAtIndex:indexPath.row]];
     

@@ -7,18 +7,21 @@
 //
 
 #import "PhotosTableViewCell.h"
+#import "UIImage+scale.h"
 
 @implementation PhotosTableViewCell
 @synthesize PhotoImageView;
 @synthesize nameLabel;
 @synthesize activityIndicator;
+
+static UIImage *defaultImage;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) 
     {
 
-        
         self.selectionStyle = UITableViewCellSelectionStyleGray;
         
         UIImage *image = [UIImage imageNamed:@"list_bg.png"];
@@ -35,26 +38,32 @@
         
         self.backgroundColor = [UIColor clearColor];
         
+        if (defaultImage == nil) {
+           defaultImage = [UIImage imageNamed:@"default_img.png"];
+           defaultImage = [defaultImage scaleImageToSize:CGSizeMake(defaultImage.size.width, defaultImage.size.height)];
+        }
+        PhotoImageView.image  = defaultImage;
+        
         PhotoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 10, 100, 80)];
-        PhotoImageView.layer.cornerRadius = 7.0;
-        PhotoImageView.userInteractionEnabled =YES;
-        PhotoImageView.layer.masksToBounds = YES;
-        PhotoImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-        PhotoImageView.contentMode = UIViewContentModeScaleAspectFill;
-        PhotoImageView.layer.borderWidth = 0.5;
+//        PhotoImageView.layer.cornerRadius = 7.0;
+//        PhotoImageView.userInteractionEnabled =YES;
+//        PhotoImageView.layer.masksToBounds = YES;
+//        PhotoImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+//        PhotoImageView.contentMode = UIViewContentModeScaleAspectFill;
+//        PhotoImageView.layer.borderWidth = 0.5;
         
         [self addSubview:PhotoImageView];        
         
               
-        nameLabel  = [[UILabel alloc] initWithFrame:CGRectMake(110, 10, 150, 80)];
+        nameLabel  = [[UILabel alloc] initWithFrame:CGRectMake(120, 10, 150, 80)];
         nameLabel.numberOfLines  =5;
         nameLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:nameLabel];
         
-        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        activityIndicator.frame = CGRectMake(40, 25, 20, 20);
-        [activityIndicator startAnimating];
-        [PhotoImageView addSubview:activityIndicator];
+//        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//        activityIndicator.frame = CGRectMake(40, 25, 20, 20);
+//        [activityIndicator startAnimating];
+//        [PhotoImageView addSubview:activityIndicator];
         
         
         

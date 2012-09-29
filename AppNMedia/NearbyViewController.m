@@ -59,20 +59,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-        NearByTypestableCell *cell = (NearByTypestableCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+       CustomTableViewCell *cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) 
     {
 
-        cell = [[NearByTypestableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
     }
-    
-       cell.selectionStyle = UITableViewCellSelectionStyleNone; 
-       cell.nameLabel.textColor = [Util subTitleColor];
-        
-        [cell.nameLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone; 
-        cell.nameLabel.text = [nearByTypesArray objectAtIndex:indexPath.row];
+ 
+        cell.textLabel.text = [nearByTypesArray objectAtIndex:indexPath.row];
 
     return cell;
         
@@ -112,12 +107,8 @@
     // Do any additional setup after loading the view from its nib.
     self.title = @"Near By";
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
-    
-    UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
-    self.navigationItem.rightBarButtonItem = homeButton;
 
-    
-    [self assignStyles];
+
     
     
     nearbyArray = [[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"nearbylist"] objectForKey:@"nearby"];
@@ -161,12 +152,8 @@
        
     }
     
-    
-    if ([nearByTypesArray count]>0)
-    {
-        
-        
-        nearByTypesTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 5, 300, 270)];
+  
+        nearByTypesTableView = [[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310, 290)];
         nearByTypesTableView.delegate = self;
         nearByTypesTableView.dataSource = self;
         nearByTypesTableView.showsVerticalScrollIndicator = NO;
@@ -174,13 +161,8 @@
         nearByTypesTableView.separatorColor = [UIColor clearColor];
         nearByTypesTableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:nearByTypesTableView];
-        [subBgView setFrame:CGRectMake(5, 5, 310, 280)];
 
-
-    }
-    
     [nearByTypesArray sortUsingSelector:@selector(caseInsensitiveCompare:)];
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
 
     
 }

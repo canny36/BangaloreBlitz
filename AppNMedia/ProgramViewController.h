@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "ImageDownloader.h"
+#import "CannyViewController.h"
 
-@interface ProgramViewController : UIViewController<ImageDownloadDelegate>{
+@interface ProgramViewController : CannyViewController<ImageDownloadDelegate>{
     
     IBOutlet UITableView *_tableView;
     NSMutableArray *programs;
+
     
-    NSMutableArray *currentDownloads;
-    ImageDownloader *imageDownloader;
 }
 
 @end

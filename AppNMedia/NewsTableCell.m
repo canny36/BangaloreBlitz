@@ -44,12 +44,10 @@ static UIImage *defaultImage;
         [titleLabel setBackgroundColor:[UIColor  clearColor]];
         [self addSubview:titleLabel];
         
-        descriptionTextView = [[UILabel alloc] initWithFrame:CGRectMake(100, 10, 200, 80)];
-        descriptionTextView.numberOfLines = 3;
+        descriptionTextView = [[UILabel alloc] initWithFrame:CGRectMake(100, 10, 200, 100)];
+        descriptionTextView.numberOfLines = 4;
         descriptionTextView.backgroundColor = [UIColor clearColor];
         [self addSubview:descriptionTextView];
-        
-        
         
         newsImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 90, 80)];
         //        supporterImageView.layer.cornerRadius = 7.0;

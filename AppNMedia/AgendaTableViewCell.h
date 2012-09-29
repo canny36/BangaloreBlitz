@@ -8,26 +8,27 @@
 
 #import <UIKit/UIKit.h>
 #import "QuartzCore/QuartzCore.h"
+#import "AgendaItem.h"
+#import "CustomTableViewCell.h"
+
 @class  AgendaViewController;
-@interface AgendaTableViewCell : UITableViewCell
+
+@interface AgendaTableViewCell : CustomTableViewCell
 {
-    AgendaViewController *agendaViewController;
-    UIView *bgView;
-    UILabel *agendaNameLabel;
-    UILabel *agendaDetailsLabel;
-    UILabel *byLabel;
-    UIButton    *selectButton;
-    BOOL         buttonSelected;
-    int         selectedSection;
+    AgendaViewController *_agendaViewController;
+
+    UIButton *_selectButton;
+    BOOL _buttonSelected;
+
 
 }
-@property(nonatomic,retain)UILabel *agendaNameLabel;
-@property(nonatomic,retain)UILabel *byLabel;
-@property(nonatomic,retain)UILabel *agendaDetailsLabel;
-@property(nonatomic,retain)UIButton    *selectButton;
+
+@property(nonatomic,retain) UIButton *selectButton;
 @property BOOL    buttonSelected;
-@property   int   selectedSection;
+
 @property(nonatomic,retain)AgendaViewController *agendaViewController;
--(void)selectButtonSetImage:(UIButton *)sender;
+
+-(void)cellWithAgendaItem:(AgendaItem*)item;
++(int)heightForItem:(AgendaItem*)item;
 
 @end

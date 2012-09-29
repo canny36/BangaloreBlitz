@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F0393DC41547C69E00411CF6"
                BuildableName = "APPlusMedia.app"
-               BlueprintName = "AppNMedia"
-               ReferencedContainer = "container:AppNMedia.xcodeproj">
+               BlueprintName = "BangaloreItBiz"
+               ReferencedContainer = "container:BangaloreItBiz.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,8 +34,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F0393DC41547C69E00411CF6"
             BuildableName = "APPlusMedia.app"
-            BlueprintName = "AppNMedia"
-            ReferencedContainer = "container:AppNMedia.xcodeproj">
+            BlueprintName = "BangaloreItBiz"
+            ReferencedContainer = "container:BangaloreItBiz.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -53,8 +53,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F0393DC41547C69E00411CF6"
             BuildableName = "APPlusMedia.app"
-            BlueprintName = "AppNMedia"
-            ReferencedContainer = "container:AppNMedia.xcodeproj">
+            BlueprintName = "BangaloreItBiz"
+            ReferencedContainer = "container:BangaloreItBiz.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -71,8 +71,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F0393DC41547C69E00411CF6"
             BuildableName = "APPlusMedia.app"
-            BlueprintName = "AppNMedia"
-            ReferencedContainer = "container:AppNMedia.xcodeproj">
+            BlueprintName = "BangaloreItBiz"
+            ReferencedContainer = "container:BangaloreItBiz.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CannyViewController.h"
 
 @class AppNMediaAppDelegate;
-@interface NearbyViewController : UIViewController <UITableViewDelegate,UITableViewDataSource>
+@interface NearbyViewController : CannyViewController <UITableViewDelegate,UITableViewDataSource>
 {
      AppNMediaAppDelegate    *appDelegate;
-    IBOutlet UIImageView *mainBgView;
-    IBOutlet UIImageView *subBgView;
+
     
     UITableView *nearbyTableView;
     NSMutableArray *nearbyArray;

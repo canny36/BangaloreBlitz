@@ -31,7 +31,7 @@
 #import "SponsorCategoryController.h"
 #import "ProgramViewController.h"
 #import "ViewController.h"
-
+#import "GalleryViewController.h"
 @implementation UINavigationBar (UINavigationBarCategory)  
 
 - (void)drawRect:(CGRect)rect  
@@ -121,12 +121,10 @@
     }
     else if (sender  == photosButton )
     {
+      
+        GalleryViewController *controller = [[GalleryViewController alloc]init];
+        [self.navigationController pushViewController:controller animated:YES];
         
-        
-        NSLog(@" PHOTOS BUTTON ");
-        ViewController *controller = [[ViewController alloc]initWithNibName:@"PhotoViewController" bundle:nil];
-//        photosViewController = [[PhotosViewController alloc] init];
-         [self.navigationController pushViewController:controller animated:YES];
     }
     else if(sender == exhibitorsButton)
     {
@@ -214,16 +212,14 @@
 #pragma mark - View lifecycle
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self.navigationController.navigationBar setHidden:YES]; 
-    //[self performSelector:@selector(hideNavigationBar) withObject:nil afterDelay:0.001];
 
-
-//    dashBordScrollView.frame = CGRectMake(0, -40, 320, 325);
-//    inFirstPage = YES;
-//    [dashBordScrollView setContentSize:CGSizeMake(640, 300)];
-//    dashBordScrollView.showsHorizontalScrollIndicator = NO;
-
+       [self.navigationController.navigationBar setHidden:YES];
 }
+
+- (void)viewDidAppear:(BOOL)animated{
+     
+}
+
 -(void)hideNavigationBar
 {
     [self.navigationController.navigationBar setHidden:YES]; 
@@ -233,6 +229,7 @@
 {
     [self.navigationController.navigationBar setHidden:NO]; 
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -242,10 +239,11 @@
     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     
-    [dashBordScrollView setContentSize:CGSizeMake(980, 250)];
+    [dashBordScrollView setContentSize:CGSizeMake(640, 250)];
     dashBordScrollView.showsHorizontalScrollIndicator = NO;
     dashBordScrollView.pagingEnabled = YES;
     [dashBordScrollView setClipsToBounds:YES];
+    
 }
 
 - (void)viewDidUnload

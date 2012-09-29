@@ -14,6 +14,9 @@
 @synthesize socialUrlTxtView;
 @synthesize socilImageView;
 @synthesize activityIndicator;
+
+static UIImage *defaultImage;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -29,26 +32,21 @@
         self.backgroundView = imageView;
         
         image = [UIImage imageNamed:@"list_over_bg.png"];
-        imageView  = [[UIImageView alloc]initWithFrame:CGRectZero];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
         imageView.image = image;
         
         self.selectedBackgroundView = imageView;
-        
-        
         self.backgroundColor = [UIColor clearColor];
-        
+
+        if (defaultImage == nil) {
+            defaultImage = [UIImage imageNamed:@"default_img.png"];
+        }
         
         socilImageView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 10, 100, 60)];
-        socilImageView.layer.cornerRadius = 7.0;
-        socilImageView.layer.masksToBounds = YES;
-        socilImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-        socilImageView.contentMode = UIViewContentModeScaleAspectFill;
-        socilImageView.layer.borderWidth = 0.5;
-        
+        socilImageView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:socilImageView];
+        socilImageView.image = defaultImage;
 
-        
-        
         socialNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(120, 10, 170, 40)];
         socialNameLabel.backgroundColor = [UIColor clearColor];
         socialNameLabel.numberOfLines =2;
@@ -59,38 +57,15 @@
         socialUrlTxtView.userInteractionEnabled = NO;
         socialUrlTxtView.backgroundColor = [UIColor clearColor];
         [self addSubview:socialUrlTxtView];
-        
-        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        activityIndicator.frame = CGRectMake(40, 15, 20, 20);
-        [activityIndicator startAnimating];
-        [socilImageView addSubview:activityIndicator];
-        
 
     }
     return self;
-}
--(void)assignImage:(NSString *)path
-{
-     @autoreleasepool {
-    NSURL *url=[NSURL URLWithString:path];
-    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-    if(img)
-    {
-        socilImageView.image = img;
-    }
-    else
-    {
-        socilImageView.image = [UIImage imageNamed:@"NoImage.png"];
-    }
-    [activityIndicator stopAnimating];
-     }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
 
-    // Configure the view for the selected state
 }
 
 - (void)dealloc

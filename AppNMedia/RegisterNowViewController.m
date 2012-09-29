@@ -33,7 +33,7 @@
     
     webview.backgroundColor = [UIColor grayColor] ;
     
-    
+    [webview setScalesPageToFit:YES];
     NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:@"tbl html"]];
     [webview loadRequest:[NSURLRequest requestWithURL:url]];
     

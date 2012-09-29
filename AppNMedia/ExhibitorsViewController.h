@@ -8,32 +8,24 @@
 
 #import <UIKit/UIKit.h>
 #import "mapViews.h"
+#import "CannyViewController.h"
+
 @class AppNMediaAppDelegate;
 @class  WebViewController;
-@interface ExhibitorsViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface ExhibitorsViewController : CannyViewController <UITableViewDataSource,UITableViewDelegate,ImageDownloadDelegate>
 {
+  
     AppNMediaAppDelegate    *appDelegate;
     WebViewController *webViewController;
-    IBOutlet UIImageView *mainBgView;
-    IBOutlet UIImageView *subBgView;
+
     
     UITableView *exhibitorsTableView;
     NSMutableArray *exhibitorsArray;
-    //////////// Styles data
-    NSString *titleColor;
-    NSString *subTitleColor;
-    
-    NSString *titleFontName;
-    NSString *subTitleFontName;
-    
-    NSString *titleFontSize;
-    NSString *subTitleFontSize;
-    //////// offline 
-    NSMutableArray *offlineExhibitorsImagesArr;
+
     mapViews *openMap;
-    IBOutlet UIImageView *transparentImageView;
+
+    
 }
--(void)assignStyles;
--(void)homeButtonClicked;
--(void)makeaMap :(int )selectedAddress;
+
+
 @end

@@ -8,71 +8,50 @@
 
 #import "AgendaTableViewCell.h"
 #import "AgendaViewController.h"
+#import "AgendaItem.h"
+#import "Util.h"
 
 @implementation AgendaTableViewCell
-@synthesize agendaNameLabel;
-@synthesize agendaDetailsLabel;
-@synthesize byLabel;
-@synthesize buttonSelected;
-@synthesize agendaViewController;
-@synthesize selectButton;
-@synthesize selectedSection;
+
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self)
     {
-        // Initialization code
-        self.selectionStyle = UITableViewCellSelectionStyleGray;
-
-//        bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 3, 300, 95)];
-//        [bgView.layer setCornerRadius:10.0f];
-//        bgView.backgroundColor = [UIColor colorWithRed:255/255 green:255/255 blue:255/255 alpha:0.5];;
-//        [bgView.layer setBorderWidth:0.1f];
-//        [self addSubview:bgView];
-        
-        UIImage *image = [UIImage imageNamed:@"list_bg.png"];
-        UIImageView *imageView  = [[UIImageView alloc]initWithFrame:CGRectZero];
-        imageView.image = image;
-        
-        self.backgroundView = imageView;
-        
-        image = [UIImage imageNamed:@"list_over_bg.png"];
-        imageView  = [[UIImageView alloc]initWithFrame:CGRectZero];
-        imageView.image = image;
-        
-        self.selectedBackgroundView = imageView;
-        
-        self.backgroundColor = [UIColor clearColor];
-      
-        agendaNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 250, 30)];
-        agendaNameLabel.numberOfLines = 2;
-        agendaNameLabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:agendaNameLabel];
-        
-        agendaDetailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 270, 40)];
-        agendaDetailsLabel.numberOfLines = 2;
-        agendaDetailsLabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:agendaDetailsLabel];
-        
-        byLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 270, 40)];
-        byLabel.numberOfLines = 2;
-        byLabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:byLabel];
-
-
-        
-        selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        selectButton.frame = CGRectMake(265, 20, 30, 30);
-        [selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-        
-
-        [selectButton addTarget:self action:@selector(selectButtonSetImage :) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:selectButton];
-        
+            
     }
     return self;
 }
+
++(int)heightForItem:(AgendaItem*)item{
+      
+    NSString *dateStr = @"";
+    
+    if (item.startTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" \n "];
+        dateStr = [dateStr stringByAppendingString:item.startTime];
+        
+    }
+    
+    if (item.endTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" - "];
+        dateStr = [dateStr stringByAppendingString:item.endTime];
+    }
+    
+    
+    CGSize size1 = [item.title sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:15] constrainedToSize:CGSizeMake(230 ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    CGSize size2 = [dateStr sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:13] constrainedToSize:CGSizeMake(230, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    return size1.height + size2.height +10;
+    
+}
+
+
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
@@ -80,29 +59,49 @@
 
     // Configure the view for the selected state
 }
--(void)selectButtonSetImage:(UIButton *)sender
-{
-    if (buttonSelected == NO)
-    {
-        buttonSelected = YES;
-        [selectButton setImage:[UIImage imageNamed:@"gold_star.png"] forState:UIControlStateNormal];
-        [agendaViewController addOrDeleteFromMyFavorites:sender.tag checkMark:buttonSelected];
 
-    }
-    else
-    {
-        buttonSelected = NO;
-        [selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-        [agendaViewController addOrDeleteFromMyFavorites:sender.tag checkMark:buttonSelected];
 
-        
+
+-(void)cellWithAgendaItem:(AgendaItem*)item{
+    NSString *dateStr = @"";
+    
+    if (item.startTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" \n "];
+        dateStr = [dateStr stringByAppendingString:item.startTime];
         
     }
-    //NSLog(@"%d",sender.tag);
+    
+    if (item.endTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" - "];
+        dateStr = [dateStr stringByAppendingString:item.endTime];
+    }
+    
+    
+    CGSize size = [item.title sizeWithFont:self.textLabel.font constrainedToSize:CGSizeMake(self.textLabel.frame.size.width ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    int lines = size.height/21+1;
+
+    self.textLabel.text = item.title;
+    self.textLabel.numberOfLines = lines;
+    
+    
+    size = [dateStr sizeWithFont:self.detailTextLabel.font constrainedToSize:CGSizeMake(self.detailTextLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    self.detailTextLabel.text = dateStr;
+    lines = size.height/20;
+    self.detailTextLabel.numberOfLines = lines > 2 ? lines : 2;
+    
+
     
 }
+
+
+
 - (void)dealloc
 {
+    
 }
 
 @end

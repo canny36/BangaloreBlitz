@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "ImageDownloader.h"
 #import "ImageLoader.h"
+#import "CannyViewController.h"
 
 @class AppNMediaAppDelegate;
-@interface SupportedViewController : UIViewController<UITableViewDataSource,UITableViewDelegate, ImageDownloadDelegate>
+@interface SupportedViewController : CannyViewController<UITableViewDataSource,UITableViewDelegate, ImageDownloadDelegate>
 {
     
     AppNMediaAppDelegate *appDelegate;
@@ -19,8 +20,7 @@
     UITableView *supportedByTableView;
     IBOutlet UIImageView *mainBgView;
     IBOutlet UIImageView *subBgView;
-    ImageDownloader *imageDownloader;
-    NSMutableArray *currentDownloads;
+
     
 }
 

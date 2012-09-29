@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "QuartzCore/QuartzCore.h"
 #import "ImageDownloader.h"
+#import "CannyViewController.h"
 
 @class AppNMediaAppDelegate;
 @class SpeakersViewDetailsController;
 
-@interface SpeakersViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate,UITextFieldDelegate,ImageDownloadDelegate>
+@interface SpeakersViewController : CannyViewController <UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate,UITextFieldDelegate,ImageDownloadDelegate>
 {
     AppNMediaAppDelegate    *appDelegate;
     SpeakersViewDetailsController *speakersDetailsViewController;
@@ -29,45 +30,15 @@
     NSMutableArray *speakersArray;
     NSMutableArray *speakersImagesArray;
     NSMutableArray *selectedIndexesArray;
-
-    //////////// Styles data
-    int backGroundColor;
-    NSString *titleColor;
-    NSString *subTitleColor;
-    
-    NSString *titleFontName;
-    NSString *subTitleFontName;
-    
-    NSString *titleFontSize;
-    NSString *subTitleFontSize;
-    //////// offline 
-    NSMutableArray *offlineSpeakersImagesArr;
-    
-    /////// myFavorites methods
     NSMutableArray *myFavoriteSpeakers;
-    NSMutableArray *myFavIndexesArray;
-    NSMutableDictionary *restoreDict;
-
-    ////////// Search functionality
-    NSString *searchString;
-    NSMutableArray *array;
-    NSMutableArray *agendaArray;
-    NSMutableArray *itemsArray;
     NSMutableArray *searchArr;
-    UITableView *searchTableView;
-    IBOutlet UIImageView *transparentImageView;
     
-    ImageDownloader *imageDownloader;
-    NSMutableArray *currentDownloads;
+    UITableView *searchTableView;
+
     
 }
+
 @property(nonatomic,retain)NSMutableArray *offlineSpeakersImagesArr;
--(void)assignStyles;
--(void)addOrDeleteFromMyFavorites:(int )selectedIndex checkMark:(BOOL)checkMark fromSearchTable:(BOOL)fromSearchTable;
--(void)homeButtonClicked;
--(void)storeMyfavorites;
--(void)mainSearchMethod;
--(NSArray *)extractMethod:(NSInteger)value;
--(void)createSearchTable;
--(void)myFavoritesAddingFromSearchResultsTableDetailsController:(NSMutableDictionary *)selectedDictionary checkMark:(BOOL)checkMark;
+
+-(void)onBookmarkButtonClick:(UIButton*)sender;
 @end

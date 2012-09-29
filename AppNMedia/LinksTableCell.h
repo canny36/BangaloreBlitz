@@ -8,20 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "QuartzCore/QuartzCore.h"
+#import "CustomTableViewCell.h"
 
-@interface LinksTableCell : UITableViewCell 
+@interface LinksTableCell : CustomTableViewCell
 {
-    UIView *bgView;
-    UIImageView *linksImageView;
-    UITextView *linkNameLabel;
-    UILabel *linkUrlLabel;
-    UIActivityIndicatorView *activityIndicator;
-}
-@property(nonatomic,retain)UITextView *linkNameLabel;
-@property(nonatomic,retain)UILabel *linkUrlLabel;
-@property(nonatomic,retain)UIImageView *linksImageView;
-@property(nonatomic,retain)UIActivityIndicatorView *activityIndicator;
 
--(void)assignImage:(NSString *)path;
+}
+
 
 @end

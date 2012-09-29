@@ -10,6 +10,7 @@
 #import "PartnersViewController.h"
 #import "UIImage+scale.h"
 
+
 @implementation PartnersTableCell
 @synthesize phoneNoButton;
 @synthesize nameLabel;
@@ -26,6 +27,7 @@ static UIImage *defaultImage;
     if (self) 
     {
      
+        self.clipsToBounds = YES;
         
         self.selectionStyle = UITableViewCellSelectionStyleGray;
         
@@ -56,75 +58,50 @@ static UIImage *defaultImage;
         [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makePhoneCall)];
         [phoneLabel addGestureRecognizer:tapGesture];
         [self addSubview:phoneLabel];
+
         
-        
-//        partnerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 10, 100, 80)];
-        
-        partnerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 100, 100)];
-        //        supporterImageView.layer.cornerRadius = 7.0;
+        partnerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 80)];
+
         if (defaultImage == nil) {
             defaultImage = [UIImage imageNamed:@"default_img.png"];
             defaultImage = [defaultImage scaleImageToSize:CGSizeMake( defaultImage.size.width, defaultImage.size.height)];
         }
-//       partnerImageView.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
-        partnerImageView.image = defaultImage;
+
+//        partnerImageView.image = defaultImage;
         partnerImageView.contentMode = UIViewContentModeScaleAspectFit;
-        
-        
-//        partnerImageView.layer.cornerRadius = 7.0;
-//        partnerImageView.layer.masksToBounds = YES;
-//        partnerImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-//        partnerImageView.contentMode = UIViewContentModeScaleAspectFill;
-//        partnerImageView.layer.borderWidth = 0.5;
-        
-        [self addSubview:partnerImageView];
-        
-//        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-//        activityIndicator.frame = CGRectMake(40, 30, 20, 20);
-//        [activityIndicator startAnimating];
-//        [partnerImageView addSubview:activityIndicator];
+//
+//        [self addSubview:partnerImageView];
+
         
         
     }
     return self;
 }
--(void)assignImage:(NSString *)path
-{
-//    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc]init];
-     @autoreleasepool {
-    NSURL *url=[NSURL URLWithString:path];
-    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-    if(img)
-    {
-        partnerImageView.image = img;
-    }
-    else
-    {
-        partnerImageView.image = [UIImage imageNamed:@"NoImage.png"];
-    }
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
     
-    [activityIndicator stopAnimating];
-//    [pool release];
-     }
+   CGRect frame =  self.imageView.frame;
+    frame = CGRectMake(0, 5, 100, 70);
+    self.imageView.frame = frame;
+    self.contentMode = UIViewContentModeScaleAspectFit;
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
 
-    // Configure the view for the selected state
 }
 
 -(void)makePhoneCall 
 {
-    int k = phoneLabel.tag;
-    [pvController makePhoneCall:k];
+
 }
 
 
 
 - (void)dealloc
 {
-//    [super dealloc];
+
 }
 
 @end

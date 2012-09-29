@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "mapViews.h"
+#import "AgendaItem.h"
+#import "SubAgendaItem.h"
 
 
 @class AppNMediaAppDelegate;
@@ -15,35 +17,17 @@
 @interface AgendaDetailsViewController : UIViewController <UITextViewDelegate>
 {
     AppNMediaAppDelegate    *appDelegate;
-    AgendaSpeakerDetailsViewController *asdvController;
-    IBOutlet UIImageView *mainBgView;
-    IBOutlet UIImageView *subBgView;
-    
-    NSMutableDictionary *selectedDict;
     NSMutableArray      *speakersDetailsArray;
-   
-      
     IBOutlet UIScrollView *scrollView;
-  
-    //////////// Styles data
-    NSString *titleColor;
-    NSString *subTitleColor;
-    
-    NSString *titleFontName;
-    NSString *subTitleFontName;
-    
-    NSString *titleFontSize;
-    NSString *subTitleFontSize;
-    
+
     mapViews *openMap;
-   
-
-
+    AgendaItem *_agendaItem;
+    SubAgendaItem *_subAgendaItem;
+    
 }
-@property(nonatomic,retain)NSMutableDictionary *selectedDict;
-//-(void)assignStyles;
-//-(void)createLabelsWithStyles;
-//-(void)homeButtonClicked;
-//-(void)agendaSpeakerDetails;
-//-(void)makeaMap;
+
+-(void)onSpeakerClick;
+@property(nonatomic , retain) AgendaItem *agendaItem;
+@property(nonatomic , retain) SubAgendaItem *subAgendaItem;
+
 @end

@@ -11,6 +11,8 @@
 #import "AgendaTableViewCell.h"
 #import "AgendaDetailsViewController.h"
 #import "Util.h"
+#import "AgendaItem.h"
+#import "SubAgendaViewController.h"
 
 @interface CellItem : NSObject{
     
@@ -31,14 +33,12 @@
 
 @end
 
-#define kAgendaTableCellHeight 100.0
+#define kAgendaTableCellHeight 80.0
 
 @implementation AgendaViewController
-@synthesize selectedAgendaLocation;
-@synthesize fromWhichSection;
-@synthesize sampleArray;
-@synthesize dateString;
-@synthesize fromWhichRow;
+
+@synthesize dateString=_dateString;
+@synthesize loc=_loc;
 
 - (NSString *)dataFilePathForMyfavoritesAgendaInfo
 { 
@@ -55,67 +55,12 @@
     }
     return self;
 }
+
 -(void)homeButtonClicked
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
--(void)addOrDeleteFromMyFavorites:(int )selectedIndex checkMark:(BOOL)checkMark
-{
-    
-    NSString *filePath = [self dataFilePathForMyfavoritesAgendaInfo];
-    
-    if (([[NSFileManager defaultManager] fileExistsAtPath:filePath])) 
-    {
-        myFavIndexesArray = [[NSMutableArray alloc] initWithContentsOfFile:filePath];
-    }
-    else
-    {
-        myFavIndexesArray = [[NSMutableArray alloc] initWithCapacity:0];
-    }
-    
-    
-    if (checkMark ==YES)
-    {
-        NSMutableDictionary *tmpDict = [itemsArray objectAtIndex:selectedIndex];
-        
-        if ([tmpDict objectForKey:@"agendaid"]!= nil)
-        {
-            [myFavIndexesArray addObject:[tmpDict objectForKey:@"agendaid"]];
-            [myFavAgendaArray addObject:[tmpDict objectForKey:@"agendaid"]];
-        } 
-    }
-    else
-    {
-        if ([myFavIndexesArray count]>0)
-        {
-            NSMutableDictionary *tmpDict = [itemsArray objectAtIndex:selectedIndex];
-            
-            NSString *speakerIdStr = @"";
-            if ([tmpDict objectForKey:@"agendaid"]!= nil)
-            {
-                speakerIdStr = [tmpDict objectForKey:@"agendaid"];
-                
-            }
-            
-            for (int i=0; i<[myFavIndexesArray count]; i++)
-            {
-                NSString *tmpStr = [myFavIndexesArray objectAtIndex:i];
-                if ([tmpStr isEqualToString:speakerIdStr])
-                {
-                    [myFavIndexesArray removeObjectAtIndex:i];
-                    [myFavAgendaArray removeObjectAtIndex:i];
-                }
-                
-            }
-        }
-     
-    }
-    
-    
-    [myFavIndexesArray writeToFile:filePath atomically:YES];
-    
-}
 
 
 #pragma mark Table View datasource and delegate methods   
@@ -143,69 +88,55 @@
     if (tableView == agendaTableView) 
     {
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width - 5,25)] ;
-        
-    
-        
-        UIImage *bgImage = [UIImage imageNamed:@"list_head_bg.png"];
+          UIImage *bgImage = [UIImage imageNamed:@"list_head_bg.png"];
         
         bgImage = [bgImage stretchableImageWithLeftCapWidth:bgImage.size.width topCapHeight:bgImage.size.height-1];
         headerView.backgroundColor = [UIColor colorWithPatternImage:bgImage];
-
         
-        NSMutableDictionary *tmpDict = [selectedAgendaLocation objectForKey:@"attributes"];
-        
-        
-        UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 270, 14)];
+        UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 270, 13)];
         dateLabel.backgroundColor = [UIColor clearColor];
-        [dateLabel setFont:[UIFont fontWithName:[Util titleFontName] size:13]];
+        [dateLabel setFont:[UIFont fontWithName:[Util titleFontName] size:15]];
          dateLabel.textColor = [Util titleColor];
-        dateLabel.text = dateString;
+        dateLabel.text = self.dateString;
         [headerView addSubview:dateLabel];
-        
-//        UILabel *addressTxtView = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, 270, 40)];
-//        addressTxtView.backgroundColor = [UIColor clearColor];
-//        [addressTxtView setFont:[UIFont fontWithName:[Util titleFontName] size:13]];
-//
-//        addressTxtView.textColor = [Util titleColor];
-//        addressTxtView.text = [tmpDict objectForKey:@"address"];
-//        
-//      [headerView addSubview:addressTxtView];
-        
-        
+       
         return headerView;
         
     }
     else
     {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)] ;
-    return headerView;
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)] ;
+        return headerView;
     }
     
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return ( tableView == agendaTableView ) ?  [itemsArray count] : [searchArr count];
+    return ( tableView == agendaTableView ) ?  [self.loc.itemArray count] : [searchArr count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+    AgendaItem *item = nil ;
     
-    CellItem *item = [cellItems objectAtIndex:indexPath.row];
-    CGSize size1 = [item.title sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:16] constrainedToSize: CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    if (tableView == agendaTableView) {
+        item =  [self.loc.itemArray objectAtIndex:indexPath.row];
+    }else{
+        item = [searchArr objectAtIndex:indexPath.row];
+    }
     
-    CGSize size2 = [item.subTitle sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:14] constrainedToSize: CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    int calHeight = [self heightForItem:item];
+    if ( calHeight > kAgendaTableCellHeight) {
+        return calHeight;
+    }
     
-    return size1.height + size2.height +10;
-    
-//    return kAgendaTableCellHeight;
+    return kAgendaTableCellHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    
     
     AgendaTableViewCell *cell;
     NSString *CellIdentifier = @"agenda identifier";
@@ -213,120 +144,153 @@
     
     if (cell == nil)
     {
-        cell = [[AgendaTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
-               
-        [cell.agendaNameLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
-        
-        [cell.byLabel setFont: [UIFont fontWithName:[Util subTitleFontName] size:15]];
-        
-        [cell.agendaDetailsLabel setFont:[UIFont systemFontOfSize:14]];
-        
-        cell.agendaDetailsLabel.textColor = [Util detailTextColor];
-        cell.byLabel.textColor = [Util linkTextColor];
-        cell.agendaNameLabel.textColor = [Util subTitleColor];
-          
-         cell.textLabel.font= [UIFont fontWithName:[Util subTitleFontName] size:16];
-         cell.textLabel.textColor = [Util subTitleColor];
-        
-         cell.detailTextLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
-        
-        cell.detailTextLabel.textColor = [Util detailTextColor];
+        cell = [[AgendaTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier hideImageView:YES];
+        cell.imageView.image = nil;
+        [cell enableBookmarkWithTarget:self];
     }
+    
+    AgendaItem *item = nil ;
+    cell.imageView.image = nil;
 
-    if (tableView == agendaTableView)
-    {
-        
-        CellItem *item = [cellItems objectAtIndex:indexPath.row];
-        
-        CGSize size = [item.title sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
-        
-        cell.textLabel.text = item.title;
-        cell.textLabel.numberOfLines = size.height/20;
-       
-        
-         size = [item.subTitle sizeWithFont:cell.detailTextLabel.font constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
-        
-        cell.detailTextLabel.text = item.subTitle;
-        cell.detailTextLabel.numberOfLines = 2;
-        
-        //cell.agendaNameLabel.text = [tmpDict objectForKey:@"agendaspeaker"];
-//        cell.agendaDetailsLabel.text = [tmpDict objectForKey:@"title"];
-//        if ([tmpDict objectForKey:@"agendaspeaker"]!= nil)
-//        {
-//            cell.byLabel.text =[NSString stringWithFormat:@"By : %@",[tmpDict objectForKey:@"agendaspeaker"]]; 
-//        }
-        
-        cell.agendaViewController= self;
-        cell.selectButton.tag = indexPath.row;
-        cell.selectedSection = indexPath.section;
-        
-        if ([myFavAgendaArray count]>0)                
-        {
-            NSMutableDictionary *tmpDict = [itemsArray objectAtIndex:indexPath.row];
-            for (int i=0; i<[myFavAgendaArray count]; i++)
-            {
-                NSString *tmpIdStr = [myFavAgendaArray objectAtIndex:i];
-                NSString *speakerIdStr = @"";
-                if ([tmpDict objectForKey:@"agendaid"] != nil)
-                {
-                    speakerIdStr = [tmpDict objectForKey:@"agendaid"];
-                }
-                
-                if ([speakerIdStr isEqualToString:tmpIdStr])
-                {
-                    [cell.selectButton setImage:[UIImage imageNamed:@"gold_star.png"] forState:UIControlStateNormal];
-                    cell.buttonSelected = YES;
-                    i = [myFavAgendaArray count];
-                }
-                else
-                {
-                    [cell.selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-                    cell.buttonSelected = NO; 
-                }
-                
-            }
-         }        
+    if (tableView == agendaTableView) {
+       item =  [self.loc.itemArray objectAtIndex:indexPath.row];
+    }else{
+       item = [searchArr objectAtIndex:indexPath.row];
     }
-    else
-    {
-        if ([searchArr count] >0) 
-        {
-            NSMutableDictionary *tmpDict = [searchArr objectAtIndex:indexPath.row];
-            
-            [cell.agendaNameLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-            
-            cell.agendaNameLabel.text = [tmpDict objectForKey:@"starttime"];  
-            cell.agendaDetailsLabel.text = [tmpDict objectForKey:@"title"];
-            if ([tmpDict objectForKey:@"agendaspeaker"]!= nil)
-            {
-                cell.byLabel.text =[NSString stringWithFormat:@"By : %@",[tmpDict objectForKey:@"agendaspeaker"]]; 
-            }
-            cell.selectButton.hidden = YES;
-        }
-        
-    }
-    return cell;
+    
+     [self cellWithAgendaItem:item:cell];
+        cell.accessoryView.tag = indexPath.row;
+       BOOL selected = [self checkIfFavorite:item];
+       [cell selectFavorite:selected];
+    
+        return cell;
 }
+
+    
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    AgendaDetailsViewController *agendaDetailsViewController = [[AgendaDetailsViewController alloc] init];
+//    AgendaDetailsViewController *agendaDetailsViewController = [[AgendaDetailsViewController alloc] init];
+    AgendaItem *item = [ tableView == agendaTableView ? self.loc.itemArray  : searchArr objectAtIndex:indexPath.row];
 
-    if (tableView == agendaTableView)
-    {
         
-        agendaDetailsViewController.selectedDict = [itemsArray objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:agendaDetailsViewController animated:YES];
-    }
-    else
+        if (item.subAgendaItems != nil  && [item.subAgendaItems count ] > 0) {
+            SubAgendaViewController *controller = [[SubAgendaViewController alloc]init];
+            controller.subAgendaArray = item.subAgendaItems;
+            [self.navigationController pushViewController:controller animated:YES];
+        }else{
+            AgendaDetailsViewController *controller = [[AgendaDetailsViewController alloc]init];
+            controller.agendaItem = item;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
+}
+
+
+-(int)heightForItem:(AgendaItem*)item{
+    
+    NSString *dateStr = @"";
+    
+    if (item.startTime != nil)
     {
-        agendaDetailsViewController.selectedDict = [searchArr objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:agendaDetailsViewController animated:YES];
+        dateStr = [dateStr stringByAppendingString:@" \n "];
+        dateStr = [dateStr stringByAppendingString:item.startTime];
+        
     }
     
+    if (item.endTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" - "];
+        dateStr = [dateStr stringByAppendingString:item.endTime];
+    }
+    
+    
+    CGSize size1 = [item.title sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:15] constrainedToSize:CGSizeMake(230 ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    CGSize size2 = [dateStr sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:13] constrainedToSize:CGSizeMake(230, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    return size1.height + size2.height +10;
+    
+}
+
+-(void)cellWithAgendaItem:(AgendaItem*)item:(CustomTableViewCell*)cell{
+    NSString *dateStr = @"";
+    
+    if (item.startTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" \n "];
+        dateStr = [dateStr stringByAppendingString:item.startTime];
+        
+    }
+    
+    if (item.endTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" - "];
+        dateStr = [dateStr stringByAppendingString:item.endTime];
+    }
+    
+    
+    CGSize size = [item.title sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    int lines = size.height/21+1;
+    
+    cell.textLabel.text = item.title;
+    cell.textLabel.numberOfLines = lines;
+    
+    
+    size = [dateStr sizeWithFont:cell.detailTextLabel.font constrainedToSize:CGSizeMake(cell.detailTextLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+   cell.detailTextLabel.text = dateStr;
+    lines = size.height/20;
+    cell.detailTextLabel.numberOfLines = lines > 2 ? lines : 2;
+    
+    
+    
+}
+
+
+-(void)onFavoriteSelection:(UIButton*)sender{
+    
+    int tag = sender.tag;
+    
+    AgendaItem *info  = [self.loc.itemArray objectAtIndex:tag];
+    NSLog(@"BOOKMARK C=BUTTON CLICK %@ ",info.agendaId);
+    if (searchTableView.hidden == NO) {
+        info = [searchArr objectAtIndex:tag];
+    }
+    
+    if (sender.selected) {
+        if ([myFavAgendaArray indexOfObject:info.agendaId] == NSNotFound) {
+            [myFavAgendaArray addObject:info.agendaId];
+        }
+        
+    }else{
+        if ([myFavAgendaArray indexOfObject:info.agendaId] != NSNotFound) {
+            [myFavAgendaArray removeObject:info.agendaId];
+        }
+    }
+}
+
+
+
+-(BOOL)checkIfFavorite:(AgendaItem*)info{
+    
+    if ([myFavAgendaArray indexOfObject:info.agendaId] != NSNotFound) {
+        return YES;
+    }
+    return NO;
+}
+
+-(void)saveFavorites{
+    
+    NSString *filePath = [self dataFilePathForMyfavoritesAgendaInfo];
+    
+    NSLog(@"SAVE FAVORITES =  %@ ",myFavAgendaArray);
+    [myFavAgendaArray writeToFile:filePath atomically:YES];
 
 }
+
 
 
 - (void)dealloc
@@ -344,7 +308,7 @@
 #pragma mark - View lifecycle
 -(void)viewWillDisappear:(BOOL)animated
 {
-       
+       [self saveFavorites];
      
 }
 - (void)viewDidLoad
@@ -352,38 +316,26 @@
     [super viewDidLoad];
     
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Selected Agenda";
+    self.title = @"Agenda";
     
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
-    
-    itemsArray = [[NSMutableArray alloc] initWithCapacity:0];
-    myFavIndexesArray = [[NSMutableArray alloc] initWithCapacity:0];
-    
-       
-    id items = [selectedAgendaLocation objectForKey:@"item"];
-    
-    if([items isKindOfClass:[NSDictionary class]])
-        [itemsArray addObject:items];
-    
-    if([items isKindOfClass:[NSArray class]])
-        [itemsArray addObjectsFromArray:items];
-
-    
+      
     NSString *filePath = [self dataFilePathForMyfavoritesAgendaInfo];
     
     if (([[NSFileManager defaultManager] fileExistsAtPath:filePath])) 
     {
         myFavAgendaArray = [[NSMutableArray alloc] initWithContentsOfFile:filePath];
     }
-    else
+   
+    if (myFavAgendaArray == nil)
     {
         myFavAgendaArray = [[NSMutableArray alloc] initWithCapacity:0];
     }
         
-    if ([selectedAgendaLocation count] == 0)
+    if ([self.loc.itemArray count] == 0)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"No details available" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
@@ -418,6 +370,7 @@
     [searchTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLineEtched];
     [searchTableView setSeparatorColor:[UIColor clearColor]];
     [self.view addSubview:searchTableView];
+    [searchTableView setHidden:YES];
 
     [agendaSearchBar setShowsCancelButton:YES animated:YES];
 
@@ -426,43 +379,37 @@
     [self.view bringSubviewToFront:agendaTableView];
     
     
-    for (NSMutableDictionary *tmpDict in itemsArray) {
-        
-        CellItem *item = [[CellItem alloc]init];
-        
-        NSString *dateStr = @"";
-        
-        if ([tmpDict objectForKey:@"agendaspeaker"]!= nil)
-        {
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"agendaspeaker"]];
-        }
-        
-        
-        if ([tmpDict objectForKey:@"starttime"] != nil)
-        {
-            dateStr = [dateStr stringByAppendingString:@" \n "];
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"starttime"]];
-            dateStr = [dateStr stringByAppendingString:@" - "];
-            
-        }
-        
-        if ([tmpDict objectForKey:@"endtime"] != nil)
-        {
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"endtime"]];
-        }
-        
-         NSString *title = [tmpDict objectForKey:@"title"];
-        
-        item.subTitle = dateStr;
-        item.title = title;
-        
-        if (cellItems == nil) {
-            cellItems = [[NSMutableArray alloc]initWithCapacity:itemsArray.count];
-        }
-        
-        [cellItems addObject:item];
-       
-    }
+//    for (AgendaItem *aItem in itemsArray) {
+//        
+//        CellItem *item = [[CellItem alloc]init];
+//        
+//        NSString *dateStr = @"";
+//      
+//        if (aItem.startTime != nil)
+//        {
+//            dateStr = [dateStr stringByAppendingString:@" \n "];
+//            dateStr = [dateStr stringByAppendingString:aItem.startTime];
+//            dateStr = [dateStr stringByAppendingString:@" - "];
+//            
+//        }
+//        
+//        if (aItem.endTime != nil)
+//        {
+//            dateStr = [dateStr stringByAppendingString:aItem.endTime];
+//        }
+//        
+//         NSString *title = aItem.title;
+//        
+//        item.subTitle = dateStr;
+//        item.title = title;
+//        
+//        if (cellItems == nil) {
+//            cellItems = [[NSMutableArray alloc]initWithCapacity:itemsArray.count];
+//        }
+//        
+//        [cellItems addObject:item];
+//       
+//    }
    
     
     
@@ -472,6 +419,8 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
+    
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -540,72 +489,46 @@
         
     }    
                 
-    for (int i=0; i<[itemsArray count]; i++)
+    for (int i=0; i<[self.loc.itemArray count]; i++)
     {
-        NSMutableDictionary *tmpDic = [itemsArray objectAtIndex:i];
+       AgendaItem *item  = [self.loc.itemArray objectAtIndex:i];
+        
         
 
-            if ([tmpDic objectForKey:@"agendaspeaker"] != nil) 
+            if (item.title != nil)
             {
-                if ([[tmpDic objectForKey:@"agendaspeaker"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
+                if ([item.title rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
                 {
                     
-                    [searchArr addObject:tmpDic];
+                    [searchArr addObject:item];
                     continue;
                     
                 }
 
             }
-            
-            
-            if ([tmpDic objectForKey:@"address"] != nil) 
+
+        
+            if (item.address != nil)
             {
-                if ([[tmpDic objectForKey:@"address"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
+                if ([item.address rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
                 {
                     
-                    [searchArr addObject:tmpDic];
+                    [searchArr addObject:item];
                     continue;
                     
                 }
             }
-            
-            
-            if ([tmpDic objectForKey:@"room"] != nil) 
+          
+            if (item.description != nil)
             {
-                if ([[tmpDic objectForKey:@"room"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
+                if ([item.description rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
                 {
                     
-                    [searchArr addObject:tmpDic];
+                    [searchArr addObject:item];
                     continue;
                     
                 }
             }
-            
-            
-            
-            if ([tmpDic objectForKey:@"description"] != nil) 
-            {
-                if ([[tmpDic objectForKey:@"description"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDic];
-                    continue;
-                    
-                }
-            }
-            
-            
-            if ([tmpDic objectForKey:@"title"] != nil) 
-            {
-                if ([[tmpDic objectForKey:@"title"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDic];
-                    continue;
-                    
-                }
-            }
-            
     }
     
     [self createSearchTable];    

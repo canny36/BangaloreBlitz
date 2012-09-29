@@ -10,6 +10,10 @@
 #import "AppNMediaAppDelegate.h"
 #import "PhotosTableViewCell.h"
 #import "WebViewController.h"
+#import "VideosViewController.h"
+#import "VideosTableCell.h"
+#import "Util.h"
+
 #define kPhotosTableCellHeight 100
 
 @implementation PhotosViewController
@@ -32,92 +36,62 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+//    return section == 1 ? @"Videos":@"Photos";
+//}
+
+
 #pragma mark Table View datasource and delegate methods 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [photosArray count];
+    
+    return section == 0 ? [photosArray count] : [videosArray count];
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return kPhotosTableCellHeight;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PhotosTableViewCell *cell;
-    NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
-    cell = (PhotosTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil)
-    {
-        cell = [[PhotosTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        CustomTableViewCell *cell = nil;
+        NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
+        cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
+        if (cell == nil)
+        {
+            cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+          
+        }
         
         NSMutableDictionary *tmpDict = [photosArray objectAtIndex:indexPath.row];
-                
-       
-        [cell.nameLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
 
-        cell.nameLabel.textColor = [UIColor whiteColor];
-        
-        
-        if ([tmpDict objectForKey:@"photoname"]!= nil)
+    if ([tmpDict objectForKey:@"photoname"]!= nil)
         {
-            cell.nameLabel.text = [tmpDict objectForKey:@"photoname"];
+            cell.textLabel.text = [tmpDict objectForKey:@"photoname"];
         }
         
-        
-        if (appDelegate.runAppInOffline == NO)
-        {
-            BOOL network = [appDelegate networkCheckingMethod];
+        NSString *logo =  [tmpDict objectForKey:@"logo"];
+        NSLog(@" LOGO %@   ",logo);
+        if (logo != nil && ![logo isEqualToString:@""]) {
             
-            if (network == YES)
-            {
-                if ([tmpDict objectForKey:@"logo"]!=nil)
-                {
-                    NSString *baseUrl = BASE_URL;
-                    NSString *imageUrl = [tmpDict objectForKey:@"logo"];
-                    baseUrl = [baseUrl stringByAppendingString:imageUrl];
-                    
-                    [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
-                }
-                else
-                {
-                    cell.PhotoImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-   
-                }
-            }
-            else
-            {
-                
-                if ([offLinePhotosImagesArry count] == [photosArray count])
-                {
-                    NSData *tmpData = [offLinePhotosImagesArry objectAtIndex:indexPath.row];
-                    cell.PhotoImageView.image = [UIImage imageWithData:tmpData];
-                }
-                else
-                {
-                    cell.PhotoImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-                }
-                [cell.activityIndicator stopAnimating]; 
-            }
-        }
-        else
-        {
-            if ([offLinePhotosImagesArry count] == [photosArray count])
-            {
-                NSData *tmpData = [offLinePhotosImagesArry objectAtIndex:indexPath.row];
-                cell.PhotoImageView.image = [UIImage imageWithData:tmpData];
-            }
-            else
-            {
-                cell.PhotoImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-            }
-            [cell.activityIndicator stopAnimating]; 
+            NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
+            [mainlogo appendString:logo];
+            NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
+            [self loadImageAtIndexpath:indexPath urlString:mainlogo cell : cell];
+        }else{
+            NSLog(@" NO LOGO   ");
             
         }
+        return cell;
 
-    }
-    return cell;
-}
+        
+  }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -130,12 +104,6 @@
     {
         NSString *imageUrl = [tmpDict objectForKey:@"image"];
        
-//       webViewController = [[WebViewController alloc] init];
-//    
-//       webViewController.urlString = imageUrl;
-//    
-//    [self presentModalViewController:webViewController animated:YES];
-        
         
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:imageUrl]])
         {
@@ -152,17 +120,6 @@
     {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[dict objectForKey:@"photoname"]]];
     }
-}
--(void)assignStyles
-{
-   
-    titleFontName =@"Helvetica-Bold";
-    titleFontSize = @"14";
-    
-    subTitleFontName =@"Helvetica";
-    subTitleFontSize = @"12";
-    
-
 }
 
 - (void)dealloc
@@ -185,11 +142,6 @@
     // Do any additional setup after loading the view from its nib.
     self.title = @"Photos";
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
-    UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
-    self.navigationItem.rightBarButtonItem = homeButton;
-
-    [self assignStyles];
-    
     
     photosArray = [[NSMutableArray alloc] initWithCapacity:0];
     if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"photoslist"] objectForKey:@"photo"] isKindOfClass:[NSDictionary class]]) 
@@ -200,45 +152,20 @@
     {
         [photosArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"photoslist"] objectForKey:@"photo"]];
     }    
-    
-   // NSLog(@"%@",photosArray);
-    
-    offLinePhotosImagesArry = [[NSMutableArray alloc] initWithCapacity:0];
-    NSString *filePath  = [self dataFilePathForOfflineImages];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-    {
-        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-        
-        if ([tmpDict objectForKey:@"offlinePhotosImagesArr"]!= nil)
-        {
-            [offLinePhotosImagesArry addObjectsFromArray:[tmpDict objectForKey:@"offlinePhotosImagesArr"]];
-        }
-        
-    }    
-    
-    
+
+       
     photosScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 5, 300, 280)];
     photosScrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:photosScrollView];
     
-    [subBgView setFrame:CGRectMake(5, 5, 312, 285)];
-    int height = [photosArray count] * kPhotosTableCellHeight;
-    if (height > 270)
-    {
-        height = 270;
-    }
-    
-    
-    photosTableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 5, 300, height)];
+    photosTableView = [[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310,280)];
     photosTableView.delegate = self;
     photosTableView.dataSource =self;
     photosTableView.showsVerticalScrollIndicator = NO;
     photosTableView.backgroundColor = [UIColor clearColor];
     photosTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:photosTableView];
-    [subBgView setFrame:CGRectMake(5, 5, 310, height+15)];
-    
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
+
 
 }
 
@@ -254,5 +181,11 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+-(void)updateCell:(ImageLoader*)loader{
+    [photosTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+}
+
 
 @end

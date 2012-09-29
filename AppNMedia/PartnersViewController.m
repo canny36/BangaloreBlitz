@@ -107,16 +107,6 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
--(void)assignStyles
-{
-    titleFontName =@"HelveticaNeue-Bold";
-    titleFontSize = @"16";
-    
-    subTitleFontName =@"HelveticaNeue";
-    subTitleFontSize = @"12";
-
-}
-
 
 #pragma mark Table View datasource and delegate methods 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -132,87 +122,22 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    PartnersTableCell *cell = (PartnersTableCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CustomTableViewCell *cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) 
     {
-        cell = [[PartnersTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        [cell setDefaultImage:nil];
     }
-    
-    cell.pvController = self;
-    cell.phoneLabel.tag = indexPath.row;
-
-    
-       
-    [cell.nameLabel setFont:[UIFont fontWithName:[Util titleFontName] size:15]];
-    cell.nameLabel.textColor = [Util titleColor];
-    
-    [cell.phoneLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:13]];
-    cell.phoneLabel.textColor = [Util subTitleColor];
-    
     NSMutableDictionary *tmpDict = [partnersArray objectAtIndex:indexPath.row];
-    cell.nameLabel.text = [tmpDict objectForKey:@"name"];
+    cell.textLabel.text = [tmpDict objectForKey:@"name"];
+    cell.textLabel.numberOfLines=2;
     NSString *type = [tmpDict objectForKey:@"type"];
-    cell.phoneLabel.text = type;
+    cell.detailTextLabel.text = type;
     
-//        if ([tmpDict objectForKey:@"phone"]!= nil)
-//        {
-//            [cell.phoneLabel setText:[NSString stringWithFormat:@"Ph : %@", [tmpDict objectForKey:@"phone"]]];
-//        }
-//       else
-//       {
-//           [cell.phoneLabel setText:@"No details available"];
-//
-//       }
-    
-//    if (appDelegate.runAppInOffline == NO)
-//    {
-//        BOOL network = [appDelegate networkCheckingMethod];
-//        
-//        if (network == YES)
-//        {
-//            
-//            NSString *baseUrl =  BASE_URL;
-//            if ([tmpDict objectForKey:@"logo"] != nil) 
-//            {
-//                NSString *imageUrl = [tmpDict objectForKey:@"logo"];
-//                baseUrl = [baseUrl stringByAppendingString:imageUrl];
-//                
-//            }
-//            
-//            [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
-//        }
-//        else
-//        {
-//            if ([offlinePartnerImagesArr count] == [partnersArray count])
-//            {
-//                NSData *tmpData = [offlinePartnerImagesArr objectAtIndex:indexPath.row];
-//                cell.partnerImageView.image = [UIImage imageWithData:tmpData];
-//            }
-//            else
-//            {
-//                cell.partnerImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-//            }
-//            [cell.activityIndicator stopAnimating]; 
-//        }
-//        
-//    }
-//    else
-//    {
-//        if ([offlinePartnerImagesArr count] == [partnersArray count])
-//        {
-//            NSData *tmpData = [offlinePartnerImagesArr objectAtIndex:indexPath.row];
-//            cell.partnerImageView.image = [UIImage imageWithData:tmpData];
-//        }
-//        else
-//        {
-//            cell.partnerImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-//        }
-//        [cell.activityIndicator stopAnimating]; 
-//        
-//    }
-
-    
+    CGSize size = [type sizeWithFont:cell.detailTextLabel.font constrainedToSize:CGSizeMake(cell.detailTextLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    NSLog(@"");
+    cell.detailTextLabel.numberOfLines = size.height/16;
     NSString *logo =  [tmpDict objectForKey:@"logo"];
 
     if (logo != nil && ![logo isEqualToString:@""]) {
@@ -220,8 +145,9 @@
         NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
         [mainlogo appendString:logo];
         NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
-        [self loadImageAtIndexpath:indexPath urlString:mainlogo cell :(PartnersTableCell*)cell];
+        [self loadImageAtIndexpath:indexPath urlString:mainlogo cell :cell];
     }
+    
     return cell;
 }
 
@@ -270,7 +196,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
-    [self assignStyles];
+
    
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
@@ -288,51 +214,22 @@
         [partnersArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"partnerslist"] objectForKey:@"partner"]];
     }  
     
-    
-    offlinePartnerImagesArr = [[NSMutableArray alloc] initWithCapacity:0];
-    
-    NSString *filePath  = [self dataFilePathForOfflineImages];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-    {
-        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-        
-        if ([tmpDict objectForKey:@"offlinePartnersImagesArr"]!= nil)
-        {
-            [offlinePartnerImagesArr addObjectsFromArray:[tmpDict objectForKey:@"offlinePartnersImagesArr"]];
-        }
-        
-//        [tmpDict release];
-    }
 
     
-    
-    int height = [partnersArray count] * kPartnersTableCellHeight;
-    
-    if (height > 270)
-    {
-        height = 270;
-    }
-    
-    partnersTableView =[[UITableView alloc] initWithFrame:CGRectMake(10, 5, 300, height)];
+    partnersTableView =[[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310, 300)];
     partnersTableView.dataSource= self;
     partnersTableView.delegate = self;
     partnersTableView.backgroundColor = [UIColor clearColor];
     partnersTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     partnersTableView.separatorColor = [UIColor clearColor];
     [self.view addSubview:partnersTableView];
-    [subBgView setFrame:CGRectMake(5, 5, 310, height+15)];
-
-    if ([partnersArray count]==0)
+ if ([partnersArray count]==0)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"No details available" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
 //        [alert release];
     }
     
-    
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
-
     
 }
 
@@ -350,59 +247,8 @@
 }
 
 
--(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(PartnersTableCell*)cell{
-    
-    CGSize point  = CGSizeMake(100, 80);
-    
-    //    [NSInvocationOperation ];
-    if (imageDownloader == nil) {
-        imageDownloader =  [ImageDownloader shareInstance];
-    }
-    
-    
-    UIImage *image =  [imageDownloader getImage:url];
-    if (image != nil) {
-        NSLog(@"HIT AT %@ ",url);
-        //        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
-        
-        cell.partnerImageView.image = image;
-        //        [supportedByTableView reloadData];
-        
-    }else{
-        
-        NSLog(@"FAIL AT %@ ",url);
-        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
-        loader.indexPath = indexpath;
- 
-        [imageDownloader addOperation:loader];
-        [currentDownloads addObject:loader];
-        
-    }
-}
-
--(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
-    
-    NSLog(@" DOWNLOAD COMPLETED FOR %d ",imageLoader.indexPath.row);
-    
-    [currentDownloads removeObject:imageLoader];
-    [imageDownloader removeOperation:imageLoader];
-    
-
-
-[self performSelectorOnMainThread:@selector(updateCell:) withObject:imageLoader waitUntilDone:YES];
-
-}
-
 -(void)updateCell:(ImageLoader*)loader{
     [partnersTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
-}
-
-
-
--(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
-    NSLog(@"ERROR DOWNLOADING ");
-    [imageDownloader removeOperation:imageLoader];
-    [currentDownloads removeObject:imageDownloader];
 }
 
 

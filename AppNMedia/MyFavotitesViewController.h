@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ImageDownloader.h"
 
 @class AppNMediaAppDelegate;
-@interface MyFavotitesViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface MyFavotitesViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,ImageDownloadDelegate>
 {
     AppNMediaAppDelegate    *appDelegate;
     IBOutlet UIImageView *mainBgView;
@@ -19,24 +20,18 @@
     NSMutableArray *selectedAgendaArr;
     NSMutableArray *selectedSpeakersArr;
     NSMutableArray *selectedIndexArr;
-    
-    //////////// Styles data
-    NSString *titleColor;
-    NSString *subTitleColor;
-    
-    NSString *titleFontName;
-    NSString *subTitleFontName;
-    
-    NSString *titleFontSize;
-    NSString *subTitleFontSize;
+
     
     ///////////////
     NSMutableArray *array;
     NSMutableArray *agendaArray;
     NSMutableArray *itemsArray;
-    IBOutlet UIImageView *transparentImageView;
 
+    
+    NSMutableArray *currentDownloads;
+    ImageDownloader *imageDownloader;
 }
+
 -(void)assignStyles;
 -(void)homeButtonClicked;
 -(NSArray *)extractMethod:(NSInteger)value;

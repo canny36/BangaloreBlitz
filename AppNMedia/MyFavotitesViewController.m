@@ -12,8 +12,15 @@
 #import "MyFavoritesDetailsViewontroller.h"
 #import "AgendaDetailsViewController.h"
 #import "Util.h"
+#import "SpeakerInfo.h"
+#import "SpeakersTableViewCell.h"
+#import "ImageLoader.h"
+#import "SpeakersViewDetailsController.h"
+#import "AgendaTableViewCell.h"
+#import "SubAgendaViewController.h"
 
 #define kmyFavoritesTableCellHeight 60
+#define kSpeakersTableCellHeight 100
 
 @implementation MyFavotitesViewController
 
@@ -31,6 +38,7 @@
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 	return [documentsDirectory stringByAppendingPathComponent:@"myfavoriteSpeakers.plist"];
 }
+
 - (NSString *)dataFilePathForMyfavoritesAgendaInfo
 { 
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
@@ -67,7 +75,7 @@
 {
     if (section ==0)
     {
-        return [selectedAgendaArr count];  
+        return [agendaArray count];
     }
     else
     {
@@ -81,14 +89,10 @@
 
 - (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section 
 {
+  
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, 300, 30)];
-    
 
-    
     headerView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"list_head_bg.png"]];
-   
-   
-    
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 2, 180, 30)];
     label.backgroundColor = [UIColor clearColor];
     [label setFont:[UIFont fontWithName:[Util titleFontName] size:15]];
@@ -100,160 +104,138 @@
     }
     else
     {
-        label.text = @"Artists"; 
+        label.text = @"Speakers"; 
     }
     
     [headerView addSubview:label];
     
     return headerView;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0)
     {
-        return 80;
+        return [AgendaTableViewCell heightForItem:[agendaArray objectAtIndex:indexPath.row]];
     }
     else
     {
-        return kmyFavoritesTableCellHeight;
-   
+        SpeakerInfo *info = nil;
+        
+            info = [selectedSpeakersArr objectAtIndex:indexPath.row];
+        CGSize size = [info.name sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:15] constrainedToSize:CGSizeMake(220 ,MAXFLOAT ) lineBreakMode:UILineBreakModeWordWrap];
+        
+        CGSize size1 = [info.name sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:13] constrainedToSize:CGSizeMake(220 ,MAXFLOAT ) lineBreakMode:UILineBreakModeWordWrap];
+        
+        CGFloat height = kSpeakersTableCellHeight;
+        height = size.height + size1.height +20;
+        
+        if (height< kSpeakersTableCellHeight) {
+            return kSpeakersTableCellHeight;
+        }
+        
+        return kSpeakersTableCellHeight;
+        
+          
     }
-}
-
-
--(void)assignStyles
-{
-    titleFontName =@"Helvetica-Bold";
-    titleFontSize = @"14";
-    
-    subTitleFontName =@"Helvetica";
-    subTitleFontSize = @"12";
-    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
     CellIdentifier = [CellIdentifier stringByAppendingFormat:@"%d",indexPath.section];
-    
-    MyFavoritesTableCell *cell = (MyFavoritesTableCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-
-    if (cell == nil) 
-    {
-        cell = [[MyFavoritesTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
-        
-        cell.timeLabel.textColor = [Util detailTextColor];
-        cell.titleLabel.textColor = [Util subTitleColor];
-        
-        cell.byLabel.textColor = [Util detailTextColor];
-        
-        
-        [cell.timeLabel setFont:[UIFont fontWithName:[ Util detailTextFontName] size:12]];
-        
-        [cell.titleLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:14]];
-        
-        [cell.byLabel setFont:[UIFont fontWithName:[Util detailTextFontName] size:12]];
-    }
-    
-    
-
-
-    
+     
     if (indexPath.section == 0)
     {
 
-
-        ////
-        NSMutableDictionary *tmpDict = [selectedAgendaArr  objectAtIndex:indexPath.row];
-        
-        NSString *dateStr = @"";
-        
-        if ([tmpDict objectForKey:@"date"]!= nil)
+       AgendaTableViewCell *cell = (AgendaTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+         if (cell == nil)
         {
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"date"]];
-            dateStr = [dateStr stringByAppendingString:@" \n "];
+            cell = [[AgendaTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
         }
-        if ([tmpDict objectForKey:@"starttime"] != nil)
-        {
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"starttime"]];
-            dateStr = [dateStr stringByAppendingString:@" - "];
-            
-        }
-        
-//        if ([tmpDict objectForKey:@"enddate"] != nil)
-//        {
-//            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"enddate"]];
-//            dateStr = [dateStr stringByAppendingString:@" "];
-//            
-//        }
-        
-        if ([tmpDict objectForKey:@"endtime"] != nil)
-        {
-            dateStr = [dateStr stringByAppendingString:[tmpDict objectForKey:@"endtime"]];
-            
-        }
-        
-
-        
-        
-        cell.timeLabel.text = dateStr;  
-        cell.titleLabel.text = [tmpDict objectForKey:@"title"];
-        if ([tmpDict objectForKey:@"agendaspeaker"]!= nil)
-        {
-            cell.byLabel.text =[NSString stringWithFormat:@"By : %@",[tmpDict objectForKey:@"agendaspeaker"]]; 
-        }
+        AgendaItem *item =  [agendaArray objectAtIndex:indexPath.row];
+        [cell cellWithAgendaItem:item];
+        cell.accessoryView = nil;
+        return cell;
     }
     else
     {
-        cell.bgView.frame = CGRectMake(0, 3, 300, 55);
-        cell.titleLabel.frame = CGRectMake(5, 0, 300, 40);
-        cell.titleLabel.numberOfLines = 2;
-        [cell.titleLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-
-        NSMutableDictionary *tmpDict = [selectedSpeakersArr objectAtIndex:indexPath.row];
-        NSString *nameStr = [tmpDict objectForKey:@"firstname"];
-        nameStr = [nameStr stringByAppendingString:@" "];
         
-        if ([tmpDict objectForKey:@"lastname"] != nil)
+        SpeakersTableViewCell *cell = nil;
+        NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
+        cell = (SpeakersTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
+        if (cell == nil)
         {
-            nameStr = [nameStr stringByAppendingString:[tmpDict objectForKey:@"lastname"]];
-        }
-        cell.titleLabel.text = nameStr;
+            cell = [[SpeakersTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
+            [cell.textLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
+            cell.textLabel.textColor = [Util subTitleColor];
+            
+            [cell.detailTextLabel setFont:[UIFont fontWithName:[Util detailTextFontName] size:13]];
+            
+            cell.detailTextLabel.textColor = [Util detailTextColor];
+        };
 
+        SpeakerInfo *info = [selectedSpeakersArr objectAtIndex:indexPath.row
+                             ];
+        CGSize size = [info.name sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width ,MAXFLOAT ) lineBreakMode:UILineBreakModeWordWrap];
+        
+        cell.textLabel.numberOfLines = size.height/21 +1;
+        cell.textLabel.text = info.name;
+        
+        size = [info.type sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width ,MAXFLOAT )];
+        cell.detailTextLabel.numberOfLines = size.height/21;
+        cell.detailTextLabel.text = info.type;
+        
+        NSString *logo  = info.logo;
+        NSLog(@" LOGO %@   ",logo);
+        if (logo != nil && ![logo isEqualToString:@""]) {
+            
+            NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
+            [mainlogo appendString:logo];
+            NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
+            [self loadImageAtIndexpath:indexPath urlString:mainlogo cell : cell];
+        }else{
+            NSLog(@" NO LOGO   ");
+            
+        }
+        cell.selectButton.hidden = YES;
+        return cell;
+
+        }
+
+    
     }
-    return cell;
-}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated: NO];
     
-   MyFavoritesDetailsViewontroller *myFavoritesDetailsViewController = [[MyFavoritesDetailsViewontroller alloc] init];
-    
     if (indexPath.section == 0)
     {
-//        myFavoritesDetailsViewController.agendaSelected = YES; 
-//        myFavoritesDetailsViewController.selectedDict = [selectedAgendaArr objectAtIndex:indexPath.row];
-        
-        AgendaDetailsViewController *advc = [[AgendaDetailsViewController alloc] init];
-        advc.selectedDict = [selectedAgendaArr objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:advc animated:YES];
-
-        
+        AgendaItem *item = [agendaArray objectAtIndex:indexPath.row];
+       
+        if (item.subAgendaItems != nil  && [item.subAgendaItems count ] > 0) {
+            SubAgendaViewController *controller = [[SubAgendaViewController alloc]init];
+            controller.subAgendaArray = item.subAgendaItems;
+            [self.navigationController pushViewController:controller animated:YES];
+        }else{
+            AgendaDetailsViewController *controller = [[AgendaDetailsViewController alloc]init];
+            controller.agendaItem = item;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
     }
     else
     {
-      myFavoritesDetailsViewController.agendaSelected = NO;  
-        myFavoritesDetailsViewController.selectedDict = [selectedSpeakersArr objectAtIndex:indexPath.row];
-        myFavoritesDetailsViewController.selectedIndex = [[selectedIndexArr objectAtIndex:indexPath.row] intValue];
-        [self.navigationController pushViewController:myFavoritesDetailsViewController animated:YES];
+        SpeakersViewDetailsController *controller  = [[SpeakersViewDetailsController alloc] init];
+
+       
+        controller.speakerInfo = [selectedSpeakersArr objectAtIndex:indexPath.row];
+        
+        [self.navigationController pushViewController:controller animated:YES];
 
     }
-    
-//    [myFavoritesDetailsViewController release];
-     
-    [myFavoritesTableView reloadData];
+
 }
 
 
@@ -282,140 +264,32 @@
     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     self.title = @"My Favorites";
+    
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
 
-    selectedAgendaArr = [[NSMutableArray alloc] initWithCapacity:0];
-    selectedSpeakersArr = [[NSMutableArray alloc] initWithCapacity:0];
-    selectedIndexArr = [[NSMutableArray alloc] initWithCapacity:0];
-   
-  
-    NSMutableArray *speakersArray = [[NSMutableArray alloc] initWithCapacity:0];
-    if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"] isKindOfClass:[NSDictionary class]]) 
-    {
-        [speakersArray addObject:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"]];
-    }
-    else
-    {
-        [speakersArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"]];
-    }    
-    
+    NSMutableArray *speakerIdArray = nil;
     
     NSString *speakerFilePath = [self dataFilePathForMyfavoritesSpeakersInfo];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:speakerFilePath])
-    {
-        NSMutableArray *tmpArr = [[NSMutableArray alloc]initWithContentsOfFile:speakerFilePath];
-        
-        for (int i = 0; i <[tmpArr count]; i++)
-        {
-            NSString *tmpIdStr = [tmpArr objectAtIndex:i];
-            for (int j=0; j<[speakersArray count]; j++)
-            {
-                NSMutableDictionary *tmpDict = [speakersArray objectAtIndex:j];
-                NSString *speakerIdStr = @"";
-                if ([tmpDict objectForKey:@"speakerid"]!= nil)
-                {
-                    speakerIdStr = [tmpDict objectForKey:@"speakerid"];
-                    
-                }
-                
-                if ([speakerIdStr  isEqualToString:tmpIdStr])
-                {
-                    [selectedSpeakersArr addObject:tmpDict];
-                    [selectedIndexArr addObject:[NSString stringWithFormat:@"%d",j]];
-                }
-               
-            }
-            
-     
-        }
-        
-//        [tmpArr release];
-        
+    if ([[NSFileManager defaultManager] fileExistsAtPath:speakerFilePath]) {
+        speakerIdArray = [[NSMutableArray alloc]initWithContentsOfFile:speakerFilePath];
     }
     
-//    [speakersArray release];
-    
-    
-   agendaArray =[[NSMutableArray alloc] initWithCapacity:0];
-    
-    if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"agendalist"] objectForKey:@"agenda"] isKindOfClass:[NSDictionary class]]) 
-    {
-        [agendaArray addObject:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"agendalist"] objectForKey:@"agenda"]];
+    if (speakerIdArray != nil && [speakerIdArray count] > 0) {
+        selectedSpeakersArr = [SpeakerInfo favorites:speakerIdArray];
     }
-    else
-    {
-        [agendaArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"agendalist"] objectForKey:@"agenda"]];
-    }   
-
-    itemsArray = [[NSMutableArray alloc] initWithCapacity:0];
-    
-    for (int i=0; i<[agendaArray count]; i++)
-    {
-          NSArray *array1 = [self extractMethod:i];
-        for (int i=0; i<[array1 count]; i++)
-        {
-            NSMutableDictionary *selectedAgendaLocation = [array1 objectAtIndex:i];
-            id items = [selectedAgendaLocation objectForKey:@"item"];
-            
-            if([items isKindOfClass:[NSDictionary class]])
-                [itemsArray addObject:items];
-            
-            if([items isKindOfClass:[NSArray class]])
-                [itemsArray addObjectsFromArray:items];
-        }
-        
-        
-    }
-    
     
     NSString *agendaFilePath = [self dataFilePathForMyfavoritesAgendaInfo];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:agendaFilePath])
     {
         NSMutableArray *tmpArr = [[NSMutableArray alloc]initWithContentsOfFile:agendaFilePath];
-        
-        for (int i = 0; i <[tmpArr count]; i++)
-        {
-            NSString *tmpIdStr = [tmpArr objectAtIndex:i];
-            for (int j=0; j<[itemsArray count]; j++)
-            {
-                NSMutableDictionary *tmpDict = [itemsArray objectAtIndex:j];
-                NSString *agendaIdStr = @"";
-                if ([tmpDict objectForKey:@"agendaid"]!= nil)
-                {
-                    agendaIdStr = [tmpDict objectForKey:@"agendaid"];
-                    
-                }
-                
-                if ([agendaIdStr  isEqualToString:tmpIdStr])
-                {
-                    [selectedAgendaArr addObject:tmpDict];
-                }
-                
-            }
-            
-            
-        }
-        
-//        [tmpArr release];
+        NSLog(@" MYFAVORITE AGENDA ARRAY %@ ",tmpArr);
+        agendaArray = [AgendaItem favorites:tmpArr];
         
     }
-
     
-//    [agendaArray release];
-//    [itemsArray release];
-    
-//    int k = [selectedAgendaArr count]+[selectedSpeakersArr count] ;
-//    int height = k * kmyFavoritesTableCellHeight;
-//    height = height+100;
-//    if (height > 270)
-//    {
-//        height = 270;
-//    }
-    
-    myFavoritesTableView =[[UITableView alloc] initWithFrame:CGRectMake(10, 10, 300, 270)];
+    myFavoritesTableView =[[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310, 290)];
     myFavoritesTableView.dataSource= self;
     myFavoritesTableView.delegate = self;
     myFavoritesTableView.backgroundColor = [UIColor clearColor];
@@ -423,11 +297,8 @@
     myFavoritesTableView.separatorColor=[UIColor clearColor];
     myFavoritesTableView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:myFavoritesTableView];
-    [subBgView setFrame:CGRectMake(5, 5, 310, 280)];
     
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
-
-    
+   
 }
 
 - (void)viewDidUnload
@@ -442,5 +313,73 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+
+
+-(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(SpeakersTableViewCell*)cell{
+    
+    CGSize point  = CGSizeMake(100, 80);
+    
+    if (imageDownloader == nil) {
+        imageDownloader =  [ImageDownloader shareInstance];
+    }
+    //    [NSInvocationOperation ];
+    
+    UIImage *image =  [imageDownloader getImage:url];
+    
+    if (image != nil) {
+        NSLog(@"HIT AT %@ ",url);
+        //        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
+        
+        cell.imageView.image = image;
+        //        [supportedByTableView reloadData];
+        
+    }else{
+        
+        NSLog(@"FAIL AT %@ ",url);
+        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
+        loader.indexPath = indexpath;
+        
+        
+        [imageDownloader addOperation:loader];
+        [currentDownloads addObject:loader];
+        
+    }
+}
+
+-(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
+    
+    NSLog(@" DOWNLOAD COMPLETED FOR %d ",imageLoader.indexPath.row);
+    
+    [currentDownloads removeObject:imageLoader];
+    [imageDownloader removeOperation:imageLoader];
+    
+    [self performSelectorOnMainThread:@selector(updateCell:) withObject:imageLoader waitUntilDone:YES];
+    
+}
+
+-(void)updateCell:(ImageLoader*)loader{
+    [myFavoritesTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+-(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
+    
+    NSLog(@"ERROR DOWNLOADING ");
+    [imageDownloader removeOperation:imageLoader];
+    [currentDownloads removeObject:imageDownloader];
+}
+
+
+-(void)viewDidDisappear:(BOOL)animated{
+    
+    for (ImageLoader *loader in currentDownloads) {
+        [loader cancel];
+    }
+    
+    [currentDownloads removeAllObjects];
+
+}
+
 
 @end

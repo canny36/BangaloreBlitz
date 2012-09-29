@@ -10,73 +10,13 @@
 #import "AppNMediaAppDelegate.h"
 #import "AgendaSpeakerDetailsViewController.h"
 #import "Util.h"
-
-
-
-@interface AgendaItem : NSObject{
-    
-//    <item><agendaid>5</agendaid><title>Inauguration of the Conference</title><date>Wednesday. 10/17/2012</date><enddate>Wednesday. 10/17/2012</enddate><starttime>10:00 am</starttime><endtime>11:15 am</endtime><locationid>2</locationid><address>KTPO Bangalore, Plot No.121, EPIP,,  Whitefield Industrial Area,, Bangalore, Karnataka 560052</address><room></room><level></level><agendaspeaker></agendaspeaker><presenter_type></presenter_type><description></description><url></url><createddate>08/28/2012</createddate><modifieddate>08/28/2012</modifieddate><status>1</status><agendaspeakers></agendaspeakers></item>
-    
-    
-    NSString *_title;
-    NSString *_date;
-    NSString *_startTime;
-    NSString *_endTime;
-    NSString *_agendaSpeaker;
-    NSString *_description;
-    NSString *_address;
-    NSString *_endDate;
-    
-}
-
-@property(nonatomic , retain) NSString *title;
-@property(nonatomic , retain) NSString *date;
-@property(nonatomic , retain) NSString *startTime;
-@property(nonatomic , retain) NSString *endTime;
-@property(nonatomic , retain) NSString *agendaSpeaker;
-@property(nonatomic , retain) NSString *description;
-@property(nonatomic , retain) NSString *address;
-@property(nonatomic , retain) NSString *endDate;
-
-@end
-
-
-@implementation AgendaItem
-
-@synthesize address = _address;
-@synthesize date = _date;
-@synthesize startTime = _startTime;
-@synthesize endTime = _endTime;
-@synthesize agendaSpeaker = _agendaSpeaker;
-@synthesize description = _description;
-@synthesize title = _title;
-@synthesize endDate = _endDate;
-
--(id)initWithDict:(NSDictionary*)dict{
-    self = [super init];
-    
-    if (self != nil) {
-        
-        self.title = [dict objectForKey:@"title"];
-        self.description= [dict objectForKey:@"description"];
-        self.date = [dict objectForKey:@"date"];
-        self.startTime = [dict objectForKey:@"starttime"];
-        self.endTime = [dict objectForKey:@"endtime"];
-        self.agendaSpeaker = [dict objectForKey:@"agendaspeaker"];
-        self.address = [dict objectForKey:@"address"];
-        self.endDate = [dict objectForKey:@"enddate"];
-        
-    }
-    return self;
-}
-
-@end
+#import "SpeakersViewController.h"
+#import "AgendaItem.h"
+#import "SpeakerInfo.h"
+#import "SpeakerView.h"
 
 @implementation AgendaDetailsViewController
 
-static AgendaItem *agendaItem;
-
-@synthesize selectedDict;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -86,20 +26,20 @@ static AgendaItem *agendaItem;
     return self;
 }
 
--(void)makeaMap
-{
-    NSString *tmpStr = @"";     
-    if ([selectedDict objectForKey:@"address"]!=nil)
-    {
-        tmpStr = [selectedDict objectForKey:@"address"];
-    }
-    
-    openMap = [[mapViews alloc] init];
-    
-    openMap.urlString = tmpStr;
-    
-    [self presentModalViewController:openMap animated:YES];
-}
+//-(void)makeaMap
+//{
+//    NSString *tmpStr = @"";     
+//    if ([selectedDict objectForKey:@"address"]!=nil)
+//    {
+//        tmpStr = [selectedDict objectForKey:@"address"];
+//    }
+//    
+//    openMap = [[mapViews alloc] init];
+//    
+//    openMap.urlString = tmpStr;
+//    
+//    [self presentModalViewController:openMap animated:YES];
+//}
 
 -(void)homeButtonClicked
 {
@@ -107,12 +47,12 @@ static AgendaItem *agendaItem;
 }
 
 
--(void)agendaSpeakerDetails
-{
-    asdvController = [[AgendaSpeakerDetailsViewController alloc] init];
-    asdvController.selectedArray = speakersDetailsArray;
-    [self.navigationController pushViewController:asdvController animated:YES];
-}
+//-(void)agendaSpeakerDetails
+//{
+//    asdvController = [[AgendaSpeakerDetailsViewController alloc] init];
+//    asdvController.selectedArray = speakersDetailsArray;
+//    [self.navigationController pushViewController:asdvController animated:YES];
+//}
 
 -(void)initView
 {
@@ -122,7 +62,7 @@ static AgendaItem *agendaItem;
     UIColor *labelCOlor = [Util titleColor];
     UIFont *detailFont = [UIFont fontWithName:[Util subTitleFontName] size:14];
     
-    CGSize size = [agendaItem.title sizeWithFont:[UIFont fontWithName:[Util titleFontName] size:16] constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize size = [self.agendaItem.title sizeWithFont:[UIFont fontWithName:[Util titleFontName] size:16] constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  , 10, 290, size.height+10)];
     
@@ -130,134 +70,448 @@ static AgendaItem *agendaItem;
     titleLabel.textColor = [Util titleColor];
     titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.text  = agendaItem.title;
+    titleLabel.text  = self.agendaItem.title;
     titleLabel.numberOfLines = size.height/20;
     
    
     [scrollView addSubview:titleLabel];
      y = 10 + size.height + 10;
     
-    UILabel *startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    UILabel *startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  , y, 290, 21)];
     startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
     startLabel.textColor = labelCOlor;
     startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text=@" Start Date  :";
+    startLabel.text= self.agendaItem.date;
     startLabel.backgroundColor = [UIColor clearColor];
        [scrollView addSubview:startLabel];
     
+//    
+//
+//    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(100  , y, 179, 21)];
+//    startLabel.font = detailFont;
+//    startLabel.textColor = [Util detailTextColor];
+//    startLabel.textAlignment = UITextAlignmentLeft;
+//    startLabel.text= self.agendaItem.date;
+//     startLabel.backgroundColor = [UIColor clearColor];
+//    [scrollView addSubview:startLabel];
     
+    
+    y = y+5 + 21;
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y, 290, 21)];
+    startLabel.font = labelFont;
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentCenter;
+    
+    NSString *timeStr = self.agendaItem.startTime;
+    if (self.agendaItem.endTime != nil) {
+        timeStr = [timeStr stringByAppendingString:@" - "];
+        timeStr = [timeStr stringByAppendingString:self.agendaItem.endTime];
+    }
 
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(115  , y, 179, 21)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text= agendaItem.date;
+     startLabel.text= timeStr;
      startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
+    
+//    
+//    y = y+10 + 21;
+//    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(5  ,y, 91, 21)];
+//    startLabel.font = labelFont;
+//    startLabel.textColor = labelCOlor;
+//    startLabel.textAlignment = UITextAlignmentRight;
+//    startLabel.text=@" Start time :";
+//     startLabel.backgroundColor = [UIColor clearColor];
+//    [scrollView addSubview:startLabel];
+//    
+//    
+//    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(100  , y, 170, 21)];
+//    startLabel.font = detailFont;
+//    startLabel.textColor = [Util detailTextColor];
+//    startLabel.textAlignment = UITextAlignmentLeft;
+//    startLabel.text= self.agendaItem.startTime;
+//     startLabel.backgroundColor = [UIColor clearColor];
+//    [scrollView addSubview:startLabel];
+    
+//    y = y+10 + 21;
+//    
+//    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(5  ,y, 91, 21)];
+//    startLabel.font = labelFont;
+//    startLabel.textColor = labelCOlor;
+//    startLabel.textAlignment = UITextAlignmentRight;
+//    startLabel.text=@" End time :";
+//     startLabel.backgroundColor = [UIColor clearColor];
+//    [scrollView addSubview:startLabel];
+//    
+//    
+//    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(100 , y, 170, 21)];
+//    startLabel.font = detailFont;
+//    startLabel.textColor = [Util detailTextColor];
+//    startLabel.textAlignment = UITextAlignmentLeft;
+//    startLabel.text= self.agendaItem.endTime;
+//    startLabel.backgroundColor = [UIColor clearColor];
+//    [scrollView addSubview:startLabel];
     
     
     y = y+10 + 21;
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  ,y, 91, 21)];
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y,91, 21)];
     startLabel.font = labelFont;
     startLabel.textColor = labelCOlor;
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text=@" End Date  :";
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text=@"Address :";
      startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
+     y = y+10 + 21;
     
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(115  , y, 179, 21)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text= agendaItem.endDate;
-     startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    y = y+10 + 21;
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  ,y, 91, 21)];
-    startLabel.font = labelFont;
-    startLabel.textColor = labelCOlor;
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text=@" Start time  :";
-     startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(115  , y, 170, 21)];
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 , y, 180, 90)];
     startLabel.font = detailFont;
     startLabel.textColor = [Util detailTextColor];
     startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text= agendaItem.startTime;
-     startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    y = y+10 + 21;
-    
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  ,y, 91, 21)];
-    startLabel.font = labelFont;
-    startLabel.textColor = labelCOlor;
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text=@" End time  :";
-     startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(115 , y, 170, 21)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text= agendaItem.endTime;
-    startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    y = y+10 + 21;
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  ,y, 91, 21)];
-    startLabel.font = labelFont;
-    startLabel.textColor = labelCOlor;
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text=@"Address   :";
-     startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(115 , y, 170, 90)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text= agendaItem.address;
+    startLabel.text= self.agendaItem.address;
     startLabel.numberOfLines = 5;
       startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
-    y = y+10 + 90;
     
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  ,y, 170, 21)];
+    y = y+10 + 90;
+
+    
+//    if (self.agendaItem.agendaSpeaker != nil && ![self.agendaItem.agendaSpeaker isEqualToString:@""]) {
+//        
+//        
+//        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10 ,y, 91, 21)];
+//        startLabel.font = labelFont;
+//        startLabel.textColor = labelCOlor;
+//        startLabel.textAlignment = UITextAlignmentLeft;
+//        startLabel.text=@"Speakers :";
+//        startLabel.backgroundColor = [UIColor clearColor];
+//        [scrollView addSubview:startLabel];
+//        
+//        CGSize size = [self.agendaItem.agendaSpeaker sizeWithFont:detailFont constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+//        
+//       UIButton *speakerLabel = [[UIButton alloc]initWithFrame:CGRectMake(100 , y, size.width +10,size.height+10)];
+//        speakerLabel.backgroundColor = [UIColor clearColor];
+//        [speakerLabel setTitle:self.agendaItem.agendaSpeaker forState:UIControlStateNormal];
+//        speakerLabel.titleLabel.font = detailFont;
+//        [speakerLabel setTitleColor:[Util detailTextColor] forState:UIControlStateNormal];
+//        [speakerLabel setTitleColor:[Util linkTextColor] forState:UIControlStateHighlighted];
+//        speakerLabel.titleLabel.textAlignment = UITextAlignmentLeft;
+//        speakerLabel.titleLabel.text= self.agendaItem.agendaSpeaker;
+//        [speakerLabel addTarget:self action:@selector(onSpeakerClick) forControlEvents:UIControlEventTouchUpInside];
+//         
+//        [scrollView addSubview:speakerLabel];
+//        
+//        y = y+10+size.height+10;
+//        
+//        
+//    }
+    
+    if (self.agendaItem.description != nil && ![self.agendaItem.description isEqualToString:@""]) {
+      
+        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y, 91, 21)];
+        startLabel.font = labelFont;
+        startLabel.textColor = labelCOlor;
+        startLabel.textAlignment = UITextAlignmentLeft;
+        startLabel.text=@"Description :";
+        startLabel.backgroundColor = [UIColor clearColor];
+        [scrollView addSubview:startLabel];
+        
+        
+        size= [self.agendaItem.description sizeWithFont:detailFont constrainedToSize:CGSizeMake(250, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        
+        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 ,y+30, 280, size.height +10)];
+        startLabel.font = detailFont;
+        startLabel.textColor = [Util detailTextColor];
+        startLabel.textAlignment = UITextAlignmentLeft;
+        startLabel.text= self.agendaItem.description;
+        startLabel.numberOfLines = size.height/20 + 1;
+        startLabel.backgroundColor = [UIColor clearColor];
+        [scrollView addSubview:startLabel];
+        
+         y = y+30+size.height+6;
+    }
+  
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    
+    if (self.agendaItem.speakers.count >0 ) {
+        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y, 91, 21)];
+        startLabel.font = labelFont;
+        startLabel.textColor = labelCOlor;
+        startLabel.textAlignment = UITextAlignmentLeft;
+        startLabel.text=@"Speakers :";
+        startLabel.backgroundColor = [UIColor clearColor];
+        [scrollView addSubview:startLabel];
+        
+        y= y+5+21;
+    }
+
+    
+    for (SpeakerInfo *info in  self.agendaItem.speakers) {
+        
+        SpeakerView *speakerView = [[SpeakerView alloc]initWithFrame:CGRectMake(0, y, 280, 90)] ;
+        speakerView.titleLabel.text = info.type;
+        
+        NSLog(@"TITLE of speaker %@ \n %@ ",info.name,info.type);
+        speakerView.nameLabel.text = info.name;
+        speakerView.presenterlabel.hidden = NO;
+        
+        if (info.presenterType != nil) {
+            if ([array indexOfObject:info.presenterType] == NSNotFound) {
+                speakerView.presenterlabel.text = info.presenterType;
+                [array addObject:info.presenterType];
+                
+            }else{
+                speakerView.presenterlabel.hidden = YES;
+            }
+        }else{
+             speakerView.presenterlabel.hidden = YES;
+        }
+        
+
+        [speakerView reDraw];
+        
+        y = y+ speakerView.frame.size.height+5;
+        [scrollView addSubview:speakerView];
+        
+    }
+    
+     y= y+20;
+    [scrollView setContentSize:CGSizeMake(300,y)];
+
+}
+
+
+
+
+-(void)initViewForSubItem
+{
+    float y = 0;
+    
+    UIFont *labelFont = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    UIColor *labelCOlor = [Util titleColor];
+    UIFont *detailFont = [UIFont fontWithName:[Util subTitleFontName] size:14];
+    
+    CGSize size = [self.subAgendaItem.title sizeWithFont:[UIFont fontWithName:[Util titleFontName] size:16] constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  , 10, 290, size.height+10)];
+    
+    titleLabel.font = [UIFont fontWithName:[Util titleFontName] size:16];
+    titleLabel.textColor = [Util titleColor];
+    titleLabel.textAlignment = UITextAlignmentCenter;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.text  = self.subAgendaItem.title;
+    titleLabel.numberOfLines = size.height/20;
+    
+    
+    [scrollView addSubview:titleLabel];
+    y = 10 + size.height + 10;
+    
+    UILabel *startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  , y, 290, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentCenter;
+    startLabel.text= self.subAgendaItem.date;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    //
+    //
+    //    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(100  , y, 179, 21)];
+    //    startLabel.font = detailFont;
+    //    startLabel.textColor = [Util detailTextColor];
+    //    startLabel.textAlignment = UITextAlignmentLeft;
+    //    startLabel.text= self.agendaItem.date;
+    //     startLabel.backgroundColor = [UIColor clearColor];
+    //    [scrollView addSubview:startLabel];
+    
+    
+    y = y+5 + 21;
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y, 290, 21)];
+    startLabel.font = labelFont;
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentCenter;
+    
+    NSString *timeStr = self.subAgendaItem.startTime;
+    if (self.agendaItem.endTime != nil) {
+        timeStr = [timeStr stringByAppendingString:@" - "];
+        timeStr = [timeStr stringByAppendingString:self.agendaItem.endTime];
+    }
+    
+    startLabel.text= timeStr;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    //
+    //    y = y+10 + 21;
+    //    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(5  ,y, 91, 21)];
+    //    startLabel.font = labelFont;
+    //    startLabel.textColor = labelCOlor;
+    //    startLabel.textAlignment = UITextAlignmentRight;
+    //    startLabel.text=@" Start time :";
+    //     startLabel.backgroundColor = [UIColor clearColor];
+    //    [scrollView addSubview:startLabel];
+    //
+    //
+    //    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(100  , y, 170, 21)];
+    //    startLabel.font = detailFont;
+    //    startLabel.textColor = [Util detailTextColor];
+    //    startLabel.textAlignment = UITextAlignmentLeft;
+    //    startLabel.text= self.agendaItem.startTime;
+    //     startLabel.backgroundColor = [UIColor clearColor];
+    //    [scrollView addSubview:startLabel];
+    
+    //    y = y+10 + 21;
+    //
+    //    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(5  ,y, 91, 21)];
+    //    startLabel.font = labelFont;
+    //    startLabel.textColor = labelCOlor;
+    //    startLabel.textAlignment = UITextAlignmentRight;
+    //    startLabel.text=@" End time :";
+    //     startLabel.backgroundColor = [UIColor clearColor];
+    //    [scrollView addSubview:startLabel];
+    //
+    //
+    //    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(100 , y, 170, 21)];
+    //    startLabel.font = detailFont;
+    //    startLabel.textColor = [Util detailTextColor];
+    //    startLabel.textAlignment = UITextAlignmentLeft;
+    //    startLabel.text= self.agendaItem.endTime;
+    //    startLabel.backgroundColor = [UIColor clearColor];
+    //    [scrollView addSubview:startLabel];
+    
+    
+    y = y+10 + 21;
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y,91, 21)];
     startLabel.font = labelFont;
     startLabel.textColor = labelCOlor;
     startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text=@"Description  :";
-      startLabel.backgroundColor = [UIColor clearColor];
+    startLabel.text=@"Address :";
+    startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
-//    agendaItem.description  = @"DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION ";
+    y = y+10 + 21;
     
-    size= [agendaItem.description sizeWithFont:detailFont constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
-    
-   
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20 ,y+30, 280, size.height +10)];
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 , y, 180, 90)];
     startLabel.font = detailFont;
     startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentCenter;
-    startLabel.text= agendaItem.description;
-    startLabel.numberOfLines = size.height/20 + 2;
-     startLabel.backgroundColor = [UIColor clearColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= self.subAgendaItem.address;
+    startLabel.numberOfLines = 5;
+    startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
-    [scrollView setContentSize:CGSizeMake(300, 300 + size.height + 50)];
+    
+    y = y+10 + 90;
+    
+    
+//    if (self.agendaItem.agendaSpeaker != nil && ![self.agendaItem.agendaSpeaker isEqualToString:@""]) {
+//        
+//        
+//        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10 ,y, 91, 21)];
+//        startLabel.font = labelFont;
+//        startLabel.textColor = labelCOlor;
+//        startLabel.textAlignment = UITextAlignmentLeft;
+//        startLabel.text=@"Speakers :";
+//        startLabel.backgroundColor = [UIColor clearColor];
+//        [scrollView addSubview:startLabel];
+//        
+//        CGSize size = [self.agendaItem.agendaSpeaker sizeWithFont:detailFont constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+//        
+//        UIButton *speakerLabel = [[UIButton alloc]initWithFrame:CGRectMake(100 , y, size.width +10,size.height+10)];
+//        speakerLabel.backgroundColor = [UIColor clearColor];
+//        [speakerLabel setTitle:self.subAgendaItem.agendaSpeaker forState:UIControlStateNormal];
+//        speakerLabel.titleLabel.font = detailFont;
+//        [speakerLabel setTitleColor:[Util detailTextColor] forState:UIControlStateNormal];
+//        [speakerLabel setTitleColor:[Util linkTextColor] forState:UIControlStateHighlighted];
+//        speakerLabel.titleLabel.textAlignment = UITextAlignmentLeft;
+//        speakerLabel.titleLabel.text= self.agendaItem.agendaSpeaker;
+//        [speakerLabel addTarget:self action:@selector(onSpeakerClick) forControlEvents:UIControlEventTouchUpInside];
+//        
+//        [scrollView addSubview:speakerLabel];
+//        
+//        y = y+10+size.height+10;
+//        
+//        
+//    }
+    
+    if (self.subAgendaItem.description != nil && ![self.subAgendaItem.description isEqualToString:@""]) {
+        
+        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y, 91, 21)];
+        startLabel.font = labelFont;
+        startLabel.textColor = labelCOlor;
+        startLabel.textAlignment = UITextAlignmentLeft;
+        startLabel.text=@"Description :";
+        startLabel.backgroundColor = [UIColor clearColor];
+        [scrollView addSubview:startLabel];
+        
+        
+        size= [self.subAgendaItem.description sizeWithFont:detailFont constrainedToSize:CGSizeMake(250, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        
+        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 ,y+30, 280, size.height +10)];
+        startLabel.font = detailFont;
+        startLabel.textColor = [Util detailTextColor];
+        startLabel.textAlignment = UITextAlignmentLeft;
+        startLabel.text= self.subAgendaItem.description;
+        startLabel.numberOfLines = size.height/20 + 1;
+        startLabel.backgroundColor = [UIColor clearColor];
+        [scrollView addSubview:startLabel];
+        
+        y = y+30+size.height+6;
+    }
+    
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    
+    if (self.subAgendaItem.speakers.count >0 ) {
+        startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y, 91, 21)];
+        startLabel.font = labelFont;
+        startLabel.textColor = labelCOlor;
+        startLabel.textAlignment = UITextAlignmentLeft;
+        startLabel.text=@"Speakers :";
+        startLabel.backgroundColor = [UIColor clearColor];
+        [scrollView addSubview:startLabel];
+        
+        y= y+5+21;
+    }
+    
+    
+    for (SpeakerInfo *info in  self.subAgendaItem.speakers) {
+        
+        SpeakerView *speakerView = [[SpeakerView alloc]initWithFrame:CGRectMake(0, y, 280, 90)] ;
+        speakerView.titleLabel.text = info.type;
+        
+        NSLog(@"TITLE of speaker %@ \n %@ ",info.name,info.type);
+        speakerView.nameLabel.text = info.name;
+        speakerView.presenterlabel.hidden = NO;
+        
+        if (info.presenterType != nil) {
+            if ([array indexOfObject:info.presenterType] == NSNotFound) {
+                speakerView.presenterlabel.text = info.presenterType;
+                [array addObject:info.presenterType];
+                
+            }else{
+                speakerView.presenterlabel.hidden = YES;
+            }
+        }else{
+            speakerView.presenterlabel.hidden = YES;
+        }
+        
+        
+        [speakerView reDraw];
+        
+        y = y+ speakerView.frame.size.height+5;
+        [scrollView addSubview:speakerView];
+        
+    }
+    
+    y= y+20;
+    [scrollView setContentSize:CGSizeMake(300,y)];
+    
+}
 
+
+
+-(void)onSpeakerClick{
+    SpeakersViewController *controller = [[SpeakersViewController alloc]init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)dealloc
@@ -278,36 +532,24 @@ static AgendaItem *agendaItem;
 {
     [super viewDidLoad];
     
-    agendaItem = nil;
-    
-    // Do any additional setup after loading the view from its nib.
+     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
 
-                                    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(-20, 0, 250, 25)];
-    label.backgroundColor = [UIColor clearColor];
-    [label setFont:[UIFont fontWithName:@"Helvetica-Bold" size:13]];
-    label.textAlignment = UITextAlignmentCenter;
-    label.textColor = [UIColor whiteColor];
-    label.text =[selectedDict objectForKey:@"title"];
-    self.navigationItem.titleView = label;
+    self.title = @"Agenda Info";
     
     scrollView.frame = CGRectMake(10, 0, 300, 285);
     [scrollView setContentSize:CGSizeMake(300, 600)];
     scrollView.showsVerticalScrollIndicator = NO;
     
-    agendaItem = [[AgendaItem alloc]initWithDict:selectedDict];
-    [self initView];
-    
-//    UITapGestureRecognizer *txtTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeaMap)];
-//    [addressTxtView addGestureRecognizer:txtTapGesture];
-//    addressTxtView.userInteractionEnabled = YES;
-//
-//    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
-
+    if(self.agendaItem != nil){
+        [self initView];
+    }else{
+        [self initViewForSubItem];
+    }
+        
     
 }
 

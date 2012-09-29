@@ -11,6 +11,7 @@
 #import "SupportedByTableViewCell.h"
 #import "Util.h"
 #import "SupportedBy.h"
+#import "CustomTableViewCell.h"
 
 #define ksupportedByTableCellHeight 80.0
 
@@ -51,26 +52,23 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    SupportedByTableViewCell *cell;
+    CustomTableViewCell *cell;
     NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
-    cell = (SupportedByTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
     {
-        cell = [[SupportedByTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
-        cell.titleLabel.textColor = [Util subTitleColor];
-        cell.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
+        [cell setDefaultImage:nil];
     }
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+  
     
     NSMutableDictionary *tmpDict = [supportedByArray objectAtIndex:indexPath.row];
       
     
     if ([tmpDict objectForKey:@"title"]!= nil)
     {
-        cell.titleLabel.text = [tmpDict objectForKey:@"title"];
+        cell.textLabel.text = [tmpDict objectForKey:@"title"];
     }
    
     NSString *logo =  [tmpDict objectForKey:@"logo"];
@@ -146,58 +144,53 @@
 }
 
 
-
--(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(SupportedByTableViewCell*)cell{
-    
-    CGSize point  = CGSizeMake(100, 80);
-    
-//    [NSInvocationOperation ];
-    
-   UIImage *image =  [imageDownloader getImage:url];
-    if (image != nil) {
-        NSLog(@"HIT AT %@ ",url);
-//        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
-        
-        cell.supporterImageView.image = image;
-//        [supportedByTableView reloadData];
-        
-              
-    }else{
-        
-          NSLog(@"FAIL AT %@ ",url);
-        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
-        loader.indexPath = indexpath;
-        [imageDownloader addOperation:loader];
-        [currentDownloads addObject:loader];
-        
-    }
-}
-
--(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
-   
-    NSLog(@" DOWNLOAD COMPLETED FOR %d ",imageLoader.indexPath.row);
-    
-    [currentDownloads removeObject:imageLoader];
-    [imageDownloader removeOperation:imageLoader];
-    
-//    SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:imageLoader.indexPath];
-//    cell.supporterImageView.image = image;
-//    [supportedByTableView reloadData];
-//    [appDelegate cacheImage:image withKey:imageLoader.url];
-    
-//    [supportedByTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:imageLoader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
-    [self performSelectorOnMainThread:@selector(updateCell:) withObject:imageLoader waitUntilDone:YES];
-    
-}
+//
+//-(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(SupportedByTableViewCell*)cell{
+//    
+//    CGSize point  = CGSizeMake(100, 80);
+//    
+////    [NSInvocationOperation ];
+//    
+//   UIImage *image =  [imageDownloader getImage:url];
+//    if (image != nil) {
+//        NSLog(@"HIT AT %@ ",url);
+////        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
+//        
+//        cell.supporterImageView.image = image;
+////        [supportedByTableView reloadData];
+//        
+//              
+//    }else{
+//        
+//          NSLog(@"FAIL AT %@ ",url);
+//        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
+//        loader.indexPath = indexpath;
+//        [imageDownloader addOperation:loader];
+//        [currentDownloads addObject:loader];
+//        
+//    }
+//}
+//
+//-(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
+//   
+//    NSLog(@" DOWNLOAD COMPLETED FOR %d ",imageLoader.indexPath.row);
+//    
+//    [currentDownloads removeObject:imageLoader];
+//    [imageDownloader removeOperation:imageLoader];
+//    
+////    SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:imageLoader.indexPath];
+////    cell.supporterImageView.image = image;
+////    [supportedByTableView reloadData];
+////    [appDelegate cacheImage:image withKey:imageLoader.url];
+//    
+////    [supportedByTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:imageLoader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+//    [self performSelectorOnMainThread:@selector(updateCell:) withObject:imageLoader waitUntilDone:YES];
+//    
+//}
 
 -(void)updateCell:(ImageLoader*)loader{
     [supportedByTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
--(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
-    NSLog(@"ERROR DOWNLOADING ");
-    [imageDownloader removeOperation:imageLoader];
-    [currentDownloads removeObject:imageLoader];
-}
 
 @end

@@ -53,14 +53,7 @@
         nameLabel.userInteractionEnabled = NO;
         nameLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:nameLabel];
-        
-        activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        activityIndicator.frame = CGRectMake(40, 15, 20, 20);
-        [activityIndicator startAnimating];
-        [exhibitorsImageView addSubview:activityIndicator];
-        
-        
-        
+       
         locationTxtView = [[UILabel alloc] initWithFrame:CGRectMake(5, 70, 290, 40)];
         locationTxtView.numberOfLines = 2;
         locationTxtView.backgroundColor = [UIColor clearColor];
@@ -108,10 +101,6 @@
 //    [pool release];
 }
 
--(void)makeaMap
-{
-    [evc makeaMap:locationTxtView.tag];
-}
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

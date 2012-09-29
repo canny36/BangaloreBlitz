@@ -8,48 +8,25 @@
 
 #import <UIKit/UIKit.h>
 #import "ImageDownloader.h"
+#import "CannyViewController.h"
 
 @class AppNMediaAppDelegate;
 @class  WebViewController;
-@interface SponsersViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,ImageDownloadDelegate>
+@interface SponsersViewController :CannyViewController <UITableViewDataSource,UITableViewDelegate>
 {
     AppNMediaAppDelegate    *appDelegate;
     WebViewController *webViewController;
-    IBOutlet UIImageView *mainBgView;
-    IBOutlet UIImageView *subBgView;
 
     UITableView *sponsersTableView;
     
     NSMutableArray *sponsersArray;
     NSMutableArray *sponsersImagesArray;
-    
-    //////////// Styles data
-    int backGroundColor;
-    NSString *titleColor;
-    NSString *subTitleColor;
-    
-    NSString *titleFontName;
-    NSString *subTitleFontName;
-    
-    NSString *titleFontSize;
-    NSString *subTitleFontSize;
-    //////// offline
-    NSMutableArray *offlineSponserImagesArr;
-    IBOutlet UIImageView *transparentImageView;
-    
     NSMutableArray *sponsorsArray;
-   
-    NSMutableArray *currentDownloads;
-    ImageDownloader *imageDownloader;
     
     NSString *categoryName;
 }
 
--(void)assignStyles;
--(void)homeButtonClicked;
-
 @property(nonatomic,retain)NSMutableArray *sponsorsArray;
 @property(nonatomic,retain) NSString *categoryName;
-
 
 @end

@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CannyViewController.h"
 
-@interface SponsorCategoryController : UIViewController<UITableViewDelegate,UITableViewDataSource>{
+@interface SponsorCategoryController : CannyViewController<UITableViewDelegate,UITableViewDataSource>{
     
-    IBOutlet UITableView *tableView;
+    IBOutlet UITableView *_tableView;
     NSArray *array;
     NSMutableDictionary *sponsorDict;
 }

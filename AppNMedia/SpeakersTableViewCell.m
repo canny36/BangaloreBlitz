@@ -8,134 +8,74 @@
 
 #import "SpeakersTableViewCell.h"
 #import "SpeakersViewController.h"
+#import "UIImage+scale.h"
 
 @implementation SpeakersTableViewCell
-@synthesize speakerImageView;
-@synthesize speakerNameLabel;
-@synthesize speakersDetailsLabel;
-@synthesize selectButton;
-@synthesize buttonSelected;
-@synthesize activityIndicatorview;
-@synthesize speakerViewController;
-@synthesize fromSearchTable;
+
 
 static UIImage *defaultImage;
+static UIImage *greyImage;
+static UIImage *goldImage;
+
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) 
     {
-        // Initialization code
 
-        self.clipsToBounds = YES;
-        self.selectionStyle = UITableViewCellSelectionStyleGray;
         
-        UIImage *image = [UIImage imageNamed:@"list_bg.png"];
-        UIImageView *iView  = [[UIImageView alloc]initWithFrame:CGRectZero];
-        iView.image = image;
-        
-        self.backgroundView = iView;
-        
-        image = [UIImage imageNamed:@"list_over_bg.png"];
-        iView  = [[UIImageView alloc]initWithFrame:CGRectZero];
-        iView.image = image;
-        
-        self.selectedBackgroundView = iView;
-        
-        
-        self.backgroundColor = [UIColor clearColor];
-        speakerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 70, 65)];
+        if (defaultImage == nil) {
+            defaultImage = [UIImage imageNamed:@"no_image.png"];
+            CGSize size = defaultImage.size;
+            CGSize itemSize = CGSizeMake(size.width/2, size.height/2);
+            UIGraphicsBeginImageContext(itemSize);
+            CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
+            [defaultImage drawInRect:imageRect];
+            defaultImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+        }
 
-        speakerImageView.contentMode = UIViewContentModeScaleAspectFill;
-        [self addSubview:speakerImageView];
+       
+        if (goldImage == nil) {
+            goldImage =  [UIImage imageNamed:@"gold_star.png"];
+        }
+       
+        if (greyImage == nil) {
+            greyImage =  [UIImage imageNamed:@"gray_star.png"];
+        }
+
         
-        speakerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(100
-                                                                     , 0, 180, 60)];
-        speakerNameLabel.numberOfLines = 3;
-        speakerNameLabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:speakerNameLabel];
-                 
-        speakersDetailsLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 30, 190, 20)];
-        speakersDetailsLabel.backgroundColor = [UIColor clearColor];
-        //[self addSubview:speakersDetailsLabel];
-           
-        selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        selectButton.frame = CGRectMake(265, 20, 30, 30);
-        [selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-        [selectButton addTarget:self action:@selector(selectButtonSetImage :) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:selectButton];
+        self.selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.selectButton.frame = CGRectMake(275 , 10,
+                                        25, 25);
+        [self.selectButton setImage:greyImage forState:UIControlStateNormal];
+        [self.selectButton addTarget:self action:@selector(selectButtonSetImage :) forControlEvents:UIControlEventTouchUpInside];
+       
+        self.accessoryView = self.selectButton;
         
-//        activityIndicatorview = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-//        activityIndicatorview.frame = CGRectMake(25, 20, 20, 20);
-//        [activityIndicatorview startAnimating];
-//        [speakerImageView addSubview:activityIndicatorview];
-        
+        [self setDefaultImage:defaultImage];
     }
     return self;
 }
 
--(void)loadDefaultImage{
-    
-    if (defaultImage == nil) {
-        defaultImage = [UIImage imageNamed:@"default_img.png"];
-        CGSize size = defaultImage.size;
-        CGSize itemSize = CGSizeMake(size.width/2, size.height/2);
-        UIGraphicsBeginImageContext(itemSize);
-        CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
-        [defaultImage drawInRect:imageRect];
-        defaultImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-    }
-    //        imageView.backgroundColor = [UIColor  colorWithPatternImage:defaultImage];
-    
-    speakerImageView.contentMode = UIViewContentModeScaleToFill;
-    speakerImageView.image = defaultImage;
-}
+
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
 
-    // Configure the view for the selected state
+    
 }
 
--(void)assignImage:(NSString *)path
-{
-     @autoreleasepool {
-    NSURL *url=[NSURL URLWithString:path];
-    UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        if(img)
-        {
-        speakerImageView.image = img;
-        }
-        else
-        {
-         speakerImageView.image = [UIImage imageNamed:@"NoImage.png"];
-        }
-    [activityIndicatorview stopAnimating];
-     }
-}
--(void)selectButtonSetImage:(UIButton *)sender
-{
-    
-    
-    if (buttonSelected == NO)
-    {
-        buttonSelected = YES;
-        [selectButton setImage:[UIImage imageNamed:@"gold_star.png"] forState:UIControlStateNormal];
-        [speakerViewController addOrDeleteFromMyFavorites:sender.tag checkMark:buttonSelected fromSearchTable:fromSearchTable];
-    }
-    else
-    {
-        buttonSelected = NO;
-        [selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-        [speakerViewController addOrDeleteFromMyFavorites:sender.tag checkMark:buttonSelected fromSearchTable:fromSearchTable];
 
-
-    }
-    //NSLog(@"%d",sender.tag);
+-(void)selectButtonSetImage:(UIButton*)sender
+{
+    self.selectButton.selected = !self.selectButton.selected;
+    self.buttonSelected = self.selectButton.selected;
+    [self.selectButton setImage: self.selectButton.selected ? goldImage : greyImage forState:UIControlStateNormal];
+    [self.speakerViewController onBookmarkButtonClick:sender];
     
 }
 

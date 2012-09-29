@@ -9,6 +9,7 @@
 #import "EventsParserClass.h"
 #import "AppNMediaAppDelegate.h"
 #import "XMLToDictionary.h"
+#import "Agenda.h"
 
 @implementation EventsParserClass
 @synthesize resultDict;
@@ -127,7 +128,7 @@
     
     
     XMLToDictionary *xmlParsing = [[XMLToDictionary alloc] init];
-    [xmlParsing setNeedAttributesKey:YES needEmptyTags:YES];
+    [xmlParsing setNeedAttributesKey:YES needEmptyTags:NO];
   
     if (webServiceData != nil) {
         
@@ -207,6 +208,8 @@
 
 -(void)storeingInformation
 {
+    
+    [Agenda clear];
     if (allInfoParsingCompleted == YES)
     {
         NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithCapacity:0];

@@ -24,7 +24,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+       
     }
     return self;
 }
@@ -43,7 +43,6 @@
    
     
     openMap = [[mapViews alloc] init];
-    
     openMap.urlString = tmpStr;
     
     [self presentModalViewController:openMap animated:YES];
@@ -59,21 +58,7 @@
 - (void)dealloc
 {
     exhibitorsArray = nil;
-//    [exhibitorsArray release];
-//    [exhibitorsTableView release];
-    offlineExhibitorsImagesArr = nil;
-//    [offlineExhibitorsImagesArr release];
-//    [super dealloc];
 
-}
-
--(void)assignStyles
-{
-    titleFontName =@"Helvetica-Bold";
-    titleFontSize = @"14";
-    
-    subTitleFontName =@"Helvetica";
-    subTitleFontSize = @"12";
 
 }
 
@@ -93,90 +78,36 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    ExhibitorsTableCell *cell = (ExhibitorsTableCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CustomTableViewCell *cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) 
     {
-        cell = [[ExhibitorsTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        [cell setDefaultImage:nil];
     }
    
     NSMutableDictionary *tmpDict = [exhibitorsArray objectAtIndex:indexPath.row];
 
     
-    [cell.nameLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    cell.nameLabel.textColor = [UIColor whiteColor];
     
-    
-    [cell.locationTxtView setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    cell.locationTxtView.textColor = [UIColor whiteColor];
-    
-    
-    [cell.roomTxtView setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    cell.roomTxtView.textColor = [UIColor whiteColor];
-    
-    
-    cell.nameLabel.text = [tmpDict objectForKey:@"name"]; 
-    cell.evc =self;
-    cell.locationTxtView.tag = indexPath.row;
-    if ([tmpDict objectForKey:@"location_address"] != nil) 
-    {
-        cell.locationTxtView.text = [tmpDict objectForKey:@"location_address"]; 
-        //NSLog(@"%@",[tmpDict objectForKey:@"location_address"]);
+    cell.textLabel.text = [tmpDict objectForKey:@"name"];
 
-    }
-    if ([tmpDict objectForKey:@"room"] != nil) 
-    {
-        cell.roomTxtView.text = [tmpDict objectForKey:@"room"]; 
-        
-    }
-    
-    if (appDelegate.runAppInOffline == NO)
-    {
-        BOOL network = [appDelegate networkCheckingMethod];
-        
-        if (network == YES)
-        {
-            
-            NSString *baseUrl = BASE_URL;
-            if ([tmpDict objectForKey:@"logo"] != nil) 
-            {
-                NSString *imageUrl = [tmpDict objectForKey:@"logo"];
-                baseUrl = [baseUrl stringByAppendingString:imageUrl];
-                
-            }
-            
-            [cell performSelectorInBackground:@selector(assignImage:) withObject:baseUrl];
-        }
-        else
-        {
-            if ([offlineExhibitorsImagesArr count] == [exhibitorsArray count])
-            {
-                NSData *tmpData = [offlineExhibitorsImagesArr objectAtIndex:indexPath.row];
-                cell.exhibitorsImageView.image = [UIImage imageWithData:tmpData];
-            }
-            else
-            {
-                cell.exhibitorsImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-            }
-            [cell.activityIndicator stopAnimating]; 
-        }
    
+    NSString *logo = [tmpDict objectForKey:@"logo"];
+    
+    NSLog(@" LOGO %@   ",logo);
+    if (logo != nil && ![logo isEqualToString:@""]) {
+        
+        NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
+        [mainlogo appendString:logo];
+        NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
+        [self loadImageAtIndexpath:indexPath urlString:mainlogo cell : cell];
+    }else{
+        NSLog(@" NO LOGO   ");
+        
     }
-    else
-    {
-        if ([offlineExhibitorsImagesArr count] == [exhibitorsArray count])
-        {
-            NSData *tmpData = [offlineExhibitorsImagesArr objectAtIndex:indexPath.row];
-            cell.exhibitorsImageView.image = [UIImage imageWithData:tmpData];
-        }
-        else
-        {
-            cell.exhibitorsImageView.image = [UIImage imageNamed:@"NoImage.png"]; 
-        }
-        [cell.activityIndicator stopAnimating]; 
-    }
-
-    return cell;
+    
+      return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -215,10 +146,6 @@
     
     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
-    [self assignStyles];
-    
-    UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
-    self.navigationItem.rightBarButtonItem = homeButton;
 
     
     self.title = @"Exhibitors";
@@ -233,31 +160,16 @@
     {
         [exhibitorsArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"exhibitorslist"] objectForKey:@"exhibitor"]];
     }    
-        
-    offlineExhibitorsImagesArr = [[NSMutableArray alloc] initWithCapacity:0];
     
-    NSString *filePath  = [self dataFilePathForOfflineImages];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-    {
-        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-        
-        if ([tmpDict objectForKey:@"offlineExhibitorsImagesArr"]!= nil)
-        {
-            [offlineExhibitorsImagesArr addObjectsFromArray:[tmpDict objectForKey:@"offlineExhibitorsImagesArr"]];
-        }
-
-    }
-    
-    exhibitorsTableView =[[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310,280)];
+    exhibitorsTableView =[[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310,290)];
     exhibitorsTableView.dataSource= self;
     exhibitorsTableView.delegate = self;
     exhibitorsTableView.backgroundColor = [UIColor clearColor];
     exhibitorsTableView.showsVerticalScrollIndicator= NO;
     exhibitorsTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     exhibitorsTableView.separatorColor = [UIColor clearColor];
+    
     [self.view addSubview:exhibitorsTableView];
-    [subBgView setFrame:CGRectMake(5, 5, 310,290)];
     
 }
 
@@ -271,5 +183,11 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+-(void)updateCell:(ImageLoader*)loader{
+    
+    [exhibitorsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+ }
+
 
 @end

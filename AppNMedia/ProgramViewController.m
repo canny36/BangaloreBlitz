@@ -10,9 +10,11 @@
 #import "Program.h"
 #import "AppNMediaAppDelegate.h"
 #import "WebViewController.h"
-#import "ProgramCell.h"
+#import "CustomTableViewCell.h"
+#import "Util.h"
 
-#define kNewsTableCellHeight 100
+#define kNewsTableCellHeight 80
+#define radians( degrees ) ( degrees * M_PI / 180 ) 
 
 @interface ProgramViewController ()
 
@@ -70,22 +72,18 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
        NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
-    ProgramCell *cell = (ProgramCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+     CustomTableViewCell *cell = (CustomTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
     {
-        cell = [[ProgramCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
-        cell.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:15];
-        cell.titleLabel.textColor = [UIColor whiteColor];
-
-        
-        cell.backgroundColor = [UIColor darkGrayColor];
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+            [cell setDefaultImage:nil];
     }
     
 
     Program *program = [programs objectAtIndex:indexPath.row];
     
-    cell.titleLabel.text = program.title;
+    cell.textLabel.text = program.title;
     NSString *logo =  program.logo;
      NSLog(@" LOGO %@   ",logo);
     if (logo != nil && ![logo isEqualToString:@""]) {
@@ -96,7 +94,6 @@
         [self loadImageAtIndexpath:indexPath urlString:mainlogo cell : cell];
     }else{
         NSLog(@" NO LOGO   ");
-        
     }
     
     
@@ -105,8 +102,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
      [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    Program *program = [programs objectAtIndex:indexPath.row
-                        ];
+    Program *program = [programs objectAtIndex:indexPath.row];
     
     if (program != nil)
     {
@@ -125,59 +121,20 @@
 }
 
 
--(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(ProgramCell*)cell{
-    
-    if (imageDownloader == nil) {
-        imageDownloader =  [ImageDownloader shareInstance];
-    }
-    
-    CGSize point  = CGSizeMake(100, 80);
-    
-    //    [NSInvocationOperation ];
-    
-    UIImage *image =  [imageDownloader getImage:url];
-    if (image != nil) {
-        NSLog(@"HIT AT %@ ",url);
-        //        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
-      
-        cell.pimageView.image = image;
-
-    }else{
-        
-        NSLog(@"FAIL AT %@ ",url);
-        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
-        loader.indexPath = indexpath;
-
-        
-        [imageDownloader addOperation:loader];
-        [currentDownloads addObject:loader];
-        
-    }
-}
-
--(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
-    
-    NSLog(@" DOWNLOAD COMPLETED FOR %d ",imageLoader.indexPath.row);
-    
-    [currentDownloads removeObject:imageLoader];
-    [imageDownloader removeOperation:imageLoader];
-    
-    [self performSelectorOnMainThread:@selector(updateCell:) withObject:imageLoader waitUntilDone:YES];
-    
-}
 
 -(void)updateCell:(ImageLoader*)loader{
+    
     [_tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
+    
 }
 
 
--(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
-    NSLog(@"ERROR DOWNLOADING ");
-     [imageDownloader removeOperation:imageLoader];
-    [currentDownloads removeObject:imageDownloader];
+
+-(void)viewWillDisappear:(BOOL)animated{
+    
+    [super viewWillDisappear:animated];
+
 }
-
-
 
 
 @end

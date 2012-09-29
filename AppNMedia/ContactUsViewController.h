@@ -47,6 +47,9 @@
     NSString *subTitleFontSize;
     mapViews *openMap;
     IBOutlet UIImageView *transparentImageView;
+    
+    
+    IBOutlet UIScrollView *scrollView;
 }
 -(void)assignStyles;
 -(void)homeButtonClicked;

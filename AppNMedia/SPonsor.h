@@ -10,46 +10,21 @@
 
 @interface SPonsor : NSObject{
     
-    
-    
-//    sponsorslist =         {
-//        category =             (
-//                                {
-//                                    attributes =                     {
-//                                        id = 1;
-//                                        name = Event;
-//                                    };
-//                                    sponsor =                     (
-//                                                                   {
-//                                                                       address1 = Madiwala;
-//                                                                       city = Banglore;
-//                                                                       createdby = 29;
-//                                                                       createddate = "09/12/2012";
-//                                                                       eventid = 1;
-//                                                                       level = "Event Sponsor";
-//                                                                       name = eventsp2;
-//                                                                       rank = 1;
-//                                                                       sponsorid = 2;
-//                                                                       state = KT;
-//                                                                       status = 1;
-//                                                                   },
-    
-    NSString *categoryID;
-    NSString *categoryName;
-    NSString *address1;
-    NSString *city;
-    NSString *createdBy;
-    NSString *createdDate;
-    NSString *eventId;
-    NSString *level;
-    NSString *name;
-    NSString *rank;
-    NSString *sponsorId;
-    NSString *state;
-    NSString *status;
-    NSString *logo;
-    NSString *logourl;
-
+    NSString *_categoryID;
+    NSString *_categoryName;
+    NSString *_address1;
+    NSString *_city;
+    NSString *_createdBy;
+    NSString *_createdDate;
+    NSString *_eventId;
+    NSString *_level;
+    NSString *_name;
+    NSString *_rank;
+    NSString *_sponsorId;
+    NSString *_state;
+    NSString *_status;
+    NSString *_logo;
+    NSString *_logourl;
 
 }
 

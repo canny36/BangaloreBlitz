@@ -20,8 +20,10 @@
     IBOutlet UILabel  *onlineOfflinelabel;
     IBOutlet UILabel  *syncTimeLabel;
     IBOutlet UITextField *timeTextFiled;
+    IBOutlet UILabel  *appUpdateLabel;
+    IBOutlet UILabel  *appUpdateDetail;
+        
     UIBarButtonItem *homeButton;
-    
     UIPickerView *dataSynchTimePicker;
     NSMutableArray *pickerViewSourceArray;
     UIToolbar *toolBarpicker;

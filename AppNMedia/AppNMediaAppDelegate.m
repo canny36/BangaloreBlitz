@@ -75,8 +75,10 @@ static NSString *cachedImageDir;
 {
     // Override point for customization after application launch.
     [self pushNotifications];
-   
     
+   
+   
+    NSLog(@" FINISH LAUNCHING WITH OPTIONS ");
 //    [[NSNotificationCenter defaultCenter] addObserver:self
 //                                             selector:@selector(reachabilityChanged:) 
 //                                                 name:kReachabilityChangedNotification 
@@ -97,6 +99,9 @@ static NSString *cachedImageDir;
     };
     
     [reach startNotifier];
+    
+    selectedEvent = 0;
+    [self mainMethod];
     
         
     //[self isNetWorkAvailable];
@@ -147,9 +152,9 @@ static NSString *cachedImageDir;
     
     
     NSLog(@" APPLICATION BECOME ACTIVE ");
-    selectedEvent = 0;
-    [self mainMethod];
+
     
+       [self performSelector:@selector(callOrNotDataSynchMethod) withObject:nil afterDelay:60];
   }
 
 -(void)mainMethod
@@ -475,7 +480,7 @@ static NSString *cachedImageDir;
     [self tokenIdMethodStoreMethod];
     
     //[self loadCompleteOffLineImages];
-   [self performSelector:@selector(callOrNotDataSynchMethod) withObject:nil afterDelay:60];
+
     
    
 

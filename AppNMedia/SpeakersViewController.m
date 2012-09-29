@@ -13,8 +13,12 @@
 #import "AgendaDetailsViewController.h"
 #import "ImageLoader.h"
 #import "Util.h"
+#import "SpeakersViewDetailsController.h"
+#import "SpeakerInfo.h"
+#import "CustomTableViewCell.h"
+#import "UIImage+scale.h"
 
-#define kSpeakersTableCellHeight 80.0
+#define kSpeakersTableCellHeight 100.0
 @implementation SpeakersViewController
 @synthesize offlineSpeakersImagesArr;
 
@@ -31,12 +35,12 @@
 	return [documentsDirectory stringByAppendingPathComponent:@"myfavoriteSpeakers.plist"];
 }
 
-- (NSString *)dataFilePathForOfflineImages
-{ 
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
-	NSString *documentsDirectory = [paths objectAtIndex:0];
-	return [documentsDirectory stringByAppendingPathComponent:@"offlineImages.plist"];
-}
+//- (NSString *)dataFilePathForOfflineImages
+//{ 
+//	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
+//	NSString *documentsDirectory = [paths objectAtIndex:0];
+//	return [documentsDirectory stringByAppendingPathComponent:@"offlineImages.plist"];
+//}
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -48,183 +52,24 @@
     }
     return self;
 }
+
 -(void)homeButtonClicked
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
--(void)addOrDeleteFromMyFavorites:(int )selectedIndex checkMark:(BOOL)checkMark fromSearchTable:(BOOL)fromSearchTable
-{
+
+-(void)saveFavorites{
     NSString *filePath = [self dataFilePathForMyfavoritesSpeakersInfo];
     
-    if (([[NSFileManager defaultManager] fileExistsAtPath:filePath])) 
-    {
-        myFavIndexesArray = [[NSMutableArray alloc] initWithContentsOfFile:filePath];
-    }
-    else
-    {
-        myFavIndexesArray = [[NSMutableArray alloc] initWithCapacity:0];
-    }
-    
-    
-    if (checkMark ==YES)
-    {
-        if (fromSearchTable == NO) 
-        {
-            NSMutableDictionary *tmpDict = [speakersArray objectAtIndex:selectedIndex];
-            if ([tmpDict objectForKey:@"speakerid"]!= nil)
-            {
-                [myFavIndexesArray addObject:[tmpDict objectForKey:@"speakerid"]];
-                [myFavoriteSpeakers addObject:[tmpDict objectForKey:@"speakerid"]];
-            }
-
-        }
-        else
-        {
-            NSMutableDictionary *tmpDict = [searchArr objectAtIndex:selectedIndex];
-            if ([tmpDict objectForKey:@"speakerid"]!= nil)
-            {
-                [myFavIndexesArray addObject:[tmpDict objectForKey:@"speakerid"]];
-                [myFavoriteSpeakers addObject:[tmpDict objectForKey:@"speakerid"]];
-            }
+    NSLog(@"SAVE FAVORITES =  %@ ", myFavoriteSpeakers);
+    [myFavoriteSpeakers writeToFile:filePath atomically:YES];
  
-        }
-        
-        
-        
-        
-        
-    }
-    else
-    { 
-        if ([myFavIndexesArray count]>0)
-        {
-            if (fromSearchTable == NO)
-            {
-                NSMutableDictionary *tmpDict = [speakersArray objectAtIndex:selectedIndex];
-                
-                NSString *speakerIdStr = @"";
-                if ([tmpDict objectForKey:@"speakerid"]!= nil)
-                {
-                    speakerIdStr = [tmpDict objectForKey:@"speakerid"];
-                    
-                }
-                
-                for (int i=0; i<[myFavIndexesArray count]; i++)
-                {
-                    NSString *tmpStr = [myFavIndexesArray objectAtIndex:i];
-                    if ([tmpStr isEqualToString:speakerIdStr])
-                    {
-                        [myFavIndexesArray removeObjectAtIndex:i];
-                        [myFavoriteSpeakers removeObjectAtIndex:i];
-                    }
-                    
-                }
-
-            }
-            else
-            {
-                NSMutableDictionary *tmpDict = [searchArr objectAtIndex:selectedIndex];
-                
-                NSString *speakerIdStr = @"";
-                if ([tmpDict objectForKey:@"speakerid"]!= nil)
-                {
-                    speakerIdStr = [tmpDict objectForKey:@"speakerid"];
-                    
-                }
-                
-                for (int i=0; i<[myFavIndexesArray count]; i++)
-                {
-                    NSString *tmpStr = [myFavIndexesArray objectAtIndex:i];
-                    if ([tmpStr isEqualToString:speakerIdStr])
-                    {
-                        [myFavIndexesArray removeObjectAtIndex:i];
-                        [myFavoriteSpeakers removeObjectAtIndex:i];
-                    }
-                    
-                }
-            }
-                   
-        
-        }
-    }
-    
-    
-    [myFavIndexesArray writeToFile:filePath atomically:YES];
-    
-    [speakersTableView reloadData];
-    [searchTableView reloadData];
-   
+    NSMutableArray *array = [[NSMutableArray alloc]initWithContentsOfFile:filePath];
+    NSLog(@"SAVE FAVORITES array =  %@ ", array);
 }
 
--(void)myFavoritesAddingFromSearchResultsTableDetailsController:(NSMutableDictionary *)selectedDictionary checkMark:(BOOL)checkMark
-{
-    NSString *filePath = [self dataFilePathForMyfavoritesSpeakersInfo];
-    
-    if (([[NSFileManager defaultManager] fileExistsAtPath:filePath])) 
-    {
-        myFavIndexesArray = [[NSMutableArray alloc] initWithContentsOfFile:filePath];
-    }
-    else
-    {
-        myFavIndexesArray = [[NSMutableArray alloc] initWithCapacity:0];
-    }
-    
-    
-    
-    if (checkMark ==YES)
-    {
-        
-        if ([selectedDictionary objectForKey:@"speakerid"]!= nil)
-        {
-            [myFavIndexesArray addObject:[selectedDictionary objectForKey:@"speakerid"]];
-            [myFavoriteSpeakers addObject:[selectedDictionary objectForKey:@"speakerid"]];
-        }
-        
-    }
-    else
-    { 
-        if ([myFavIndexesArray count]>0)
-        {
-            
-            NSString *speakerIdStr = @"";
-            if ([selectedDictionary objectForKey:@"speakerid"]!= nil)
-            {
-                speakerIdStr = [selectedDictionary objectForKey:@"speakerid"];
-                
-            }
-            
-            for (int i=0; i<[myFavIndexesArray count]; i++)
-            {
-                NSString *tmpStr = [myFavIndexesArray objectAtIndex:i];
-                if ([tmpStr isEqualToString:speakerIdStr])
-                {
-                    [myFavIndexesArray removeObjectAtIndex:i];
-                    [myFavoriteSpeakers removeObjectAtIndex:i];
-                }
-                
-            }
-        }
-    }
-    
-    
-    [myFavIndexesArray writeToFile:filePath atomically:YES];
-    
-    [searchTableView reloadData];
-    [speakersTableView reloadData];
 
-    
-}
-
--(void)assignStyles
-{
-    
-    titleFontName =@"Helvitica-Bold";
-    titleFontSize = @"14";
-    subTitleFontName = @"Helvitica";
-    subTitleFontSize = @"12";
-    
-}
 
 #pragma mark Table View datasource and delegate methods 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -242,50 +87,66 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    SpeakerInfo *info = nil;
+    if (tableView == speakersTableView) {
+        info = [speakersArray objectAtIndex:indexPath.row];
+    }else{
+        info  = [searchArr objectAtIndex:indexPath.row];
+    }
+ 
+    CGSize size = [info.name sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:15] constrainedToSize:CGSizeMake(220 ,MAXFLOAT ) lineBreakMode:UILineBreakModeWordWrap];
+    
+    CGSize size1 = [info.name sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:13] constrainedToSize:CGSizeMake(220 ,MAXFLOAT ) lineBreakMode:UILineBreakModeWordWrap];
+    
+    CGFloat height = kSpeakersTableCellHeight;
+    height = size.height + size1.height +20;
+    
+    if (height< kSpeakersTableCellHeight) {
+        return kSpeakersTableCellHeight;
+    }
+    
     return kSpeakersTableCellHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-        SpeakersTableViewCell *cell;
+      CustomTableViewCell *cell;
     NSString *CellIdentifier = [NSString stringWithFormat:@"cell%d",indexPath.row];
-    cell = (SpeakersTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
     {
-        cell = [[SpeakersTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
-        [cell.speakerNameLabel setFont:[UIFont fontWithName:[Util subTitleFontName] size:15]];
-        cell.speakerNameLabel.textColor = [Util subTitleColor];
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
+        [cell enableBookmarkWithTarget:self];
+        UIImage *image = [UIImage imageNamed:@"no_image.png"];
+        image = [image scaleImageToSize:CGSizeMake( image.size.width/2, image.size.height/2)];
+        [cell setDefaultImage:image];
         
-        [cell.speakersDetailsLabel setFont:[UIFont fontWithName:[Util detailTextFontName] size:14]];
-        
-        cell.speakersDetailsLabel.textColor = [Util detailTextColor];
     };
-    
-    [cell loadDefaultImage];
+
+     SpeakerInfo *info = nil;
  
     if (tableView == speakersTableView) 
     {
-        cell.fromSearchTable = NO;
-        NSMutableDictionary *tmpDict = [speakersArray objectAtIndex:indexPath.row];
+      
+        info = [speakersArray objectAtIndex:indexPath.row];
         
-        NSString *nameStr = [tmpDict objectForKey:@"firstname"];
-        nameStr = [nameStr stringByAppendingString:@" "];
+    }else{
         
-        if ([tmpDict objectForKey:@"lastname"] != nil)
-        {
-            nameStr = [nameStr stringByAppendingString:[tmpDict objectForKey:@"lastname"]];
-        }
+         info = [searchArr objectAtIndex:indexPath.row];
+    }
+    
+     CGSize size = [info.name sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width ,MAXFLOAT ) lineBreakMode:UILineBreakModeWordWrap];
+    
+     cell.textLabel.numberOfLines = size.height/21 +1;
+     cell.textLabel.text = info.name;
+    
+     size = [info.type sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.detailTextLabel.frame.size.width ,MAXFLOAT )];
+     cell.detailTextLabel.numberOfLines = size.height/21;
+     cell.detailTextLabel.text = info.type;
         
-        
-        //NSLog(@"speaker id = %@",[tmpDict objectForKey:@"speakerid"]);
-        
-        cell.speakerNameLabel.text =nameStr;
-        
-        cell.speakersDetailsLabel.text = [tmpDict objectForKey:@"description"];
-        
-        NSString *logo  = [tmpDict objectForKey:@"speakerphoto"];
+        NSString *logo  = info.logo;
         NSLog(@" LOGO %@   ",logo);
         if (logo != nil && ![logo isEqualToString:@""]) {
             
@@ -297,99 +158,23 @@
             NSLog(@" NO LOGO   ");
             
         }
-        
-        cell.speakerViewController= self;
-        cell.selectButton.tag = indexPath.row;
-        if ([myFavoriteSpeakers count]>0)
-        {
-            for (int i=0; i<[myFavoriteSpeakers count]; i++)
-            {
-                NSString *tmpIdStr = [myFavoriteSpeakers objectAtIndex:i];
-                NSString *speakerIdStr = @"";
-                if ([tmpDict objectForKey:@"speakerid"] != nil)
-                {
-                    speakerIdStr = [tmpDict objectForKey:@"speakerid"];
-                }
-                
-                if ([speakerIdStr isEqualToString:tmpIdStr])
-                {
-                    [cell.selectButton setImage:[UIImage imageNamed:@"gold_star.png"] forState:UIControlStateNormal];
-                    cell.buttonSelected = YES;
-                    i = [myFavoriteSpeakers count];
-                }
-                else
-                {
-                    [cell.selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-                    cell.buttonSelected = NO; 
-                }
 
-            }
-      }
+        cell.accessoryView.tag = indexPath.row;
+        BOOL selected= [self checkIfFavorite:info];
 
-    }
-    else
-    {
-        cell.speakerViewController= self;
-        cell.selectButton.tag = indexPath.row;
-        cell.fromSearchTable = YES;
-        if ([searchArr count]>0)
-        {
-            NSMutableDictionary *tmpDict = [searchArr objectAtIndex:indexPath.row]; 
-            NSString *nameStr = [tmpDict objectForKey:@"firstname"];
-            nameStr = [nameStr stringByAppendingString:@" "];
-            
-            if ([tmpDict objectForKey:@"lastname"] != nil)
-            {
-                nameStr = [nameStr stringByAppendingString:[tmpDict objectForKey:@"lastname"]];
-            }
-            cell.speakerNameLabel.text = nameStr;
-            cell.speakerImageView.frame = CGRectZero;
-            
-            NSString *logo  = [tmpDict objectForKey:@"speakerphoto"];
-            NSLog(@" LOGO %@   ",logo);
-            if (logo != nil && ![logo isEqualToString:@""]) {
-                
-                NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
-                [mainlogo appendString:logo];
-                NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
-                [self loadImageAtIndexpath:indexPath urlString:mainlogo cell : cell];
-            }else{
-                NSLog(@" NO LOGO   ");
-                
-            }
-            
-            if ([myFavoriteSpeakers count]>0)
-            {
-                for (int i=0; i<[myFavoriteSpeakers count]; i++)
-                {
-                    NSString *tmpIdStr = [myFavoriteSpeakers objectAtIndex:i];
-                    NSString *speakerIdStr = @"";
-                    if ([tmpDict objectForKey:@"speakerid"] != nil)
-                    {
-                        speakerIdStr = [tmpDict objectForKey:@"speakerid"];
-                    }
-                    
-                    if ([speakerIdStr isEqualToString:tmpIdStr])
-                    {
-                        [cell.selectButton setImage:[UIImage imageNamed:@"gold_star.png"] forState:UIControlStateNormal];
-                        cell.buttonSelected = YES;
-                        i = [myFavoriteSpeakers count];
-                    }
-                    else
-                    {
-                        [cell.selectButton setImage:[UIImage imageNamed:@"gray_star.png"] forState:UIControlStateNormal];
-                        cell.buttonSelected = NO; 
-                    }
-                    
-                }
-            }
-
-        }
-        
-    }
+        [cell selectFavorite:selected];
     
     return cell;
 }
+
+-(BOOL)checkIfFavorite:(SpeakerInfo*)info{
+    
+    if ([myFavoriteSpeakers indexOfObject:info.speakerId] != NSNotFound) {
+        return YES;
+    }
+    return NO;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -398,105 +183,48 @@
 
     if (tableView == speakersTableView)
     {
-        
-        speakersDetailsViewController.selectedDict = [speakersArray objectAtIndex:indexPath.row];
-        speakersDetailsViewController.selectedRow = indexPath.row;
-        speakersDetailsViewController.svc = self;
-        speakersDetailsViewController.fromSearchTable = NO;
-        
-        NSMutableDictionary *tmpDict = [speakersArray objectAtIndex:indexPath.row];
-        
-        if ([myFavoriteSpeakers count]>0)
-        {
-            for (int i=0; i<[myFavoriteSpeakers count]; i++)
-            {
-                NSString *tmpIdStr = [myFavoriteSpeakers objectAtIndex:i];
-                NSString *speakerIdStr = @"";
-                if ([tmpDict objectForKey:@"speakerid"] != nil)
-                {
-                    speakerIdStr = [tmpDict objectForKey:@"speakerid"];
-                }
-                
-                if ([speakerIdStr isEqualToString:tmpIdStr])
-                {
-                    
-                    speakersDetailsViewController.addedToMyfavorites= YES;
-                    i = [myFavoriteSpeakers count];
-                }
-                else
-                {
-                    speakersDetailsViewController.addedToMyfavorites= NO;
    
-                }
-                
-            }
-        
-      
+        speakersDetailsViewController.svc = self;
+        speakersDetailsViewController.speakerInfo = [speakersArray objectAtIndex:indexPath.row];
 
-    }
-        
         [self.navigationController pushViewController:speakersDetailsViewController animated:YES];
-  
-    }
+     }
     else
     {
-        speakersDetailsViewController.selectedDict = [searchArr objectAtIndex:indexPath.row];
-        speakersDetailsViewController.selectedRow = [[selectedIndexesArray objectAtIndex:indexPath.row] intValue];
-        speakersDetailsViewController.fromSearchTable = YES;
-        speakersDetailsViewController.svc = self;
-        
-        
-        
-        NSMutableDictionary *tmpDict = [searchArr objectAtIndex:indexPath.row];
-        
-        if ([myFavoriteSpeakers count]>0)
-        {
-            for (int i=0; i<[myFavoriteSpeakers count]; i++)
-            {
-                NSString *tmpIdStr = [myFavoriteSpeakers objectAtIndex:i];
-                NSString *speakerIdStr = @"";
-                if ([tmpDict objectForKey:@"speakerid"] != nil)
-                {
-                    speakerIdStr = [tmpDict objectForKey:@"speakerid"];
-                }
-                
-                if ([speakerIdStr isEqualToString:tmpIdStr])
-                {
-                    
-                    speakersDetailsViewController.addedToMyfavorites= YES;
-                    i = [myFavoriteSpeakers count];
-                }
-                else
-                {
-                    speakersDetailsViewController.addedToMyfavorites= NO;
-                    
-                }
-                
-            }
 
-        
-        }
-        
-        
-        [self.navigationController pushViewController:speakersDetailsViewController animated:YES];
-        
+        speakersDetailsViewController.svc = self;
+        speakersDetailsViewController.speakerInfo = [searchArr objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:speakersDetailsViewController animated:YES];    
     }
 
 }
 
+-(void)onFavoriteSelection:(UIButton *)sender{
+    
+    NSLog(@"onfavorite selection");
+    
+    int tag = sender.tag;
+    
+    SpeakerInfo *info  = [speakersArray objectAtIndex:tag];
+    
+    if (sender.selected) {
+        if ([myFavoriteSpeakers indexOfObject:info.speakerId] == NSNotFound) {
+            [myFavoriteSpeakers addObject:info.speakerId];
+        }
+        
+    }else{
+        if ([myFavoriteSpeakers indexOfObject:info.speakerId] != NSNotFound) {
+            [myFavoriteSpeakers removeObject:info.speakerId];
+        }
+    }
+
+}
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
+    [super didReceiveMemoryWarning];  
 }
 
--(void)storeMyfavorites
-{
-    
-}
 
 #pragma mark - View lifecycle
 -(void)viewWillDisappear:(BOOL)animated
@@ -507,58 +235,44 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+
     self.title = @"Speakers";
-    
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
     
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
-    [self assignStyles];
+
          
-    speakersArray = [[NSMutableArray alloc] initWithCapacity:0];
-    if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"] isKindOfClass:[NSDictionary class]]) 
-    {
-        [speakersArray addObject:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"]];
-    }
-    else
-    {
-        [speakersArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"]];
-    }
+    speakersArray = [SpeakerInfo collection];
     
-    NSLog(@" SPEAKERS ARRAY %d ", [speakersArray count]);
+//    if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"] isKindOfClass:[NSDictionary class]]) 
+//    {
+//        [speakersArray addObject:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"]];
+//    }
+//    else
+//    {
+//        [speakersArray addObjectsFromArray:[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"speakerslist"] objectForKey:@"speaker"]];
+//    }
+//    
+//    NSLog(@" SPEAKERS ARRAY %d ", [speakersArray count]);
     
-    myFavIndexesArray = [[NSMutableArray alloc] initWithCapacity:0];
+   
     
     NSString *filePath = [self dataFilePathForMyfavoritesSpeakersInfo];
     
-    if (([[NSFileManager defaultManager] fileExistsAtPath:filePath])) 
+    if (([[NSFileManager defaultManager] fileExistsAtPath:filePath]))
     {
         myFavoriteSpeakers = [[NSMutableArray alloc] initWithContentsOfFile:filePath];
     }
-    else
-    {
-        myFavoriteSpeakers = [[NSMutableArray alloc] initWithCapacity:0];
+   
+    
+        
+    NSLog(@"DATA MYFAVORITES %@  %d ",myFavoriteSpeakers , [myFavoriteSpeakers count]);
+    if (myFavoriteSpeakers == nil) {
+         myFavoriteSpeakers = [[NSMutableArray alloc] initWithCapacity:0];
     }
     
     
-    
-    offlineSpeakersImagesArr = [[NSMutableArray alloc] initWithCapacity:0];
-
-    NSString *filePath1  = [self dataFilePathForOfflineImages];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath1])
-    {
-        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath1];
-        
-        if ([tmpDict objectForKey:@"offLinespeakerImagesArr"]!= nil)
-        {
-            [offlineSpeakersImagesArr addObjectsFromArray:[tmpDict objectForKey:@"offLinespeakerImagesArr"]];
-        }
-        
-    }      
-    
-    
-
     speakersTableView = [[UITableView alloc] initWithFrame:CGRectMake(5,60, 310, 250)];
     speakersTableView.dataSource = self;
     speakersTableView.delegate = self;
@@ -568,9 +282,6 @@
     speakersTableView.separatorColor = [UIColor clearColor] ;
     
     [self.view addSubview:speakersTableView];
-    
-  
-    
     
     for (UIView *view in participantsSearchBar.subviews)
     {
@@ -591,18 +302,13 @@
     searchTableView.separatorColor = [UIColor clearColor];
     [self.view addSubview:searchTableView];
     [participantsSearchBar setShowsCancelButton:YES animated:YES];
-    
-    selectedIndexesArray = [[NSMutableArray alloc] initWithCapacity:0];
-
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
-
+ 
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -612,19 +318,19 @@
 }
 
 
--(NSArray *)extractMethod:(NSInteger)value
-{
-    NSMutableDictionary *mainDic = [agendaArray objectAtIndex:value];
-    id data =   [mainDic objectForKey:@"agendalocation"];
-   
-    array = [[NSMutableArray alloc]init];
-    if([data isKindOfClass:[NSArray class]])
-        [array addObjectsFromArray:data];
-    
-    if([data isKindOfClass:[NSDictionary class]])
-        [array addObject:data];
-    return array;
-}
+//-(NSArray *)extractMethod:(NSInteger)value
+//{
+//    NSMutableDictionary *mainDic = [agendaArray objectAtIndex:value];
+//    id data =   [mainDic objectForKey:@"agendalocation"];
+//   
+//    array = [[NSMutableArray alloc]init];
+//    if([data isKindOfClass:[NSArray class]])
+//        [array addObjectsFromArray:data];
+//    
+//    if([data isKindOfClass:[NSDictionary class]])
+//        [array addObject:data];
+//    return array;
+//}
 
 #pragma mark - searchBar
 - (void)searchBarCancelButtonClicked:(UISearchBar *) aSearchBar 
@@ -658,14 +364,16 @@
 {
     return YES;
 }
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     
     [searchBar resignFirstResponder];
-    searchString = searchBar.text;
-    [self mainSearchMethod];
+
+    [self mainSearchMethod:searchBar.text];
 }
--(void)mainSearchMethod
+
+-(void)mainSearchMethod:(NSString*)searchStr
 {
     if (searchArr != nil)
     {
@@ -676,128 +384,39 @@
         searchArr = [[NSMutableArray alloc] initWithCapacity:0]; 
  
     }
-    [selectedIndexesArray removeAllObjects];
+   
     
-    
-    if ([searchString length]>3)
+    if ([searchStr length]>3)
     {
+
         for (int i=0; i<[speakersArray count]; i++)
         {
+            SpeakerInfo *info = [speakersArray objectAtIndex:i];
             
-            NSMutableDictionary *tmpDict = [speakersArray objectAtIndex:i];
-            if ([tmpDict objectForKey:@"city"] != nil) 
-            {
-                if ([[tmpDict objectForKey:@"city"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDict];
-                    [selectedIndexesArray addObject:[NSString stringWithFormat:@"%d",i]];
-                    continue;
-                    
-                }
+            if([info.name rangeOfString:searchStr options:NSCaseInsensitiveSearch ].location != NSNotFound){
+                [searchArr addObject:info];
+                continue;
             }
-            
-            
-            if ([tmpDict objectForKey:@"firstname"] != nil) 
-            {
-                if ([[tmpDict objectForKey:@"firstname"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDict];
-                    [selectedIndexesArray addObject:[NSString stringWithFormat:@"%d",i]];
-                    continue;
-                    
-                }
+             if([info.type rangeOfString:searchStr options:NSCaseInsensitiveSearch ].location != NSNotFound){
+                [searchArr addObject:info];
+                
+                continue;
             }
-            
-            
-            if ([tmpDict objectForKey:@"lastname"] != nil) 
-            {
-                if ([[tmpDict objectForKey:@"lastname"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDict];
-                    [selectedIndexesArray addObject:[NSString stringWithFormat:@"%d",i]];
-                    continue;
-                    
-                }
-            }
-            
-            
-            
-            if ([tmpDict objectForKey:@"description"] != nil) 
-            {
-                if ([[tmpDict objectForKey:@"description"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDict];
-                    [selectedIndexesArray addObject:[NSString stringWithFormat:@"%d",i]];
-                    continue;
-                    
-                }
-            }
-            
-            
         }
     }
-    else
-    {
-        
-        for (int i=0; i<[speakersArray count]; i++)
-        {
-            
-            NSMutableDictionary *tmpDict = [speakersArray objectAtIndex:i];
-            if ([tmpDict objectForKey:@"firstname"] != nil) 
-            {
-                if ([[tmpDict objectForKey:@"firstname"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDict];
-                    [selectedIndexesArray addObject:[NSString stringWithFormat:@"%d",i]];
-                    continue;
-                    
-                }
-            }
-            
-            
-            if ([tmpDict objectForKey:@"lastname"] != nil) 
-            {
-                if ([[tmpDict objectForKey:@"lastname"] rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)   
-                {
-                    
-                    [searchArr addObject:tmpDict];
-                    [selectedIndexesArray addObject:[NSString stringWithFormat:@"%d",i]];
-                    continue;
-                    
-                }
-            }
-
-            
-            
-        }
-        
-    }
     
-    
-    
-    
-    
-
     [self createSearchTable];
  
 }
+
 -(void)createSearchTable
 {
     if ([searchArr count]>0)
     {
         speakersTableView.hidden = YES;
         [searchTableView reloadData];
-        int height  = kSpeakersTableCellHeight * [searchArr count];
-        if (height > 220)
-        {
-            height = 220;
-        }
-        CGRect viewFrame1 = CGRectMake(10, 60, 300, height);
+
+        CGRect viewFrame1 = speakersTableView.frame;
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationBeginsFromCurrentState:YES];
         [UIView setAnimationDuration: 0.7];
@@ -808,7 +427,7 @@
     {
         [searchTableView reloadData];
 
-        CGRect viewFrame1 = CGRectMake(10, 500, 300, 200);
+        CGRect viewFrame1 = speakersTableView.frame;
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationBeginsFromCurrentState:YES];
         [UIView setAnimationDuration: 0.7];
@@ -825,7 +444,7 @@
 
 
 
--(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(SpeakersTableViewCell*)cell{
+-(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(CustomTableViewCell*)cell{
     
     CGSize point  = CGSizeMake(100, 80);
     
@@ -835,11 +454,12 @@
     //    [NSInvocationOperation ];
     
     UIImage *image =  [imageDownloader getImage:url];
+    
     if (image != nil) {
         NSLog(@"HIT AT %@ ",url);
         //        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
         
-        cell.speakerImageView.image = image;
+        cell.imageView.image = image;
         //        [supportedByTableView reloadData];
         
     }else{
@@ -885,6 +505,8 @@
     }
     
     [currentDownloads removeAllObjects];
+    
+    [self saveFavorites];
 }
 
 @end

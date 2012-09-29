@@ -8,30 +8,24 @@
 
 #import <UIKit/UIKit.h>
 #import "QuartzCore/QuartzCore.h"
+#import "CustomTableViewCell.h"
 
 @class SpeakersViewController;
-@interface SpeakersTableViewCell : UITableViewCell
+
+@interface SpeakersTableViewCell : CustomTableViewCell
 {
-    SpeakersViewController *speakerViewController;
-    UIView *bgView;
-    UIImageView *speakerImageView;
-    UILabel     *speakerNameLabel;
-    UILabel     *speakersDetailsLabel;
-    UIButton    *selectButton;
-    BOOL         buttonSelected;
-    UIActivityIndicatorView *activityIndicatorview;
-    BOOL fromSearchTable;
-    
+    SpeakersViewController *_speakerViewController;
+    UIButton    *_selectButton;
+    BOOL         _buttonSelected;
+      
 }
 @property(nonatomic,retain)SpeakersViewController *speakerViewController;
-@property(nonatomic,retain)UIImageView *speakerImageView;
-@property(nonatomic,retain) UILabel     *speakerNameLabel;
-@property(nonatomic,retain) UILabel     *speakersDetailsLabel;
-@property(nonatomic,retain)UIButton    *selectButton;
-@property(nonatomic,retain)UIActivityIndicatorView *activityIndicatorview;
+@property(nonatomic,retain)UIButton  *selectButton;
+
 @property BOOL   buttonSelected;
-@property BOOL   fromSearchTable;
--(void)assignImage:(NSString *)path;
+
+-(void)selectButton:(BOOL)select;
 -(void)selectButtonSetImage:(UIButton *)sender;
 -(void)loadDefaultImage;
+
 @end

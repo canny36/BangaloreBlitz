@@ -175,24 +175,20 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    NearByTableViewCell *cell = (NearByTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+   CustomTableViewCell *cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) 
     {
         
-        cell = [[NearByTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
-        
-        
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
     }
 
-    cell.nbdvController = self;
-    cell.phoneNumber.tag = indexPath.row;
     
     NSMutableDictionary *tmpDict = [selectedArray objectAtIndex:indexPath.row];
     
     if ([tmpDict objectForKey:@"name"] != nil) 
     {
-        cell.nameLabel.text = [tmpDict objectForKey:@"name"];
+        cell.textLabel.text = [tmpDict objectForKey:@"name"];
     }
     
     NSString *tmpStr = @"";
@@ -203,15 +199,11 @@
         tmpStr=  [tmpStr stringByAppendingString:[tmpDict objectForKey:@"phone"]];
         
     }
-    else
-    {
-        tmpStr=  [tmpStr stringByAppendingString:@"No details"];
-    }
-    cell.phoneNumber.text = tmpStr;
-    
-    tmpStr = @"";
+   
     if ([tmpDict objectForKey:@"address1"] != nil)
     {
+        
+        tmpStr=  [tmpStr stringByAppendingString:@" \n "];
         tmpStr=  [tmpStr stringByAppendingString:[tmpDict objectForKey:@"address1"]];
         tmpStr=  [tmpStr stringByAppendingString:@", "];
         
@@ -227,16 +219,16 @@
         tmpStr=  [tmpStr stringByReplacingOccurrencesOfString:@"," withString:@""];
         
     }
-    if ([tmpDict objectForKey:@"state"] != nil)
-    {
-        tmpStr=  [tmpStr stringByAppendingString:[tmpDict objectForKey:@"state"]];
-        tmpStr=  [tmpStr stringByAppendingString:@", "];
-    }
-    else
-    {
-        tmpStr=  [tmpStr stringByReplacingOccurrencesOfString:@"," withString:@""];
-        
-    }
+//    if ([tmpDict objectForKey:@"state"] != nil)
+//    {
+//        tmpStr=  [tmpStr stringByAppendingString:[tmpDict objectForKey:@"state"]];
+//        tmpStr=  [tmpStr stringByAppendingString:@", "];
+//    }
+//    else
+//    {
+//        tmpStr=  [tmpStr stringByReplacingOccurrencesOfString:@"," withString:@""];
+//
+//    }
     
     if ([tmpDict objectForKey:@"zipcode"] != nil)
     {
@@ -248,35 +240,10 @@
         
     }
     
-    cell.addresstxtView.text = tmpStr;
-    
-    cell.addresstxtView.userInteractionEnabled = YES;
-    cell.addresstxtView.tag = indexPath.row;
-       
-  
-    
-    if ([tmpDict objectForKey:@"type"] != nil) 
-    {
-        cell.typeLabel.text = [tmpDict objectForKey:@"type"];
-    }
-    
-    
-    
-    
-    [cell.nameLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-    [cell.phoneNumber setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    [cell.typeLabel setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    
-    
-    [cell.addresstxtView setFont:[UIFont fontWithName:subTitleFontName size:[subTitleFontSize intValue]]];
-    
-    
 
-    cell.nameLabel.textColor = [UIColor whiteColor];
-    cell.phoneNumber.textColor = [UIColor whiteColor];
-    
-    cell.typeLabel.textColor = [UIColor whiteColor];
-    cell.addresstxtView.textColor = [UIColor whiteColor];
+    cell.detailTextLabel.text = tmpStr;
+    cell.detailTextLabel.numberOfLines = 5;
+
     
     NSString *logo =  [tmpDict objectForKey:@"logo"];
     
@@ -286,7 +253,7 @@
         NSMutableString *mainlogo = [NSMutableString stringWithString:BASE_URL];
         [mainlogo appendString:logo];
         NSLog(@" URL AT %d = %@  ", indexPath.row, mainlogo);
-        [self loadImageAtIndexpath:indexPath urlString:mainlogo cell :(NearByTableViewCell*)cell];
+        [self loadImageAtIndexpath:indexPath urlString:mainlogo cell :cell];
     }else{
         
     }
@@ -306,15 +273,6 @@
             }
        }
        
-}
--(void)assignStyles
-{
-    titleFontName =@"Helvetica-Bold";
-    titleFontSize = @"14";
-    
-    subTitleFontName =@"Helvetica";
-    subTitleFontSize = @"12";
-
 }
 
 - (void)didReceiveMemoryWarning
@@ -338,8 +296,6 @@
     self.navigationItem.rightBarButtonItem = homeButton;
     
     
-    [self assignStyles];
-    
    
     nearbyArray = [[NSMutableArray alloc] initWithCapacity:0];
     if ([[[[appDelegate.mainResponseDict objectForKey:@"event"] objectForKey:@"nearbylist"] objectForKey:@"nearby"] isKindOfClass:[NSDictionary class]]) 
@@ -352,17 +308,7 @@
     }   
 
    
-    offlineNearByImagesArr = [[NSMutableArray alloc] initWithCapacity:0];
-    NSString *filePath  = [self dataFilePathForOfflineImages];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
-    {
-        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-        
-        if ([tmpDict objectForKey:@"offlineNearByImagesArr"]!= nil)
-        {
-            [offlineNearByImagesArr addObjectsFromArray:[tmpDict objectForKey:@"offlineNearByImagesArr"]];
-        }
-    }        
+       
     
     
 //    int height = [selectedArray count] * kNearbyTableCellHeight;
@@ -400,78 +346,11 @@
 }
 
 
-
--(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(NearByTableViewCell*)cell{
-    
-    CGSize point  = CGSizeMake(100, 80);
-    
-    //    [NSInvocationOperation ];
-    if (imageDownloader == nil) {
-        imageDownloader =  [ImageDownloader shareInstance];
-    }
-    
-    UIImage *image =  [imageDownloader getImage:url];
-    if (image != nil) {
-        NSLog(@"HIT AT %@ ",url);
-//        image   = [image scaleImageToSize:CGSizeMake(95, 95)];
-        //        SupportedByTableViewCell *cell = (SupportedByTableViewCell*)[supportedByTableView cellForRowAtIndexPath:indexpath];
-        
-        cell.locationImageView.image = image;
-        
-    }else{
-        
-        NSLog(@"FAIL AT %@ ",url);
-        ImageLoader *loader = [[ImageLoader alloc]initWithUrl:url withSize:point delegate:self];
-        loader.indexPath = indexpath;
-        
-        [imageDownloader addOperation:loader];
-        [currentDownloads addObject:loader];
-        
-    }
-}
-
--(void)onDownloadCompletion:(UIImage*)image : (ImageLoader*)imageLoader{
-    
-    NSLog(@" DOWNLOAD COMPLETED FOR %d ",imageLoader.indexPath.row);
-    
-    [currentDownloads removeObject:imageLoader];
-    [imageDownloader removeOperation:imageLoader];
-    
-    [self performSelectorOnMainThread:@selector(updateCell:) withObject:imageLoader waitUntilDone:YES];
-    
-}
-
 -(void)updateCell:(ImageLoader*)loader{
     [nearbyTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:loader.indexPath, nil] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 
--(void)onErrorLoadingImage:(ImageLoader*)imageLoader{
- 
-    NSLog(@"ERROR DOWNLOADING ");
-    [imageDownloader removeOperation:imageLoader];
-    [currentDownloads removeObject:imageLoader];
-}
-
-
--(void)cancelDownloads{
-    
-    for (ImageLoader *loader in currentDownloads) {
-        
-        [loader cancel];
-        
-    }
-    
-    [currentDownloads removeAllObjects];
-}
-
-
-
-- (void)viewWillDisappear:(BOOL)animated{
-    
-    [self cancelDownloads];
-    
-}
 
 
 @end

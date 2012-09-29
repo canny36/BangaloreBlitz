@@ -11,6 +11,83 @@
 #import "WebViewController.h"
 #import "Util.h"
 
+@interface ContactInfo : NSObject{
+    
+//    address1 = "Plot No.121, EPIP,";
+//    address2 = "Whitefield Industrial Area,";
+//    city = Bangalore;
+//    contactemail = "enquiry@bangaloreit.biz";
+//    contactname = "Mr.Aritro / Mr.Venkat";
+//    contactphone = "7259207115 / 9844202080";
+//    url = "http://www.bangaloreit.biz/IT_2012/index.php";
+//    zipcode = 560052;
+//     location = "Plot No.121, EPIP,,  Whitefield Industrial Area,, Bangalore, Karnataka 560052";
+    
+    NSString *_name1;
+    NSString *_phone1;
+    NSString *_name2;
+    NSString *_phone2;
+    
+    NSString *_mail;
+    NSString *_weblink;
+    NSString *_address;
+    
+}
+
+@property(nonatomic,retain) NSString *name1;
+@property(nonatomic,retain) NSString *phone1;
+@property(nonatomic,retain) NSString *name2;
+@property(nonatomic,retain) NSString *phone2;
+@property(nonatomic,retain) NSString *mail;
+@property(nonatomic,retain) NSString *weblink;
+@property(nonatomic,retain) NSString *address;
+
+
+@end
+
+
+@implementation ContactInfo
+
+@synthesize name1=_name1;
+@synthesize phone1=_phone1;
+@synthesize name2=_name2;
+@synthesize phone2=_phone2;
+@synthesize mail=_mail;
+@synthesize weblink=_weblink;
+@synthesize address=_address;
+
+-(id)init{
+    self = [super init];
+    if (self) {
+        [self initVars];
+    }
+    return self;
+}
+
+-(void)initVars{
+    
+    AppNMediaAppDelegate *appDelegate = (AppNMediaAppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSMutableDictionary *tmpDict = [appDelegate.eventsArray objectAtIndex:0];
+    NSString *token = [tmpDict objectForKey:@"contactname"];
+   NSArray *tokens = [token componentsSeparatedByString:@"/"];
+    
+        
+    self.mail = [tmpDict objectForKey:@"contactemail"];
+    self.name1 = [tokens objectAtIndex:0];
+    self.name2 = [tokens objectAtIndex:1];
+    
+    token = [tmpDict objectForKey:@"contactphone"];
+    tokens = [token componentsSeparatedByString:@"/"];
+    
+    self.phone1 = [tokens objectAtIndex:0];
+    self.phone2 = [tokens objectAtIndex:1];
+    self.weblink = [tmpDict objectForKey:@"url"];
+    self.address = [tmpDict objectForKey:@"location"];
+    
+}
+
+@end
+
 @implementation ContactUsViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -40,6 +117,181 @@
         
         [self presentModalViewController:openMap animated:YES];
     }
+}
+
+-(void)initView{
+    
+    
+    
+    ContactInfo *info = [[ContactInfo alloc]init];
+    
+    float y = 10;
+    
+    UIFont *labelFont = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    UIColor *labelCOlor = [Util titleColor];
+    UIFont *detailFont = [UIFont fontWithName:[Util subTitleFontName] size:14];
+    
+    UILabel *startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentRight;
+    startLabel.text=@"Name       :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= info.name1;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    y += 10+21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentRight;
+    startLabel.text=@"Phone No :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= info.phone1;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    y += 10+21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentRight;
+    startLabel.text=@"Name       :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= info.name2;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+
+    
+    y += 10+21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentRight;
+    startLabel.text=@"Phone No :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= info.phone2;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    
+    y += 10+21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentRight;
+    startLabel.text=@"Email ID   :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= info.mail;
+    startLabel.backgroundColor = [UIColor clearColor];
+    
+    [scrollView addSubview:startLabel];
+    
+    y += 10+21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentRight;
+    startLabel.text=@"Address   :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    CGSize size = [info.address sizeWithFont:detailFont constrainedToSize:CGSizeMake(180, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120 , y, 179, size.height+10)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.numberOfLines = size.height/21+1;
+    
+    startLabel.text= info.address;
+    startLabel.backgroundColor = [UIColor clearColor];
+    
+    [scrollView addSubview:startLabel];
+    
+    
+    y += 10+size.height +10;
+
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
+    startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentRight;
+    startLabel.text=@"Web Link :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    
+    UIButton *weblinkLabel = [[UIButton alloc]initWithFrame:CGRectMake(120  , y, 179, 42)];
+    [weblinkLabel setTitleColor:[Util linkTextColor] forState:UIControlStateNormal];
+    weblinkLabel.titleLabel.numberOfLines=2;
+     [weblinkLabel setTitleColor:[Util titleColor] forState:UIControlStateSelected];
+    weblinkLabel.titleLabel.font = detailFont;
+    weblinkLabel.titleLabel.textColor = [Util detailTextColor];
+    weblinkLabel.titleLabel.textAlignment = UITextAlignmentLeft;
+    
+    [weblinkLabel setTitle:info.weblink forState:UIControlStateNormal];
+    weblinkLabel.backgroundColor = [UIColor clearColor];
+    
+    [weblinkLabel addTarget:self action:@selector(onWebLinkSelection:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [scrollView addSubview:weblinkLabel];
+    
+    [scrollView setContentSize:CGSizeMake(300, y+10+50)];
+    
+    
+}
+
+-(void)onWebLinkSelection:(NSString *)url{
+    
 }
 
 -(IBAction)buttonClicked:(UIButton *)sender
@@ -208,10 +460,8 @@
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
-    // Release any cached data, images, etc that aren't in use.
 }
 
 #pragma mark - View lifecycle
@@ -219,6 +469,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+  
     // Do any additional setup after loading the view from its nib.
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
 
@@ -235,23 +486,25 @@
     else
     {
         [contactUsArray addObjectsFromArray:[[appDelegate.mainResponseDict objectForKey:@"event"]  objectForKey:@"contactus"]];
-    }  
-    [self assignStyles];
-    
+    }
+
     UITapGestureRecognizer *txtTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(makeaMap)];
     [addressTextView addGestureRecognizer:txtTapGesture];
     addressTextView.userInteractionEnabled = YES;
-    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
-
+//    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
     
-       
-}
+    scrollView.frame = CGRectMake(10, 0, 300, 285);
+    [scrollView setContentSize:CGSizeMake(300, 600)];
+    scrollView.showsVerticalScrollIndicator = NO;
+    
+    [self initView];
+    
+ }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -13,4 +13,7 @@
 
 
 -(UIImage*)scaleImageToSize:(CGSize)size;
+-(UIImage*)imageWithImage:(UIImage*)sourceImage scaledToSizeWithSameAspectRatio:(CGSize)targetSize;
+- (UIImage *) scaleImage: (UIImage *)image scaleFactor:(float)scaleBy;
+
 @end

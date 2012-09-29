@@ -104,10 +104,6 @@
 }
 
 
--(void)makeaMap
-{
-    [nbdvController makeaMap:addresstxtView.tag];
-}
 
 -(void)assignImage:(NSString *)path
 {
@@ -124,16 +120,6 @@
     }
     [activityIndicator stopAnimating];
      }
-}
--(void)photosViewClicked;
-{
-    [nbdvController photosViewClicked:locationImageView.tag];
-}
--(void)makePhoneCall 
-{
-    int k = phoneNumber.tag;
-
-    [nbdvController makePhoneCall:k];
 }
 
 

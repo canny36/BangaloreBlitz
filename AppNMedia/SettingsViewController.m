@@ -187,16 +187,24 @@
     subTitleFontName = [Util detailTextFontName];
     subTitleFontSize = @"15";
     
+    UIColor *detailColor= [Util detailTextColor];
+    UIColor *labelCOlor = [Util titleColor];
+
    
     [onlineOfflinelabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-    onlineOfflinelabel.textColor = [UIColor whiteColor];
+    onlineOfflinelabel.textColor = labelCOlor;
     
     
     [syncTimeLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-    syncTimeLabel.textColor = [UIColor whiteColor];
+    syncTimeLabel.textColor = labelCOlor;
     
-    [minutsLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
-    minutsLabel.textColor = [UIColor whiteColor];
+
+    
+    [appUpdateLabel setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
+    appUpdateLabel.textColor = labelCOlor;
+    
+    [appUpdateDetail setFont:[UIFont fontWithName:titleFontName size:[titleFontSize intValue]]];
+    appUpdateDetail.textColor = detailColor;
     
     
 }
@@ -210,6 +218,29 @@
 
     }
 
+}
+
+- (NSString *)dataFilePathForEventsInfo
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	return [documentsDirectory stringByAppendingPathComponent:@"events.plist"];
+}
+
+-(void)lastUpdateTime{
+    NSString *filePath = [self dataFilePathForEventsInfo];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+    {
+        NSMutableDictionary *tmpDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+        if ([tmpDict objectForKey:@"lastUpdatedTimeAndDate"]!=nil)
+        {
+            appUpdateDetail.text = [tmpDict objectForKey:@"lastUpdatedTimeAndDate"];
+            
+        }
+        
+        
+    }
 }
 
 -(void)switchValueChanged
@@ -410,7 +441,7 @@
    transparentImageView.frame = CGRectMake(30, 70, 260, 250);
     selectedTimeValue = @"6";
     
-
+    [self lastUpdateTime];
     
 }
 

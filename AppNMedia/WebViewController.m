@@ -9,30 +9,34 @@
 #import "WebViewController.h"
 
 @implementation WebViewController
+
 @synthesize urlString;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+       
     }
     return self;
 }
+
 -(void)homeButtonClicked
 {
      [self dismissModalViewControllerAnimated:YES];  
 }
+
 -(void) dismissMaps
 {
     
     [self dismissModalViewControllerAnimated:YES];    
 }
+
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
-    // Release any cached data, images, etc that aren't in use.
+   
 }
 
 #pragma mark - View lifecycle
@@ -40,7 +44,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
     UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     
     UINavigationItem *navTitle = [[UINavigationItem alloc] initWithTitle:@"Web"];
@@ -61,6 +65,8 @@
     
     [showMap loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString]]];
     
+    [showMap setScalesPageToFit:YES];
+    showMap.delegate  = self;
     [self.view addSubview:showMap];
 }
 
