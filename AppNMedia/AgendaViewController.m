@@ -489,24 +489,18 @@
         
     }    
                 
-    for (int i=0; i<[self.loc.itemArray count]; i++)
+    for (int i=0 , count = [self.loc.itemArray count]; i<count; i++)
     {
        AgendaItem *item  = [self.loc.itemArray objectAtIndex:i];
         
-        
-
-            if (item.title != nil)
+             if (item.title != nil)
             {
                 if ([item.title rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
                 {
-                    
-                    [searchArr addObject:item];
+                     [searchArr addObject:item];
                     continue;
-                    
-                }
-
+                  }
             }
-
         
             if (item.address != nil)
             {
@@ -515,7 +509,6 @@
                     
                     [searchArr addObject:item];
                     continue;
-                    
                 }
             }
           
@@ -523,10 +516,8 @@
             {
                 if ([item.description rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound)
                 {
-                    
-                    [searchArr addObject:item];
+                     [searchArr addObject:item];
                     continue;
-                    
                 }
             }
     }
@@ -542,6 +533,7 @@
     if ([searchArr count]>0)
     {
         agendaTableView.hidden = YES;
+        [searchTableView setHidden:NO];
         [searchTableView reloadData];
 
 

@@ -73,14 +73,16 @@
         NSLog(@" NO LOGO   ");
         
     }
-    
-    
-    
     return cell;
 }
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    SPonsor *sponsor = [sponsorsArray objectAtIndex:indexPath.row];
+    [self openUrl:sponsor.website];
+    
 //    NSMutableDictionary *tmpDict = [sponsersArray objectAtIndex:indexPath.row];
 //    
 //    if ([tmpDict objectForKey:@"website"]!=nil)

@@ -65,8 +65,8 @@
     
     if (cell == nil) {
         cell = [[CustomTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-       
-    }
+        cell.textLabel.textAlignment = UITextAlignmentLeft;
+     }
   
     cell.textLabel.text = [array objectAtIndex:indexPath.row];
     return cell;

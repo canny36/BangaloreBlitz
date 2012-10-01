@@ -38,6 +38,12 @@
     self.navigationItem.rightBarButtonItem = homeButton;
     
 }
+-(void)openUrl:(NSString*)urlString{
+    UIApplication *app = [UIApplication sharedApplication];
+    if ([app canOpenURL:[NSURL URLWithString:urlString]]) {
+        [app openURL:[NSURL URLWithString:urlString]];
+    }
+}
 
 
 -(void)homeButtonClicked

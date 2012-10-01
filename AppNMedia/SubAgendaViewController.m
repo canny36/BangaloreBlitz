@@ -111,7 +111,7 @@
     if (cell == nil)
     {
         cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier hideImageView:YES] ;
-        [cell enableBookmarkWithTarget:self];
+//        [cell enableBookmarkWithTarget:self];
         
     }
     
@@ -153,6 +153,7 @@
     lines = size.height/20;
     cell.detailTextLabel.numberOfLines = lines > 2 ? lines : 2;
     
+
     BOOL selected = [self checkIfFavorite:item];
     [cell selectFavorite:selected];
     cell.accessoryView.tag = indexPath.row;
@@ -175,10 +176,16 @@
     
     int tag = sender.tag;
     
+    NSLog(@"TAG %d ",tag);
+    
     SubAgendaItem *info  = [self.subAgendaArray objectAtIndex:tag];
     NSLog(@"BOOKMARK C=BUTTON CLICK %@ ",info.agendaId);
     if (_tableView.hidden == YES) {
         info = [_searchArray objectAtIndex:tag];
+    }
+    
+    if (info == nil) {
+        return;
     }
     
     if (sender.selected) {

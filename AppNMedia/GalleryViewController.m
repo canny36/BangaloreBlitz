@@ -11,6 +11,8 @@
 #import "PhotosViewController.h"
 #import "WebViewController.h"
 
+#define PRESS_URL @"http://www.bangaloreit.biz/IT_2012/index.php?media=1"
+
 @interface GalleryViewController ()
 
 @end
@@ -34,13 +36,23 @@
     }else if(sender == videosButton){
         controller = [[VideosViewController alloc]init];
     }else if(sender == pressButton){
-        WebViewController *webViewController = [[WebViewController alloc] init];
-          webViewController.urlString = @"http://www.bangaloreit.biz/IT_2012/index.php?media=1";
-          [self presentModalViewController:webViewController animated:YES];
+//        WebViewController *webViewController = [[WebViewController alloc] init];
+//          webViewController.urlString = @"http://www.bangaloreit.biz/IT_2012/index.php?media=1";
+//          [self presentModalViewController:webViewController animated:YES];
+        
+        [self onWebLinkSelection: PRESS_URL ];
         return;
     }
     
     [self.navigationController pushViewController:controller animated:YES];
+    
+}
+
+-(void)onWebLinkSelection:(NSString*)url{
+    UIApplication *app =  [UIApplication sharedApplication] ;
+    if ([app canOpenURL:[NSURL URLWithString:url]]) {
+        [app openURL:[NSURL URLWithString:url]];
+    }
     
 }
 

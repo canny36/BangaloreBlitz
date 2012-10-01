@@ -16,6 +16,7 @@
     self = [super initWithFrame:frame];
     if (self) {
       
+        
         self.presenterlabel = [[UILabel alloc]initWithFrame:CGRectMake(10,10, 200, 25)];
         self.presenterlabel.font = [UIFont fontWithName:[Util titleFontName] size:14];
         self.presenterlabel.backgroundColor  = [UIColor clearColor];

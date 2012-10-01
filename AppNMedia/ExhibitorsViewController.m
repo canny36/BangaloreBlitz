@@ -10,6 +10,8 @@
 #import "AppNMediaAppDelegate.h"
 #import "ExhibitorsTableCell.h"
 #import "WebViewController.h"
+#import "Util.h"
+
 #define kExhibitorsTableCellHeight 100
 
 @implementation ExhibitorsViewController
@@ -71,6 +73,21 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    int height = 10;
+    NSDictionary *tmpDict =   [exhibitorsArray objectAtIndex:indexPath.row];
+    NSString *name = [tmpDict objectForKey:@"name"];
+    CGSize size =  [name sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:LARGE_FONT_SIZE] constrainedToSize : CGSizeMake(150, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    height += size.height;
+    NSString *address = [self adress:tmpDict];
+
+    size =  [address sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:MEDIUM_FONT_SIZE] constrainedToSize:CGSizeMake(150, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+   
+    height += size.height;
+
+    if (height < kExhibitorsTableCellHeight) {
+        return height + 20;
+    }
+    
     return kExhibitorsTableCellHeight;
 }
 
@@ -82,17 +99,24 @@
     
     if (cell == nil) 
     {
-        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         [cell setDefaultImage:nil];
     }
    
     NSMutableDictionary *tmpDict = [exhibitorsArray objectAtIndex:indexPath.row];
+    
+   NSString *text = [tmpDict objectForKey:@"name"];
 
-    
-    
     cell.textLabel.text = [tmpDict objectForKey:@"name"];
-
-   
+       CGSize size =  [text sizeWithFont:[cell.textLabel font] constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    cell.textLabel.numberOfLines =  size.height/21;
+    
+    NSString *address = [self adress:tmpDict];
+      
+    cell.detailTextLabel.text = address;
+    size =  [text sizeWithFont:[cell.detailTextLabel font] constrainedToSize:CGSizeMake(cell.detailTextLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    cell.detailTextLabel.numberOfLines = size.height/16+1;
+    
     NSString *logo = [tmpDict objectForKey:@"logo"];
     
     NSLog(@" LOGO %@   ",logo);
@@ -110,6 +134,54 @@
       return cell;
 }
 
+-(NSString*)adress:(NSDictionary*)dict{
+    NSMutableString *address = [[NSMutableString alloc]init];
+    
+    NSLog(@" ADRESS %@ ",dict);
+//    <address1/>
+//    <address2/>
+//    <city/>
+//    <state/>
+//    <zipcode/>
+//    <phone/>
+    
+    NSString *a = [dict objectForKey:@"address1"];
+    
+    if(a != nil && a.length > 0){
+        [address appendString:a];
+        [address appendString:@" , "];
+    }
+    a = [dict objectForKey:@"address2"];
+    if(a != nil && a.length > 0){
+        [address appendString:a];
+        [address appendString:@" , "];
+    }
+    a = [dict objectForKey:@"city"];
+    if(a != nil && a.length > 0){
+        [address appendString:a];
+        [address appendString:@" , "];
+    }
+    a = [dict objectForKey:@"state"];
+    if(a != nil && a.length > 0){
+        [address appendString:a];
+        [address appendString:@" , "];
+    }
+    a = [dict objectForKey:@"zipcode"];
+    if(a != nil && a.length > 0){
+        [address appendString:a];
+    
+    }
+    
+    a = [dict objectForKey:@"phone"];
+    if(a != nil && a.length > 0){
+        [address appendString:@"\n"];
+        [address appendString:a];
+    }
+    NSLog(@" ADRESS %@ ",address);
+    return address;
+
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -119,17 +191,11 @@
     if ([tmpDict objectForKey:@"website"] != nil)
     {
         NSString *urlString = [tmpDict objectForKey:@"website"];
-        //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
-
-    webViewController = [[WebViewController alloc] init];
-    
-    webViewController.urlString = urlString;
-    
-    [self presentModalViewController:webViewController animated:YES];
-        
-    }
-
-       
+      UIApplication *app =  [UIApplication sharedApplication];
+        if([app canOpenURL:[NSURL URLWithString:urlString]]){
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+        }
+      }
 }
 
 - (void)didReceiveMemoryWarning

@@ -18,5 +18,5 @@
 -(void)onFavoriteSelection:(UIButton*)sender;
 -(void)updateCell:(ImageLoader*)loader;
 -(void)loadImageAtIndexpath:(NSIndexPath*)indexpath urlString :(NSString*)url cell :(CustomTableViewCell*)cell;
-
+-(void)openUrl:(NSString*)urlString;
 @end

@@ -241,8 +241,6 @@
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
     
-    
-    
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(-20, 0, 250, 25)] ;
     label.backgroundColor = [UIColor clearColor];
     [label setFont:[UIFont fontWithName:@"Helvetica-Bold" size:13]];

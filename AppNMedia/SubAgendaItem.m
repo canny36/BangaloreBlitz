@@ -9,6 +9,9 @@
 #import "SubAgendaItem.h"
 #import "SpeakerInfo.h"
 #include "AppNMediaAppDelegate.h"
+#import "AgendaLoc.h"
+#import "Agenda.h"
+#import "AgendaItem.h"
 
 @interface SubAgendaItem()
 
@@ -64,6 +67,8 @@
          self.address = [dict objectForKey:@"address"];
          self.presenterType = [dict objectForKey:@"presenter_type"];
          self.speakers = [SpeakerInfo agendaCollection:[dict objectForKey:@"agendaspeakers"]];
+        self.agendaId = [dict objectForKey:@"agendaid"];
+        
     }
     return self;
 }
@@ -95,6 +100,51 @@
         }
     }
     return collection;
+}
+
+
+
+
++(NSMutableArray*)favorites:(NSMutableArray*)array{
+    
+    NSMutableArray *agendaItems;
+    NSMutableArray *agendaArray =[Agenda collection];
+    for (Agenda *agenda in agendaArray) {
+        for(AgendaLoc *loc in agenda.locArray){
+            if ([loc.itemArray count]>0) {
+                
+                for ( AgendaItem *item in loc.itemArray ) {
+                    if (agendaItems == nil) {
+                        agendaItems = [[NSMutableArray alloc]init];
+                     }
+                    if (item.subAgendaItems.count >0 ) {
+                        [agendaItems addObjectsFromArray:item.subAgendaItems];
+                    }
+                }
+            }
+        }
+    }
+    
+    NSLog(@"ANGENDAITEMS COUNT %d ",agendaItems.count);
+    
+    NSMutableArray *favoriteAgendaItems  = nil;
+    
+    for (NSString *agendaId in  array) {
+        for (SubAgendaItem *info in agendaItems) {
+            if ([info.agendaId isEqualToString: agendaId]) {
+                
+                if (favoriteAgendaItems == nil) {
+                    favoriteAgendaItems = [[NSMutableArray alloc]init];
+                }
+                
+                [favoriteAgendaItems addObject:info];
+                continue;
+            }
+        }
+    }
+    
+    NSLog(@" FAVORITE AGENDA  %@ ",favoriteAgendaItems);
+    return favoriteAgendaItems;
 }
 
 @end

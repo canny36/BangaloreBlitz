@@ -18,6 +18,7 @@
 #import "SpeakersViewDetailsController.h"
 #import "AgendaTableViewCell.h"
 #import "SubAgendaViewController.h"
+#import "CustomTableViewCell.h"
 
 #define kmyFavoritesTableCellHeight 60
 #define kSpeakersTableCellHeight 100
@@ -77,13 +78,18 @@
     {
         return [agendaArray count];
     }
-    else
+    else if(section == 2)
     {
-        return [selectedSpeakersArr count]; 
+        return [subAgendaArray count];
+    }else{
+         return [selectedSpeakersArr count]; 
+       
     }
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+
     return 30;
 }
 
@@ -102,7 +108,7 @@
     {
         label.text = @"Agenda";
     }
-    else
+    else if(section == 1)
     {
         label.text = @"Speakers"; 
     }
@@ -116,7 +122,9 @@
 {
     if (indexPath.section == 0)
     {
-        return [AgendaTableViewCell heightForItem:[agendaArray objectAtIndex:indexPath.row]];
+        return [self heightForItem:[agendaArray objectAtIndex:indexPath.row]];
+    }else if(indexPath.section == 2){
+                return [self heightForSubAgendaItem:[subAgendaArray objectAtIndex:indexPath.row]];
     }
     else
     {
@@ -128,7 +136,7 @@
         CGSize size1 = [info.name sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:13] constrainedToSize:CGSizeMake(220 ,MAXFLOAT ) lineBreakMode:UILineBreakModeWordWrap];
         
         CGFloat height = kSpeakersTableCellHeight;
-        height = size.height + size1.height +20;
+        height = size.height + size1.height +10;
         
         if (height< kSpeakersTableCellHeight) {
             return kSpeakersTableCellHeight;
@@ -148,17 +156,17 @@
     if (indexPath.section == 0)
     {
 
-       AgendaTableViewCell *cell = (AgendaTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+      CustomTableViewCell*cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
          if (cell == nil)
         {
-            cell = [[AgendaTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
+            cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier hideImageView:YES] ;
         }
         AgendaItem *item =  [agendaArray objectAtIndex:indexPath.row];
-        [cell cellWithAgendaItem:item];
+        [self cellWithAgendaItem:item:cell];
         cell.accessoryView = nil;
         return cell;
     }
-    else
+    else if(indexPath.section == 1)
     {
         
         SpeakersTableViewCell *cell = nil;
@@ -202,7 +210,55 @@
         cell.selectButton.hidden = YES;
         return cell;
 
+    }else if(indexPath.section == 2){
+        
+        CustomTableViewCell*cell = (CustomTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier hideImageView:YES] ;
         }
+        SubAgendaItem *item =  [subAgendaArray objectAtIndex:indexPath.row];
+        NSString *dateStr = @"";
+        
+        if (item.date != nil)
+        {
+            dateStr = [dateStr stringByAppendingString:item.date];
+            
+        }
+        
+        
+        if (item.startTime != nil)
+        {
+            dateStr = [dateStr stringByAppendingString:@" \n "];
+            dateStr = [dateStr stringByAppendingString:item.startTime];
+            
+        }
+        
+        if (item.endTime != nil)
+        {
+            dateStr = [dateStr stringByAppendingString:@" - "];
+            dateStr = [dateStr stringByAppendingString:item.endTime];
+        }
+        
+        
+        CGSize size = [item.title sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        int lines = size.height/21+1;
+        NSLog(@" AGENDA VIEW LINES at row %d  %f  for \n %@ ",indexPath.row,size.height,item.title);
+        cell.textLabel.text = item.title;
+        cell.textLabel.numberOfLines = lines;
+        
+        
+        size = [dateStr sizeWithFont:cell.detailTextLabel.font constrainedToSize:CGSizeMake(cell.detailTextLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+        
+        
+        cell.detailTextLabel.text = dateStr;
+        lines = size.height/20;
+        cell.detailTextLabel.numberOfLines = lines > 2 ? lines : 2;
+
+        cell.accessoryView.tag = indexPath.row;
+        return cell;
+
+    }
 
     
     }
@@ -224,6 +280,11 @@
             controller.agendaItem = item;
             [self.navigationController pushViewController:controller animated:YES];
         }
+    }else if(indexPath.section == 2){
+        SubAgendaItem *item = [subAgendaArray objectAtIndex:indexPath.row];
+        AgendaDetailsViewController *controller = [[AgendaDetailsViewController alloc]init];
+        controller.subAgendaItem = item;
+        [self.navigationController pushViewController:controller animated:YES];
     }
     else
     {
@@ -238,6 +299,116 @@
 
 }
 
+-(int)heightForItem:(AgendaItem*)item{
+    
+    NSString *dateStr = @"";
+    
+    if (item.date != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:item.date];
+    }
+    
+    if (item.startTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" \n "];
+        dateStr = [dateStr stringByAppendingString:item.startTime];
+        
+    }
+    
+    if (item.endTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" - "];
+        dateStr = [dateStr stringByAppendingString:item.endTime];
+    }
+    
+    
+    CGSize size1 = [item.title sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:15] constrainedToSize:CGSizeMake(230 ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    CGSize size2 = [dateStr sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:13] constrainedToSize:CGSizeMake(230, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    return size1.height + size2.height +10;
+    
+}
+
+-(int)heightForSubAgendaItem:(SubAgendaItem*)item{
+    
+    NSString *dateStr = @"";
+    
+    if (item.date != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:item.date];
+    }
+    
+    if (item.startTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" \n "];
+        dateStr = [dateStr stringByAppendingString:item.startTime];
+        
+    }
+    
+    if (item.endTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" - "];
+        dateStr = [dateStr stringByAppendingString:item.endTime];
+    }
+    
+    
+    CGSize size1 = [item.title sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:15] constrainedToSize:CGSizeMake(230 ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    CGSize size2 = [dateStr sizeWithFont:[UIFont fontWithName:[Util detailTextFontName] size:13] constrainedToSize:CGSizeMake(230, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    return size1.height + size2.height +10;
+    
+}
+
+
+-(void)cellWithAgendaItem:(AgendaItem*)item:(CustomTableViewCell*)cell{
+    NSString *dateStr = @"";
+    
+    if (item.date != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:item.date];
+
+    }
+    
+    if (item.startTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" \n "];
+        dateStr = [dateStr stringByAppendingString:item.startTime];
+        
+    }
+    
+    if (item.endTime != nil)
+    {
+        dateStr = [dateStr stringByAppendingString:@" - "];
+        dateStr = [dateStr stringByAppendingString:item.endTime];
+    }
+    
+    
+    CGSize size = [item.title sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width ,MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    int lines = size.height/21+1;
+    
+    cell.textLabel.text = item.title;
+    cell.textLabel.numberOfLines = lines;
+    
+    
+    size = [dateStr sizeWithFont:cell.detailTextLabel.font constrainedToSize:CGSizeMake(cell.detailTextLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    
+    cell.detailTextLabel.text = dateStr;
+    lines = size.height/20;
+    cell.detailTextLabel.numberOfLines = lines > 2 ? lines : 2;
+    
+}
+
+- (NSString *)dataFilePathForMyfavoritesSubAgendaInfo
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	return [documentsDirectory stringByAppendingPathComponent:@"myfavoriteSubAgenda.plist"];
+}
 
 
 - (void)dealloc
@@ -287,6 +458,17 @@
         NSLog(@" MYFAVORITE AGENDA ARRAY %@ ",tmpArr);
         agendaArray = [AgendaItem favorites:tmpArr];
         
+    }
+    
+    
+   agendaFilePath = [self dataFilePathForMyfavoritesSubAgendaInfo];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:agendaFilePath])
+    {
+        NSMutableArray *tmpArr = [[NSMutableArray alloc]initWithContentsOfFile:agendaFilePath];
+        NSLog(@" MYFAVORITE SUB AGENDA  id ARRAY %@ ",tmpArr);
+        subAgendaArray = [SubAgendaItem favorites:tmpArr];
+          NSLog(@" MYFAVORITE SUB AGENDA ARRAY %@ ",subAgendaArray);
     }
     
     myFavoritesTableView =[[UITableView alloc] initWithFrame:CGRectMake(5, 5, 310, 290)];

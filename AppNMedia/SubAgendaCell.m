@@ -7,6 +7,8 @@
 //
 
 #import "SubAgendaCell.h"
+#import "Agenda.h"
+#import "AgendaLoc.h"
 
 @implementation SubAgendaCell
 
@@ -69,5 +71,10 @@ static UIImage *grayImage;
     [self.controller onBookmarkButtonClick:sender];
     
 }
+
+
+
+
+
 
 @end

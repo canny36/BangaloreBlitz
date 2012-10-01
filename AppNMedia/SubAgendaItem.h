@@ -61,6 +61,6 @@
 
 -(id)initWithDict:(NSDictionary*)dict;
 +(NSMutableArray*)collection:(NSDictionary*)dict;
-    
++(NSMutableArray*)favorites:(NSMutableArray*)array;
 
 @end

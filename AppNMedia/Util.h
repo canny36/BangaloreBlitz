@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#define LARGE_FONT_SIZE 15;
-#define MEDIUM_FONT_SIZE 13;
-#define SMALL_FONT_SIZE 11;
+#define LARGE_FONT_SIZE 15
+#define MEDIUM_FONT_SIZE 13
+#define SMALL_FONT_SIZE 11
 
 @interface Util : NSObject
 

@@ -90,6 +90,8 @@
 
 @implementation ContactUsViewController
 
+static ContactInfo *info;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -120,11 +122,7 @@
 }
 
 -(void)initView{
-    
-    
-    
-    ContactInfo *info = [[ContactInfo alloc]init];
-    
+     
     float y = 10;
     
     UIFont *labelFont = [UIFont fontWithName:[Util detailTextFontName] size:15];
@@ -138,9 +136,7 @@
     startLabel.text=@"Name       :";
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
-    
-    
-    
+     
     startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
     startLabel.font = detailFont;
     startLabel.textColor = [Util detailTextColor];
@@ -158,8 +154,6 @@
     startLabel.text=@"Phone No :";
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
-    
-    
     
     startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
     startLabel.font = detailFont;
@@ -179,8 +173,6 @@
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
-    
-    
     startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
     startLabel.font = detailFont;
     startLabel.textColor = [Util detailTextColor];
@@ -188,7 +180,6 @@
     startLabel.text= info.name2;
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
-
     
     y += 10+21;
     
@@ -199,20 +190,21 @@
     startLabel.text=@"Phone No :";
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
+     
+    UITextView *phone = [[UITextView alloc]initWithFrame:CGRectMake(120  , y, 179, 25)];
+    phone.font = detailFont;
+    phone.textColor = [Util detailTextColor];
+    phone.textAlignment = UITextAlignmentLeft;
+    phone.text= info.phone2;
+    phone.backgroundColor = [UIColor clearColor];
+    [phone setUserInteractionEnabled:YES];
+    [phone setScrollEnabled:NO];
+    [phone setEditable:NO];
+    [phone setDataDetectorTypes:UIDataDetectorTypePhoneNumber];
+    [scrollView addSubview:phone];
     
     
-    
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text= info.phone2;
-    startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    
-    y += 10+21;
+    y += 10+25;
     
     startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
     startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
@@ -222,18 +214,19 @@
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
+    UITextView *email  = [[UITextView alloc]initWithFrame:CGRectMake(120  , y, 190, 25)];
+    email.font = detailFont;
+    email.textColor = [Util detailTextColor];
+    email.textAlignment = UITextAlignmentLeft;
+    email.text= info.mail;
+    email.backgroundColor = [UIColor clearColor];
+    [email setEditable:NO];
+    [email setUserInteractionEnabled:YES];
+    [email setScrollEnabled:NO];
     
+    [scrollView addSubview:email];
     
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text= info.mail;
-    startLabel.backgroundColor = [UIColor clearColor];
-    
-    [scrollView addSubview:startLabel];
-    
-    y += 10+21;
+    y += 10+25;
     
     startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
     startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
@@ -256,9 +249,7 @@
     
     [scrollView addSubview:startLabel];
     
-    
     y += 10+size.height +10;
-
     
     startLabel = [[UILabel alloc]initWithFrame:CGRectMake(20  , y, 91, 21)];
     startLabel.font = [UIFont fontWithName:[Util detailTextFontName] size:15];
@@ -267,8 +258,6 @@
     startLabel.text=@"Web Link :";
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
-    
-    
     
     UIButton *weblinkLabel = [[UIButton alloc]initWithFrame:CGRectMake(120  , y, 179, 42)];
     [weblinkLabel setTitleColor:[Util linkTextColor] forState:UIControlStateNormal];
@@ -280,6 +269,7 @@
     
     [weblinkLabel setTitle:info.weblink forState:UIControlStateNormal];
     weblinkLabel.backgroundColor = [UIColor clearColor];
+    [weblinkLabel setTitleColor:[Util titleColor] forState:UIControlStateHighlighted];
     
     [weblinkLabel addTarget:self action:@selector(onWebLinkSelection:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -290,7 +280,12 @@
     
 }
 
--(void)onWebLinkSelection:(NSString *)url{
+-(void)onWebLinkSelection:(UIButton*)sender{
+    NSString *url = info.weblink;
+   UIApplication *app =  [UIApplication sharedApplication] ;
+    if ([app canOpenURL:[NSURL URLWithString:url]]) {
+       [app openURL:[NSURL URLWithString:url]];
+    }
     
 }
 
@@ -469,11 +464,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-  
-    // Do any additional setup after loading the view from its nib.
+
     appDelegate = (AppNMediaAppDelegate *) [[UIApplication sharedApplication] delegate];
 
     self.title = @"Contact Us";
+    
     UIBarButtonItem *homeButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain  target:self action:@selector(homeButtonClicked)];     
     self.navigationItem.rightBarButtonItem = homeButton;
 
@@ -496,7 +491,7 @@
     scrollView.frame = CGRectMake(10, 0, 300, 285);
     [scrollView setContentSize:CGSizeMake(300, 600)];
     scrollView.showsVerticalScrollIndicator = NO;
-    
+    info = [[ContactInfo alloc]init];
     [self initView];
     
  }

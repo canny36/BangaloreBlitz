@@ -25,7 +25,7 @@
     NSString *_status;
     NSString *_logo;
     NSString *_logourl;
-
+   NSString *_website;
 }
 
 
@@ -44,6 +44,7 @@
 @property(retain,readonly) NSString *status;
 @property(retain,readonly) NSString *logo;
 @property(retain,readonly) NSString *logourl;
+@property(retain,readonly) NSString *website;
 
 +(NSMutableDictionary*)collectSponsors;
 @end

@@ -39,11 +39,12 @@
     if ([selectedDict objectForKey:@"weblink"]!= nil)
     {
         NSString *webUrl = [selectedDict objectForKey:@"weblink"];
-        webView = [[WebViewController alloc] init];
-        
-        webView.urlString = webUrl;
-        
-        [self presentModalViewController:webView animated:YES];  
+//        webView = [[WebViewController alloc] init];
+//        
+//        webView.urlString = webUrl;
+//        
+//        [self presentModalViewController:webView animated:YES];
+        [self onWebLinkSelection:webUrl];
     }
     else
     {
@@ -52,6 +53,13 @@
     }
 
 }
+
+-(void)onWebLinkSelection:(NSString*)url{
+    UIApplication *app =  [UIApplication sharedApplication] ;
+    if ([app canOpenURL:[NSURL URLWithString:url]]) {
+        [app openURL:[NSURL URLWithString:url]];
+    }
+ }
 
 -(void)loadSpeakerImage
 {

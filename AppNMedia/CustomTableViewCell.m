@@ -70,7 +70,7 @@ static UIImage *grayImage;
         }
         
         favButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        favButton.frame = CGRectMake(265, 20, 30, 30);
+        favButton.frame = CGRectMake(280, 20, 25, 25);
         [favButton setImage:[self grayImage] forState:UIControlStateNormal];
         
         
@@ -131,7 +131,7 @@ static UIImage *grayImage;
         }
         
         favButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        favButton.frame = CGRectMake(265, 20, 30, 30);
+        favButton.frame = CGRectMake(280, 20, 25, 25);
         [favButton setImage:[self grayImage] forState:UIControlStateNormal];
         
         
@@ -196,15 +196,25 @@ static UIImage *grayImage;
     [self.imageView setFrame:frame];
     
     frame = self.textLabel.frame;
-    frame.origin.x = 110;
+    frame.origin.x = 105;
+    frame.size.width = 175;
     [self.textLabel setFrame:frame];
     
     frame = self.detailTextLabel.frame;
-    frame.origin.x = 110;
+    frame.origin.x = 105;
+      frame.size.width =175;
     [self.detailTextLabel setFrame:frame];
-     
+       
+    if (self.accessoryView != nil) {
+        frame  = self.accessoryView.frame;
+        frame.origin.x = 280;
+        self.accessoryView.frame = frame;
+        NSLog(@" ACCESSORY FRAME w = %f x =  %f ", frame.size.width,frame.origin.x);
+    }
+    
+      
+    
 }
-
 
 +(UIFont*)titleFont{
     return  [UIFont fontWithName:[Util subTitleFontName] size:FONT_SIZE_TITLE];

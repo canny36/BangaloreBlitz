@@ -13,7 +13,7 @@
 #import "ImageLoader.h"
 #import "Util.h"
 
-#define kNewsTableCellHeight 100
+#define kNewsTableCellHeight 80
 @implementation NewsViewController
 
 - (NSString *)dataFilePathForOfflineImages
@@ -45,7 +45,16 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kNewsTableCellHeight;
+    
+    NSMutableDictionary *tmpDict = [newsArray objectAtIndex:indexPath.row];
+    NSString *text = [tmpDict objectForKey:@"description"];
+    CGSize size = [text sizeWithFont:[UIFont fontWithName:[Util subTitleFontName] size:15] constrainedToSize:CGSizeMake(200, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    
+    if (size.height < kNewsTableCellHeight) {
+        return kNewsTableCellHeight;
+    }
+    
+    return size.height + 20;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -55,15 +64,17 @@
     
     if (cell == nil)
     {
-        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
+        cell = [[CustomTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] ;
         [cell setDefaultImage:nil];
     }
     
-    cell.textLabel.text = @"NEWS";
-     NSMutableDictionary *tmpDict = [newsArray objectAtIndex:indexPath.row];
-
-     NSString *logo =  [tmpDict objectForKey:@"logo"];
-    
+   
+    NSMutableDictionary *tmpDict = [newsArray objectAtIndex:indexPath.row];
+    NSString *text = [tmpDict objectForKey:@"description"];
+    NSString *logo =  [tmpDict objectForKey:@"logo"];
+    CGSize size = [text sizeWithFont:cell.textLabel.font constrainedToSize:CGSizeMake(cell.textLabel.frame.size.width, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    cell.detailTextLabel.numberOfLines = size.height/21+1;
+    cell.detailTextLabel.text =  text;
     
     if (logo != nil && ![logo isEqualToString:@""]) {
         
@@ -87,13 +98,7 @@
     if ([tmpDict objectForKey:@"newsurl"]!=nil)
     {
         
-        NSString *urlString = [tmpDict objectForKey:@"newsurl"];
-        
-        webViewController = [[WebViewController alloc] init];
-        
-        webViewController.urlString = urlString;
-        
-        [self presentModalViewController:webViewController animated:YES];
+        [self openUrl:[tmpDict objectForKey:@"newsurl"]];
         
     }
 

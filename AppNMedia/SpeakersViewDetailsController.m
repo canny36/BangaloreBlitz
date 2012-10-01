@@ -87,21 +87,28 @@
     NSString *urlString = speakerInfo.weblink;
     
     if (urlString != nil && ![urlString isEqualToString:@""] && [self validateUrl:urlString]) {
+//        
+//        WebViewController *webViewController = [[WebViewController alloc] init];
+//        
+//        webViewController.urlString = urlString;
+//        
+//        [self presentModalViewController:webViewController animated:YES];
         
-        WebViewController *webViewController = [[WebViewController alloc] init];
-        
-        webViewController.urlString = urlString;
-        
-        [self presentModalViewController:webViewController animated:YES];
+        [self onWebLinkSelection:urlString];
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"No valid information " delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
-
-    
 }
 
+
+-(void)onWebLinkSelection:(NSString*)url{
+    UIApplication *app =  [UIApplication sharedApplication] ;
+    if ([app canOpenURL:[NSURL URLWithString:url]]) {
+        [app openURL:[NSURL URLWithString:url]];
+    }
+    
+}
 
 - (BOOL) validateUrl: (NSString *) candidate {
    
@@ -216,7 +223,7 @@
     
 
     frame = profileButton.frame;
-    
+    [profileButton setTitleColor:[Util titleColor] forState:UIControlStateHighlighted];
     frame.origin.y = descriptionLabel.frame.size.height + descriptionLabel.frame.origin.y +20;
     profileButton.frame = frame;
     
@@ -255,14 +262,14 @@
      self.navigationItem.rightBarButtonItem = homeButton;
     
     
-    UIImage *image = [UIImage imageNamed:@"default_img.png"];
+    UIImage *image = [UIImage imageNamed:@"no_image.png"];
     
       CGSize size = image.size;
       CGSize itemSize = CGSizeMake(size.width/2, size.height/2);
       UIImage  *scaleimage  = [image scaleImageToSize:itemSize];
      speakerImageView.image = scaleimage;
     
-    [self loadSpeakerImage];
+     [self loadSpeakerImage];
      [self assignStyles];
 
 

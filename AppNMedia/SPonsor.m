@@ -15,15 +15,15 @@
     NSString *name;
 }
 
-@property(retain,readonly) NSString *_id;
-@property(retain,readonly) NSString *name;
+@property(retain,readonly) NSString *_categoryId;
+@property(retain,readonly) NSString *_name;
 
 @end
 
 
 @interface Category()
 
-@property(retain,readwrite) NSString *_id;
+@property(retain,readwrite) NSString *categoryId;
 @property(retain,readwrite) NSString *name;
 
 @end
@@ -34,7 +34,7 @@
 {
     self = [super init];
     if (self) {
-        self._id = [dict objectForKey:@"id"];
+        self.categoryId = [dict objectForKey:@"id"];
         self.name = [dict objectForKey:@"name"];
     }
     
@@ -64,7 +64,7 @@
 @property(retain,readwrite) NSString *logo;
 @property(retain,readwrite) NSString *logourl;
 @property(retain,readwrite) NSMutableArray *categoryArray;
-
+@property(retain,readwrite) NSString *website;
 @end
 @implementation SPonsor
 
@@ -110,10 +110,11 @@
         self.sponsorId = [dict objectForKey:@"sponsorid"];
         self.state = [dict objectForKey:@"state"];
         self.status= [dict objectForKey:@"status"];
-        self.categoryID = category._id;
+        self.categoryID = category.categoryId;
         self.categoryName = category.name;
         self.logo = [dict objectForKey:@"logo"];
         self.logourl = [dict objectForKey:@"logourl"];
+        self.website = [dict objectForKey:@"website"] ;
         
     }
     return self;

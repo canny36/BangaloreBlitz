@@ -108,18 +108,27 @@
     {
         
         NSString *urlString = program.weblink;
+//        
+//       WebViewController *webViewController = [[WebViewController alloc] init];
+//        
+//        webViewController.urlString = urlString;
+//        
+//        [self presentModalViewController:webViewController animated:YES];
         
-       WebViewController *webViewController = [[WebViewController alloc] init];
-        
-        webViewController.urlString = urlString;
-        
-        [self presentModalViewController:webViewController animated:YES];
+        [self onWebLinkSelection:urlString];
         
     }
     
     
 }
 
+-(void)onWebLinkSelection:(NSString*)url{
+    UIApplication *app =  [UIApplication sharedApplication] ;
+    if ([app canOpenURL:[NSURL URLWithString:url]]) {
+        [app openURL:[NSURL URLWithString:url]];
+    }
+    
+}
 
 
 -(void)updateCell:(ImageLoader*)loader{

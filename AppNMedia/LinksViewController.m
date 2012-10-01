@@ -92,11 +92,21 @@
     {
         
         NSString *urlString = [tmpDict objectForKey:@"linkurl"];
-        webViewController = [[WebViewController alloc] init];
-        webViewController.urlString = urlString;
-        [self presentModalViewController:webViewController animated:YES];
+//        webViewController = [[WebViewController alloc] init];
+//        webViewController.urlString = urlString;
+//        [self presentModalViewController:webViewController animated:YES];
+        
+        [self onWebLinkSelection:urlString];
         
     }
+}
+
+-(void)onWebLinkSelection:(NSString*)url{
+       UIApplication *app =  [UIApplication sharedApplication] ;
+    if ([app canOpenURL:[NSURL URLWithString:url]]) {
+        [app openURL:[NSURL URLWithString:url]];
+    }
+    
 }
 
 

@@ -403,7 +403,7 @@
 
     }
     
-    pickerViewSourceArray = [[NSMutableArray alloc] initWithObjects:@"6",@"10",@"15",@"30",@"60", nil];
+    pickerViewSourceArray = [[NSMutableArray alloc] initWithObjects:@"2" , @"6",@"10",@"15",@"30",@"60", nil];
     selectedTimeValue = [pickerViewSourceArray objectAtIndex:0
                          ];
     timeTextFiled.text = selectedTimeValue;

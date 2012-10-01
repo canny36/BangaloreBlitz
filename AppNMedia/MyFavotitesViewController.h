@@ -26,10 +26,12 @@
     NSMutableArray *array;
     NSMutableArray *agendaArray;
     NSMutableArray *itemsArray;
-
+    NSMutableArray *subAgendaArray;
     
     NSMutableArray *currentDownloads;
     ImageDownloader *imageDownloader;
+    
+    
 }
 
 -(void)assignStyles;

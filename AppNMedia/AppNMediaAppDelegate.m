@@ -2013,8 +2013,6 @@ static NSString *cachedImageDir;
 {
     NSString *timeStr = selectedTime;
     int time = [timeStr intValue]*60;
-    //int time = [timeStr intValue];
-
     
     if (timer != nil)
     {
@@ -2022,8 +2020,8 @@ static NSString *cachedImageDir;
         timer = nil;
     }
     
-    timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(callDataSynchMethod) userInfo:nil repeats:YES];
-     
+    timer = [NSTimer scheduledTimerWithTimeInterval:time target:self selector:@selector(callDataSynchMethod) userInfo:nil repeats:YES];
+    
 }
 
 -(void)callDataSynchMethod

@@ -89,13 +89,7 @@
     
     if (urlString !=nil)
     {
-     
-    
-        webViewController = [[WebViewController alloc] init];
-        
-        webViewController.urlString = urlString;
-        
-        [self presentModalViewController:webViewController animated:YES];
+        [self openUrl:urlString];
     
     }
     

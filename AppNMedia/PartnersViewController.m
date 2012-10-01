@@ -164,11 +164,10 @@
         
     NSString *urlString = [tmpDict objectForKey:@"website"];
     
-    webViewController = [[WebViewController alloc] init];
-    
-    webViewController.urlString = urlString;
-    
-    [self presentModalViewController:webViewController animated:YES];
+        UIApplication *app =  [UIApplication sharedApplication];
+        if([app canOpenURL:[NSURL URLWithString:urlString]]){
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+        }
     }
 }
 

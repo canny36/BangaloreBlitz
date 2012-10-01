@@ -85,9 +85,22 @@
     }
     
     return cell;
-    
 }
 
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+
+        NSMutableDictionary *tmpDict = [supportedByArray objectAtIndex:indexPath.row];
+       NSString *website =   [tmpDict objectForKey:@"weblink"];
+        if (website !=nil)
+        {
+            [self openUrl:website];
+            
+        }
+}
 
 -(void)homeButtonClicked
 {

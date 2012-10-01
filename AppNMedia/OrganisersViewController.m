@@ -108,6 +108,19 @@
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+     Organizer *organizer  =[organisersArray objectAtIndex:indexPath.row];
+
+    if (organizer.weblink !=nil)
+    {
+        [self openUrl:organizer.weblink];
+        
+    }
+}
+
 
 - (void)viewDidLoad
 {

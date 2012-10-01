@@ -62,7 +62,7 @@
     UIColor *labelCOlor = [Util titleColor];
     UIFont *detailFont = [UIFont fontWithName:[Util subTitleFontName] size:14];
     
-    CGSize size = [self.agendaItem.title sizeWithFont:[UIFont fontWithName:[Util titleFontName] size:16] constrainedToSize:CGSizeMake(300, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize size = [self.agendaItem.title sizeWithFont:[UIFont fontWithName:[Util titleFontName] size:16] constrainedToSize:CGSizeMake(290, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  , 10, 290, size.height+10)];
     
@@ -152,28 +152,7 @@
     
     
     y = y+10 + 21;
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y,91, 21)];
-    startLabel.font = labelFont;
-    startLabel.textColor = labelCOlor;
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text=@"Address :";
-     startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-     y = y+10 + 21;
-    
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 , y, 180, 90)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text= self.agendaItem.address;
-    startLabel.numberOfLines = 5;
-      startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    y = y+10 + 90;
-
+   
     
 //    if (self.agendaItem.agendaSpeaker != nil && ![self.agendaItem.agendaSpeaker isEqualToString:@""]) {
 //        
@@ -270,11 +249,39 @@
         [speakerView reDraw];
         
         y = y+ speakerView.frame.size.height+5;
+        
+        [speakerView add];
+        
         [scrollView addSubview:speakerView];
         
     }
+    y = y+20;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y,91, 21)];
+    startLabel.font = labelFont;
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text=@"Address :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    y = y+10 + 21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 , y, 180, 90)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= self.agendaItem.address;
+    startLabel.numberOfLines = 5;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    y = y+10 + 90;
+
     
      y= y+20;
+    
     [scrollView setContentSize:CGSizeMake(300,y)];
 
 }
@@ -380,29 +387,7 @@
     
     
     y = y+10 + 21;
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y,91, 21)];
-    startLabel.font = labelFont;
-    startLabel.textColor = labelCOlor;
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text=@"Address :";
-    startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    y = y+10 + 21;
-    
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 , y, 180, 90)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text= self.subAgendaItem.address;
-    startLabel.numberOfLines = 5;
-    startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
-    
-    
-    y = y+10 + 90;
-    
-    
+       
 //    if (self.agendaItem.agendaSpeaker != nil && ![self.agendaItem.agendaSpeaker isEqualToString:@""]) {
 //        
 //        
@@ -502,7 +487,31 @@
         
     }
     
+     y = y+10+21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(10  ,y,91, 21)];
+    startLabel.font = labelFont;
+    startLabel.textColor = labelCOlor;
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text=@"Address :";
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    y = y+10 + 21;
+    
+    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(40 , y, 180, 90)];
+    startLabel.font = detailFont;
+    startLabel.textColor = [Util detailTextColor];
+    startLabel.textAlignment = UITextAlignmentLeft;
+    startLabel.text= self.subAgendaItem.address;
+    startLabel.numberOfLines = 5;
+    startLabel.backgroundColor = [UIColor clearColor];
+    [scrollView addSubview:startLabel];
+    
+    
+    y = y+10 + 90;
     y= y+20;
+    
     [scrollView setContentSize:CGSizeMake(300,y)];
     
 }
