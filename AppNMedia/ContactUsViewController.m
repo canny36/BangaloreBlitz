@@ -155,13 +155,24 @@ static ContactInfo *info;
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
     
-    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
-    startLabel.font = detailFont;
-    startLabel.textColor = [Util detailTextColor];
-    startLabel.textAlignment = UITextAlignmentLeft;
-    startLabel.text= info.phone1;
-    startLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:startLabel];
+//    startLabel = [[UILabel alloc]initWithFrame:CGRectMake(120  , y, 179, 21)];
+//    startLabel.font = detailFont;
+//    startLabel.textColor = [Util detailTextColor];
+//    startLabel.textAlignment = UITextAlignmentLeft;
+//    startLabel.text= info.phone1;
+//    startLabel.backgroundColor = [UIColor clearColor];
+    UITextView *phone = [[UITextView alloc]initWithFrame:CGRectMake(120  , y, 179, 25)];
+    phone.font = detailFont;
+    phone.textColor = [Util detailTextColor];
+    phone.textAlignment = UITextAlignmentLeft;
+    phone.text= info.phone1;
+    phone.backgroundColor = [UIColor clearColor];
+    [phone setUserInteractionEnabled:YES];
+    [phone setScrollEnabled:NO];
+    [phone setEditable:NO];
+    [phone setDataDetectorTypes:UIDataDetectorTypePhoneNumber];
+    
+    [scrollView addSubview:phone];
     
     y += 10+21;
     
@@ -191,7 +202,7 @@ static ContactInfo *info;
     startLabel.backgroundColor = [UIColor clearColor];
     [scrollView addSubview:startLabel];
      
-    UITextView *phone = [[UITextView alloc]initWithFrame:CGRectMake(120  , y, 179, 25)];
+    phone = [[UITextView alloc]initWithFrame:CGRectMake(120  , y, 179, 25)];
     phone.font = detailFont;
     phone.textColor = [Util detailTextColor];
     phone.textAlignment = UITextAlignmentLeft;

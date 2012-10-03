@@ -249,8 +249,7 @@
         [speakerView reDraw];
         
         y = y+ speakerView.frame.size.height+5;
-        
-        [speakerView add];
+
         
         [scrollView addSubview:speakerView];
         

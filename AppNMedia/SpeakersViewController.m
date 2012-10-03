@@ -273,7 +273,7 @@
     }
     
     
-    speakersTableView = [[UITableView alloc] initWithFrame:CGRectMake(5,60, 310, 250)];
+    speakersTableView = [[UITableView alloc] initWithFrame:CGRectMake(5,50, 310, 250)];
     speakersTableView.dataSource = self;
     speakersTableView.delegate = self;
     speakersTableView.backgroundColor = [UIColor clearColor];
